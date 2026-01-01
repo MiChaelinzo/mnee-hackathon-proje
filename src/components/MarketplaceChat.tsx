@@ -141,7 +141,142 @@ export default function MarketplaceChat({
       )
     : allConversationMessages
 
-  const commonEmojis = ['👍', '❤️', '😊', '🎉', '🔥', '👏', '💯', '🤔']
+  const emojiCategories = {
+    'Smileys & People': [
+      '😀', '😃', '😄', '😁', '😆', '😅', '🤣', '😂', '🙂', '🙃', '😉', '😊', '😇',
+      '🥰', '😍', '🤩', '😘', '😗', '😚', '😙', '🥲', '😋', '😛', '😜', '🤪', '😝',
+      '🤑', '🤗', '🤭', '🤫', '🤔', '🤐', '🤨', '😐', '😑', '😶', '😏', '😒', '🙄',
+      '😬', '😮', '😯', '😲', '😳', '🥺', '😦', '😧', '😨', '😰', '😥', '😢', '😭',
+      '😱', '😖', '😣', '😞', '😓', '😩', '😫', '🥱', '😤', '😡', '😠', '🤬', '😈',
+      '👿', '💀', '☠️', '💩', '🤡', '👹', '👺', '👻', '👽', '👾', '🤖', '😺', '😸',
+      '😹', '😻', '😼', '😽', '🙀', '😿', '😾'
+    ],
+    'Gestures & Body': [
+      '👋', '🤚', '🖐️', '✋', '🖖', '👌', '🤌', '🤏', '✌️', '🤞', '🤟', '🤘', '🤙',
+      '👈', '👉', '👆', '🖕', '👇', '☝️', '👍', '👎', '✊', '👊', '🤛', '🤜', '👏',
+      '🙌', '👐', '🤲', '🤝', '🙏', '✍️', '💅', '🤳', '💪', '🦾', '🦿', '🦵', '🦶',
+      '👂', '🦻', '👃', '🧠', '🫀', '🫁', '🦷', '🦴', '👀', '👁️', '👅', '👄', '💋'
+    ],
+    'Hearts & Emotions': [
+      '❤️', '🧡', '💛', '💚', '💙', '💜', '🖤', '🤍', '🤎', '💔', '❤️‍🔥', '❤️‍🩹',
+      '💕', '💞', '💓', '💗', '💖', '💘', '💝', '💟', '☮️', '✝️', '☪️', '🕉️', '☸️',
+      '✡️', '🔯', '🕎', '☯️', '☦️', '🛐', '⛎', '♈', '♉', '♊', '♋', '♌', '♍', '♎',
+      '♏', '♐', '♑', '♒', '♓', '🆔', '⚛️', '🉑', '☢️', '☣️', '📴', '📳', '🈶', '🈚',
+      '🈸', '🈺', '🈷️', '✴️', '🆚', '💮', '🉐'
+    ],
+    'Animals & Nature': [
+      '🐶', '🐱', '🐭', '🐹', '🐰', '🦊', '🐻', '🐼', '🐨', '🐯', '🦁', '🐮', '🐷',
+      '🐽', '🐸', '🐵', '🙈', '🙉', '🙊', '🐒', '🐔', '🐧', '🐦', '🐤', '🐣', '🐥',
+      '🦆', '🦅', '🦉', '🦇', '🐺', '🐗', '🐴', '🦄', '🐝', '🪱', '🐛', '🦋', '🐌',
+      '🐞', '🐜', '🪰', '🪲', '🪳', '🦟', '🦗', '🕷️', '🕸️', '🦂', '🐢', '🐍', '🦎',
+      '🦖', '🦕', '🐙', '🦑', '🦐', '🦞', '🦀', '🐡', '🐠', '🐟', '🐬', '🐳', '🐋',
+      '🦈', '🐊', '🐅', '🐆', '🦓', '🦍', '🦧', '🦣', '🐘', '🦛', '🦏', '🐪', '🐫',
+      '🦒', '🦘', '🦬', '🐃', '🐂', '🐄', '🐎', '🐖', '🐏', '🐑', '🦙', '🐐', '🦌',
+      '🐕', '🐩', '🦮', '🐕‍🦺', '🐈', '🐈‍⬛', '🪶', '🐓', '🦃', '🦤', '🦚', '🦜', '🦢',
+      '🦩', '🕊️', '🐇', '🦝', '🦨', '🦡', '🦫', '🦦', '🦥', '🐁', '🐀', '🐿️', '🦔'
+    ],
+    'Food & Drink': [
+      '🍏', '🍎', '🍐', '🍊', '🍋', '🍌', '🍉', '🍇', '🍓', '🫐', '🍈', '🍒', '🍑',
+      '🥭', '🍍', '🥥', '🥝', '🍅', '🍆', '🥑', '🥦', '🥬', '🥒', '🌶️', '🫑', '🌽',
+      '🥕', '🫒', '🧄', '🧅', '🥔', '🍠', '🥐', '🥯', '🍞', '🥖', '🥨', '🧀', '🥚',
+      '🍳', '🧈', '🥞', '🧇', '🥓', '🥩', '🍗', '🍖', '🦴', '🌭', '🍔', '🍟', '🍕',
+      '🫓', '🥪', '🥙', '🧆', '🌮', '🌯', '🫔', '🥗', '🥘', '🫕', '🥫', '🍝', '🍜',
+      '🍲', '🍛', '🍣', '🍱', '🥟', '🦪', '🍤', '🍙', '🍚', '🍘', '🍥', '🥠', '🥮',
+      '🍢', '🍡', '🍧', '🍨', '🍦', '🥧', '🧁', '🍰', '🎂', '🍮', '🍭', '🍬', '🍫',
+      '🍿', '🍩', '🍪', '🌰', '🥜', '🍯', '🥛', '🍼', '🫖', '☕', '🍵', '🧃', '🥤',
+      '🧋', '🍶', '🍺', '🍻', '🥂', '🍷', '🥃', '🍸', '🍹', '🧉', '🍾', '🧊'
+    ],
+    'Activities & Sports': [
+      '⚽', '🏀', '🏈', '⚾', '🥎', '🎾', '🏐', '🏉', '🥏', '🎱', '🪀', '🏓', '🏸',
+      '🏒', '🏑', '🥍', '🏏', '🪃', '🥅', '⛳', '🪁', '🏹', '🎣', '🤿', '🥊', '🥋',
+      '🎽', '🛹', '🛼', '🛷', '⛸️', '🥌', '🎿', '⛷️', '🏂', '🪂', '🏋️', '🤼', '🤸',
+      '🤺', '🤾', '🏌️', '🏇', '🧘', '🏊', '🏄', '🚣', '🧗', '🚵', '🚴', '🏆', '🥇',
+      '🥈', '🥉', '🏅', '🎖️', '🎗️', '🏵️', '🎫', '🎟️', '🎪', '🤹', '🎭', '🩰', '🎨',
+      '🎬', '🎤', '🎧', '🎼', '🎹', '🥁', '🪘', '🎷', '🎺', '🪗', '🎸', '🪕', '🎻'
+    ],
+    'Travel & Places': [
+      '🚗', '🚕', '🚙', '🚌', '🚎', '🏎️', '🚓', '🚑', '🚒', '🚐', '🛻', '🚚', '🚛',
+      '🚜', '🦯', '🦽', '🦼', '🛴', '🚲', '🛵', '🏍️', '🛺', '🚨', '🚔', '🚍', '🚘',
+      '🚖', '🚡', '🚠', '🚟', '🚃', '🚋', '🚞', '🚝', '🚄', '🚅', '🚈', '🚂', '🚆',
+      '🚇', '🚊', '🚉', '✈️', '🛫', '🛬', '🛩️', '💺', '🛰️', '🚀', '🛸', '🚁', '🛶',
+      '⛵', '🚤', '🛥️', '🛳️', '⛴️', '🚢', '⚓', '🪝', '⛽', '🚧', '🚦', '🚥', '🚏',
+      '🗺️', '🗿', '🗽', '🗼', '🏰', '🏯', '🏟️', '🎡', '🎢', '🎠', '⛲', '⛱️', '🏖️',
+      '🏝️', '🏜️', '🌋', '⛰️', '🏔️', '🗻', '🏕️', '⛺', '🛖', '🏠', '🏡', '🏘️', '🏚️',
+      '🏗️', '🏭', '🏢', '🏬', '🏣', '🏤', '🏥', '🏦', '🏨', '🏪', '🏫', '🏩', '💒',
+      '🏛️', '⛪', '🕌', '🕍', '🛕', '🕋', '⛩️', '🛤️', '🛣️', '🗾', '🎑', '🏞️', '🌅',
+      '🌄', '🌠', '🎇', '🎆', '🌇', '🌆', '🏙️', '🌃', '🌌', '🌉', '🌁'
+    ],
+    'Objects & Symbols': [
+      '⌚', '📱', '📲', '💻', '⌨️', '🖥️', '🖨️', '🖱️', '🖲️', '🕹️', '🗜️', '💾', '💿',
+      '📀', '📼', '📷', '📸', '📹', '🎥', '📽️', '🎞️', '📞', '☎️', '📟', '📠', '📺',
+      '📻', '🎙️', '🎚️', '🎛️', '🧭', '⏱️', '⏲️', '⏰', '🕰️', '⌛', '⏳', '📡', '🔋',
+      '🔌', '💡', '🔦', '🕯️', '🪔', '🧯', '🛢️', '💸', '💵', '💴', '💶', '💷', '🪙',
+      '💰', '💳', '🪪', '💎', '⚖️', '🪜', '🧰', '🪛', '🔧', '🔨', '⚒️', '🛠️', '⛏️',
+      '🪚', '🔩', '⚙️', '🪤', '🧱', '⛓️', '🧲', '🔫', '💣', '🧨', '🪓', '🔪', '🗡️',
+      '⚔️', '🛡️', '🚬', '⚰️', '🪦', '⚱️', '🏺', '🔮', '📿', '🧿', '💈', '⚗️', '🔭',
+      '🔬', '🕳️', '🩹', '🩺', '💊', '💉', '🩸', '🧬', '🦠', '🧫', '🧪', '🌡️', '🧹',
+      '🪠', '🧺', '🧻', '🚽', '🚰', '🚿', '🛁', '🪥', '🪒', '🧼', '🪣', '🧴', '🧽',
+      '🧯', '🛎️', '🔑', '🗝️', '🚪', '🪑', '🛋️', '🛏️', '🖼️', '🪞', '🪟', '🛍️', '🎁',
+      '🎈', '🎏', '🎀', '🪄', '🪅', '🎊', '🎉', '🎎', '🏮', '🎐', '🧧', '✉️', '📩',
+      '📨', '📧', '💌', '📥', '📤', '📦', '🏷️', '🪧', '📪', '📫', '📬', '📭', '📮',
+      '📯', '📜', '📃', '📄', '📑', '🧾', '📊', '📈', '📉', '🗒️', '🗓️', '📆', '📅',
+      '🗑️', '📇', '🗃️', '🗳️', '🗄️', '📋', '📁', '📂', '🗂️', '🗞️', '📰', '📓', '📔',
+      '📒', '📕', '📗', '📘', '📙', '📚', '📖', '🔖', '🧷', '🔗', '📎', '🖇️', '📐',
+      '📏', '🧮', '📌', '📍', '✂️', '🖊️', '🖋️', '✒️', '🖌️', '🖍️', '📝', '✏️', '🔍',
+      '🔎', '🔏', '🔐', '🔒', '🔓'
+    ],
+    'Symbols': [
+      '❤️', '🧡', '💛', '💚', '💙', '💜', '🖤', '🤍', '🤎', '❣️', '💕', '💞', '💓',
+      '💗', '💖', '💘', '💝', '💟', '☮️', '✝️', '☪️', '🕉️', '☸️', '✡️', '🔯', '🕎',
+      '☯️', '☦️', '🛐', '⛎', '♈', '♉', '♊', '♋', '♌', '♍', '♎', '♏', '♐', '♑',
+      '♒', '♓', '🆔', '⚛️', '🉑', '☢️', '☣️', '📴', '📳', '🈶', '🈚', '🈸', '🈺',
+      '🈷️', '✴️', '🆚', '💮', '🉐', '㊙️', '㊗️', '🈴', '🈵', '🈹', '🈲', '🅰️', '🅱️',
+      '🆎', '🆑', '🅾️', '🆘', '❌', '⭕', '🛑', '⛔', '📛', '🚫', '💯', '💢', '♨️',
+      '🚷', '🚯', '🚳', '🚱', '🔞', '📵', '🚭', '❗', '❕', '❓', '❔', '‼️', '⁉️',
+      '🔅', '🔆', '〽️', '⚠️', '🚸', '🔱', '⚜️', '🔰', '♻️', '✅', '🈯', '💹', '❇️',
+      '✳️', '❎', '🌐', '💠', 'Ⓜ️', '🌀', '💤', '🏧', '🚾', '♿', '🅿️', '🛗', '🈳',
+      '🈂️', '🛂', '🛃', '🛄', '🛅', '🚹', '🚺', '🚼', '⚧️', '🚻', '🚮', '🎦', '📶',
+      '🈁', '🔣', 'ℹ️', '🔤', '🔡', '🔠', '🆖', '🆗', '🆙', '🆒', '🆕', '🆓', '0️⃣',
+      '1️⃣', '2️⃣', '3️⃣', '4️⃣', '5️⃣', '6️⃣', '7️⃣', '8️⃣', '9️⃣', '🔟', '🔢', '#️⃣', '*️⃣',
+      '⏏️', '▶️', '⏸️', '⏯️', '⏹️', '⏺️', '⏭️', '⏮️', '⏩', '⏪', '⏫', '⏬', '◀️', '🔼',
+      '🔽', '➡️', '⬅️', '⬆️', '⬇️', '↗️', '↘️', '↙️', '↖️', '↕️', '↔️', '↪️', '↩️',
+      '⤴️', '⤵️', '🔀', '🔁', '🔂', '🔄', '🔃', '🎵', '🎶', '➕', '➖', '➗', '✖️',
+      '♾️', '💲', '💱', '™️', '©️', '®️', '〰️', '➰', '➿', '🔚', '🔙', '🔛', '🔝',
+      '🔜', '✔️', '☑️', '🔘', '🔴', '🟠', '🟡', '🟢', '🔵', '🟣', '⚫', '⚪', '🟤',
+      '🔺', '🔻', '🔸', '🔹', '🔶', '🔷', '🔳', '🔲', '▪️', '▫️', '◾', '◽', '◼️',
+      '◻️', '🟥', '🟧', '🟨', '🟩', '🟦', '🟪', '⬛', '⬜', '🟫', '🔈', '🔇', '🔉',
+      '🔊', '🔔', '🔕', '📣', '📢', '💬', '💭', '🗯️', '♠️', '♣️', '♥️', '♦️', '🃏',
+      '🎴', '🀄', '🕐', '🕑', '🕒', '🕓', '🕔', '🕕', '🕖', '🕗', '🕘', '🕙', '🕚',
+      '🕛', '🕜', '🕝', '🕞', '🕟', '🕠', '🕡', '🕢', '🕣', '🕤', '🕥', '🕦', '🕧'
+    ],
+    'Flags': [
+      '🏳️', '🏴', '🏁', '🚩', '🏳️‍🌈', '🏳️‍⚧️', '🏴‍☠️', '🇺🇳', '🇦🇫', '🇦🇽', '🇦🇱', '🇩🇿',
+      '🇦🇸', '🇦🇩', '🇦🇴', '🇦🇮', '🇦🇶', '🇦🇬', '🇦🇷', '🇦🇲', '🇦🇼', '🇦🇺', '🇦🇹', '🇦🇿',
+      '🇧🇸', '🇧🇭', '🇧🇩', '🇧🇧', '🇧🇾', '🇧🇪', '🇧🇿', '🇧🇯', '🇧🇲', '🇧🇹', '🇧🇴', '🇧🇦',
+      '🇧🇼', '🇧🇷', '🇮🇴', '🇻🇬', '🇧🇳', '🇧🇬', '🇧🇫', '🇧🇮', '🇰🇭', '🇨🇲', '🇨🇦', '🇮🇨',
+      '🇨🇻', '🇧🇶', '🇰🇾', '🇨🇫', '🇹🇩', '🇨🇱', '🇨🇳', '🇨🇽', '🇨🇨', '🇨🇴', '🇰🇲', '🇨🇬',
+      '🇨🇩', '🇨🇰', '🇨🇷', '🇨🇮', '🇭🇷', '🇨🇺', '🇨🇼', '🇨🇾', '🇨🇿', '🇩🇰', '🇩🇯', '🇩🇲',
+      '🇩🇴', '🇪🇨', '🇪🇬', '🇸🇻', '🇬🇶', '🇪🇷', '🇪🇪', '🇸🇿', '🇪🇹', '🇪🇺', '🇫🇰', '🇫🇴',
+      '🇫🇯', '🇫🇮', '🇫🇷', '🇬🇫', '🇵🇫', '🇹🇫', '🇬🇦', '🇬🇲', '🇬🇪', '🇩🇪', '🇬🇭', '🇬🇮',
+      '🇬🇷', '🇬🇱', '🇬🇩', '🇬🇵', '🇬🇺', '🇬🇹', '🇬🇬', '🇬🇳', '🇬🇼', '🇬🇾', '🇭🇹', '🇭🇳',
+      '🇭🇰', '🇭🇺', '🇮🇸', '🇮🇳', '🇮🇩', '🇮🇷', '🇮🇶', '🇮🇪', '🇮🇲', '🇮🇱', '🇮🇹', '🇯🇲',
+      '🇯🇵', '🇯🇪', '🇯🇴', '🇰🇿', '🇰🇪', '🇰🇮', '🇽🇰', '🇰🇼', '🇰🇬', '🇱🇦', '🇱🇻', '🇱🇧',
+      '🇱🇸', '🇱🇷', '🇱🇾', '🇱🇮', '🇱🇹', '🇱🇺', '🇲🇴', '🇲🇬', '🇲🇼', '🇲🇾', '🇲🇻', '🇲🇱',
+      '🇲🇹', '🇲🇭', '🇲🇶', '🇲🇷', '🇲🇺', '🇾🇹', '🇲🇽', '🇫🇲', '🇲🇩', '🇲🇨', '🇲🇳', '🇲🇪',
+      '🇲🇸', '🇲🇦', '🇲🇿', '🇲🇲', '🇳🇦', '🇳🇷', '🇳🇵', '🇳🇱', '🇳🇨', '🇳🇿', '🇳🇮', '🇳🇪',
+      '🇳🇬', '🇳🇺', '🇳🇫', '🇰🇵', '🇲🇰', '🇲🇵', '🇳🇴', '🇴🇲', '🇵🇰', '🇵🇼', '🇵🇸', '🇵🇦',
+      '🇵🇬', '🇵🇾', '🇵🇪', '🇵🇭', '🇵🇳', '🇵🇱', '🇵🇹', '🇵🇷', '🇶🇦', '🇷🇪', '🇷🇴', '🇷🇺',
+      '🇷🇼', '🇼🇸', '🇸🇲', '🇸🇹', '🇸🇦', '🇸🇳', '🇷🇸', '🇸🇨', '🇸🇱', '🇸🇬', '🇸🇽', '🇸🇰',
+      '🇸🇮', '🇬🇸', '🇸🇧', '🇸🇴', '🇿🇦', '🇰🇷', '🇸🇸', '🇪🇸', '🇱🇰', '🇧🇱', '🇸🇭', '🇰🇳',
+      '🇱🇨', '🇵🇲', '🇻🇨', '🇸🇩', '🇸🇷', '🇸🇪', '🇨🇭', '🇸🇾', '🇹🇼', '🇹🇯', '🇹🇿', '🇹🇭',
+      '🇹🇱', '🇹🇬', '🇹🇰', '🇹🇴', '🇹🇹', '🇹🇳', '🇹🇷', '🇹🇲', '🇹🇨', '🇹🇻', '🇻🇮', '🇺🇬',
+      '🇺🇦', '🇦🇪', '🇬🇧', '🏴󠁧󠁢󠁥󠁮󠁧󠁿', '🏴󠁧󠁢󠁳󠁣󠁴󠁿', '🏴󠁧󠁢󠁷󠁬󠁳󠁿', '🇺🇸', '🇺🇾', '🇺🇿', '🇻🇺',
+      '🇻🇦', '🇻🇪', '🇻🇳', '🇼🇫', '🇪🇭', '🇾🇪', '🇿🇲', '🇿🇼'
+    ]
+  }
+
+  const [emojiPickerSearch, setEmojiPickerSearch] = useState('')
+  const [emojiCategory, setEmojiCategory] = useState<keyof typeof emojiCategories>('Smileys & People')
 
   const filteredConversations = (conversations || [])
     .filter(conv => {
@@ -1231,19 +1366,64 @@ export default function MarketplaceChat({
                                       <Smiley className="w-3 h-3" />
                                     </Button>
                                   </PopoverTrigger>
-                                  <PopoverContent className="w-auto p-2">
-                                    <div className="flex gap-1">
-                                      {commonEmojis.map(emoji => (
-                                        <button
-                                          key={emoji}
-                                          onClick={() => {
-                                            handleReaction(message.id, emoji)
-                                          }}
-                                          className="text-lg hover:scale-125 transition-transform"
-                                        >
-                                          {emoji}
-                                        </button>
-                                      ))}
+                                  <PopoverContent className="w-[380px] p-0" align="start">
+                                    <div className="flex flex-col max-h-[420px]">
+                                      <div className="p-3 border-b border-border space-y-2">
+                                        <Input
+                                          placeholder="Search emojis..."
+                                          value={emojiPickerSearch}
+                                          onChange={(e) => setEmojiPickerSearch(e.target.value)}
+                                          className="h-8 text-sm"
+                                        />
+                                        <div className="flex gap-1 overflow-x-auto pb-1">
+                                          {(Object.keys(emojiCategories) as Array<keyof typeof emojiCategories>).map((cat) => (
+                                            <button
+                                              key={cat}
+                                              onClick={() => {
+                                                setEmojiCategory(cat)
+                                                setEmojiPickerSearch('')
+                                              }}
+                                              className={`px-2 py-1 rounded text-xs whitespace-nowrap transition-colors ${
+                                                emojiCategory === cat
+                                                  ? 'bg-primary text-primary-foreground'
+                                                  : 'bg-muted hover:bg-muted/80'
+                                              }`}
+                                            >
+                                              {cat.split(' ')[0]}
+                                            </button>
+                                          ))}
+                                        </div>
+                                      </div>
+                                      <ScrollArea className="flex-1 p-3">
+                                        <div className="grid grid-cols-8 gap-1">
+                                          {(emojiPickerSearch
+                                            ? Object.values(emojiCategories)
+                                                .flat()
+                                                .filter(emoji => emoji.toLowerCase().includes(emojiPickerSearch.toLowerCase()))
+                                            : emojiCategories[emojiCategory]
+                                          ).map((emoji, idx) => (
+                                            <button
+                                              key={`${emoji}-${idx}`}
+                                              onClick={() => {
+                                                handleReaction(message.id, emoji)
+                                                setEmojiPickerSearch('')
+                                              }}
+                                              className="text-2xl hover:scale-125 transition-transform p-2 hover:bg-muted rounded"
+                                              title={emoji}
+                                            >
+                                              {emoji}
+                                            </button>
+                                          ))}
+                                        </div>
+                                        {emojiPickerSearch && 
+                                          Object.values(emojiCategories).flat().filter(emoji => 
+                                            emoji.toLowerCase().includes(emojiPickerSearch.toLowerCase())
+                                          ).length === 0 && (
+                                          <div className="text-center py-8 text-muted-foreground text-sm">
+                                            No emojis found
+                                          </div>
+                                        )}
+                                      </ScrollArea>
                                     </div>
                                   </PopoverContent>
                                 </Popover>
@@ -1613,13 +1793,88 @@ export default function MarketplaceChat({
                       </>
                     ) : (
                       <>
-                        <Input
-                          placeholder={isRecording ? "Recording voice message..." : "Type your message..."}
-                          value={newMessage}
-                          onChange={(e) => setNewMessage(e.target.value)}
-                          onKeyDown={(e) => e.key === 'Enter' && !e.shiftKey && handleSendMessage()}
-                          disabled={isRecording}
-                        />
+                        <div className="flex-1 relative">
+                          <Input
+                            placeholder={isRecording ? "Recording voice message..." : "Type your message..."}
+                            value={newMessage}
+                            onChange={(e) => setNewMessage(e.target.value)}
+                            onKeyDown={(e) => e.key === 'Enter' && !e.shiftKey && handleSendMessage()}
+                            disabled={isRecording}
+                            className="pr-10"
+                          />
+                          <Popover>
+                            <PopoverTrigger asChild>
+                              <Button
+                                size="sm"
+                                variant="ghost"
+                                className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8 p-0"
+                                disabled={isRecording}
+                              >
+                                <Smiley className="w-4 h-4" />
+                              </Button>
+                            </PopoverTrigger>
+                            <PopoverContent className="w-[380px] p-0" align="end">
+                              <div className="flex flex-col max-h-[420px]">
+                                <div className="p-3 border-b border-border space-y-2">
+                                  <Input
+                                    placeholder="Search emojis..."
+                                    value={emojiPickerSearch}
+                                    onChange={(e) => setEmojiPickerSearch(e.target.value)}
+                                    className="h-8 text-sm"
+                                  />
+                                  <div className="flex gap-1 overflow-x-auto pb-1">
+                                    {(Object.keys(emojiCategories) as Array<keyof typeof emojiCategories>).map((cat) => (
+                                      <button
+                                        key={cat}
+                                        onClick={() => {
+                                          setEmojiCategory(cat)
+                                          setEmojiPickerSearch('')
+                                        }}
+                                        className={`px-2 py-1 rounded text-xs whitespace-nowrap transition-colors ${
+                                          emojiCategory === cat
+                                            ? 'bg-primary text-primary-foreground'
+                                            : 'bg-muted hover:bg-muted/80'
+                                        }`}
+                                      >
+                                        {cat.split(' ')[0]}
+                                      </button>
+                                    ))}
+                                  </div>
+                                </div>
+                                <ScrollArea className="flex-1 p-3">
+                                  <div className="grid grid-cols-8 gap-1">
+                                    {(emojiPickerSearch
+                                      ? Object.values(emojiCategories)
+                                          .flat()
+                                          .filter(emoji => emoji.toLowerCase().includes(emojiPickerSearch.toLowerCase()))
+                                      : emojiCategories[emojiCategory]
+                                    ).map((emoji, idx) => (
+                                      <button
+                                        key={`${emoji}-${idx}`}
+                                        onClick={() => {
+                                          setNewMessage(prev => prev + emoji)
+                                          setEmojiPickerSearch('')
+                                        }}
+                                        className="text-2xl hover:scale-125 transition-transform p-2 hover:bg-muted rounded"
+                                        title={emoji}
+                                      >
+                                        {emoji}
+                                      </button>
+                                    ))}
+                                  </div>
+                                  {emojiPickerSearch && 
+                                    Object.values(emojiCategories).flat().filter(emoji => 
+                                      emoji.toLowerCase().includes(emojiPickerSearch.toLowerCase())
+                                    ).length === 0 && (
+                                    <div className="text-center py-8 text-muted-foreground text-sm">
+                                      No emojis found
+                                    </div>
+                                  )}
+                                </ScrollArea>
+                              </div>
+                            </PopoverContent>
+                          </Popover>
+                        </div>
                         <Button onClick={handleSendMessage} className="gap-2" disabled={isRecording}>
                           <PaperPlaneRight className="w-4 h-4" />
                           Send
@@ -1631,7 +1886,7 @@ export default function MarketplaceChat({
                 {!editingMessage && (
                   <p className="text-xs text-muted-foreground flex items-center gap-1.5 px-1">
                     <Paperclip className="w-3 h-3" />
-                    Drag & drop files • Attach images & documents • Record voice messages
+                    Drag & drop files • Attach images & documents • Record voice • Add emojis
                   </p>
                 )}
               </div>
