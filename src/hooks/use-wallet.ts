@@ -182,9 +182,18 @@ export function useWallet() {
     }
   }
 
-  const transferMNEE = async (toAddress: string, amount: string) => {
+  const transferMNEE = async (
+    toAddress: string,
+    amount: string,
+    onTxSubmit?: (txHash: string) => void
+  ) => {
     if (!walletState.isConnected || !walletState.address) {
       toast.error('Wallet not connected')
+      return null
+    }
+
+    if (!toAddress || toAddress === '0x0000000000000000000000000000000000000000') {
+      toast.error('Invalid recipient address')
       return null
     }
 
@@ -194,20 +203,32 @@ export function useWallet() {
       const mneeContract = new Contract(MNEE_CONTRACT_ADDRESS, MNEE_ABI, signer)
       
       const decimals = await mneeContract.decimals()
+      const balance = await mneeContract.balanceOf(walletState.address)
       const amountWei = parseUnits(amount, decimals)
+
+      if (balance < amountWei) {
+        toast.error('Insufficient MNEE Balance', {
+          description: `You need ${amount} MNEE but only have ${formatUnits(balance, decimals)}`,
+        })
+        return null
+      }
 
       const tx = await mneeContract.transfer(toAddress, amountWei)
       
+      if (onTxSubmit) {
+        onTxSubmit(tx.hash)
+      }
+
       toast.info('Transaction Submitted', {
-        description: 'Waiting for confirmation...',
+        description: 'Waiting for blockchain confirmation...',
       })
 
       const receipt = await tx.wait()
       
       await updateBalances(walletState.address, provider)
 
-      toast.success('Transaction Confirmed', {
-        description: `Transferred ${amount} MNEE`,
+      toast.success('Payment Confirmed', {
+        description: `Successfully transferred ${amount} MNEE`,
       })
 
       return receipt.hash
@@ -217,8 +238,12 @@ export function useWallet() {
       
       let errorMessage = 'Transaction failed'
       
-      if (web3Error.code === 4001) {
+      if (web3Error.code === 4001 || web3Error.code === 'ACTION_REJECTED') {
         errorMessage = 'Transaction rejected by user'
+      } else if (web3Error.message?.includes('insufficient funds')) {
+        errorMessage = 'Insufficient ETH for gas fees'
+      } else if (web3Error.message?.includes('gas required exceeds')) {
+        errorMessage = 'Transaction would fail - insufficient funds or invalid recipient'
       } else if (web3Error.message) {
         errorMessage = web3Error.message
       }
@@ -227,6 +252,22 @@ export function useWallet() {
         description: errorMessage,
       })
 
+      return null
+    }
+  }
+
+  const checkMNEEBalance = async (address: string): Promise<string | null> => {
+    try {
+      if (!window.ethereum) return null
+      
+      const provider = new BrowserProvider(window.ethereum as never)
+      const mneeContract = new Contract(MNEE_CONTRACT_ADDRESS, MNEE_ABI, provider)
+      const balance = await mneeContract.balanceOf(address)
+      const decimals = await mneeContract.decimals()
+      
+      return formatUnits(balance, decimals)
+    } catch (error) {
+      console.error('Error checking MNEE balance:', error)
       return null
     }
   }
@@ -270,6 +311,7 @@ export function useWallet() {
     disconnectWallet,
     switchToEthereumMainnet,
     transferMNEE,
+    checkMNEEBalance,
     refreshBalances,
   }
 }

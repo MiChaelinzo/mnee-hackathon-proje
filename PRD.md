@@ -27,11 +27,11 @@ A decentralized marketplace where AI agents can autonomously discover, purchase,
 - **Success criteria**: Real-time balance updates, transaction history syncs with blockchain, spending limits enforce correctly
 
 ### Autonomous Purchase Flow
-- **Functionality**: AI agents can autonomously purchase services using MNEE when they need them
-- **Purpose**: Demonstrate programmable money enabling agent autonomy
+- **Functionality**: AI agents can autonomously purchase services using MNEE with real on-chain transactions
+- **Purpose**: Demonstrate programmable money enabling agent autonomy with actual blockchain settlement
 - **Trigger**: Agent identifies a need (simulated) or user initiates test purchase
-- **Progression**: Agent evaluates need → Queries available services → Checks MNEE balance → Executes on-chain payment → Receives service access token
-- **Success criteria**: Transaction completes on-chain, MNEE transfers from agent to service provider, access is granted
+- **Progression**: Agent evaluates need → Queries available services → Checks MNEE balance → User approves MetaMask transaction → MNEE transfers on-chain from user to service provider → Transaction confirmed on Ethereum → Service access granted
+- **Success criteria**: Transaction completes on Ethereum mainnet, MNEE transfers from user wallet to service provider address, transaction hash is recorded and viewable on Etherscan, balances update in real-time
 
 ### Service Provider Portal
 - **Functionality**: Users can list their own AI services for sale, set pricing in MNEE, and track earnings
@@ -104,11 +104,18 @@ A decentralized marketplace where AI agents can autonomously discover, purchase,
 - **Success criteria**: Stats update in real-time, trend indicators show directional changes accurately, analytics are contextual to current view, performance metrics are meaningful and actionable
 
 ### Wallet Connection Enhancement
-- **Functionality**: Real MetaMask wallet integration with actual blockchain connectivity, balance fetching, and network verification
-- **Purpose**: Enable genuine Web3 transactions using the MNEE stablecoin contract on Ethereum Mainnet
+- **Functionality**: Real MetaMask wallet integration with actual blockchain connectivity, balance fetching, network verification, and MNEE token transfer capability
+- **Purpose**: Enable genuine Web3 transactions using the MNEE stablecoin contract (0x8ccedbAe4916b79da7F3F612EfB2EB93A2bFD6cF) on Ethereum Mainnet
 - **Trigger**: App load without wallet connection or clicking wallet button
-- **Progression**: Detect MetaMask → Click connect → User approves in MetaMask → Fetch balances → Verify network → Display connection status
-- **Success criteria**: Real wallet addresses displayed, actual MNEE and ETH balances shown, network switching functionality works, proper error handling for rejected connections
+- **Progression**: Detect MetaMask → Click connect → User approves in MetaMask → Fetch real MNEE and ETH balances from blockchain → Verify network → Display connection status → Enable purchase transactions
+- **Success criteria**: Real wallet addresses displayed, actual MNEE and ETH balances shown from blockchain queries, network switching functionality works, proper error handling for rejected connections, real ERC-20 token transfers execute successfully with gas estimation and confirmation
+
+### Real MNEE Token Transfers
+- **Functionality**: Actual ERC-20 token transfers using the MNEE contract on Ethereum Mainnet with MetaMask transaction signing
+- **Purpose**: Enable real programmable money transactions instead of simulated payments, demonstrating true blockchain-based commerce
+- **Trigger**: User initiates any purchase (service, bundle, or subscription) while wallet is connected
+- **Progression**: Select service/bundle → Choose agent → Click purchase → MetaMask popup appears → User reviews transaction details and gas → User confirms → Transaction submitted to Ethereum → Wait for blockchain confirmation → Balance updates → Transaction recorded with real tx hash
+- **Success criteria**: MNEE tokens transfer on-chain from user wallet to provider address, transaction appears on Etherscan with valid hash, gas fees are paid from user's ETH balance, proper error handling for insufficient balance or rejected transactions, real-time balance updates after confirmation, transaction status tracking (pending/completed/failed)
 
 ### Service Performance Metrics
 - **Functionality**: Real-time tracking of service sales, revenue, category distribution, and growth trends

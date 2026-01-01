@@ -578,6 +578,8 @@ function App() {
                 transactions={transactions || []}
                 onPurchase={handlePurchase}
                 walletConnected={wallet.isConnected}
+                onTransferMNEE={wallet.transferMNEE}
+                userAddress={wallet.address}
               />
             </TabsContent>
 
@@ -591,6 +593,8 @@ function App() {
                 onPurchase={handlePurchase}
                 onCreateBundle={handleCreateBundle}
                 walletConnected={wallet.isConnected}
+                onTransferMNEE={wallet.transferMNEE}
+                userAddress={wallet.address}
               />
             </TabsContent>
 

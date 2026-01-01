@@ -21,6 +21,8 @@ interface BundlesViewProps {
   onPurchase: (transaction: Transaction) => void
   onCreateBundle: (bundle: ServiceBundle) => void
   walletConnected: boolean
+  onTransferMNEE?: (toAddress: string, amount: string, onTxSubmit?: (txHash: string) => void) => Promise<string | null>
+  userAddress?: string | null
 }
 
 export default function BundlesView({
@@ -32,9 +34,12 @@ export default function BundlesView({
   onPurchase,
   onCreateBundle,
   walletConnected,
+  onTransferMNEE,
+  userAddress,
 }: BundlesViewProps) {
   const [selectedAgent, setSelectedAgent] = useState<string>(agents[0]?.id || '')
   const [isBuilderOpen, setIsBuilderOpen] = useState(false)
+  const [isPurchasing, setIsPurchasing] = useState(false)
 
   const calculateTotalSavings = () => {
     const bundleSavings = bundles.reduce((acc, bundle) => {
@@ -53,7 +58,7 @@ export default function BundlesView({
     return Math.max(bundleMax, subMax)
   }
 
-  const handleBundlePurchase = (bundle: ServiceBundle) => {
+  const handleBundlePurchase = async (bundle: ServiceBundle) => {
     if (!walletConnected) {
       toast.error('Please connect your wallet first')
       return
@@ -77,6 +82,8 @@ export default function BundlesView({
       return
     }
 
+    setIsPurchasing(true)
+
     const transaction: Transaction = {
       id: crypto.randomUUID(),
       agentId: agent.id,
@@ -85,17 +92,53 @@ export default function BundlesView({
       serviceName: bundle.name,
       amount: bundle.bundlePrice,
       timestamp: Date.now(),
-      status: 'completed',
-      txHash: `0x${Math.random().toString(16).slice(2, 66)}`,
+      status: 'pending',
       type: 'bundle',
       bundleId: bundle.id,
     }
 
-    onPurchase(transaction)
-    toast.success(`Bundle purchased! Saved ${bundle.discount}%`)
+    if (onTransferMNEE && userAddress) {
+      try {
+        const txHash = await onTransferMNEE(
+          bundle.providerAddress,
+          bundle.bundlePrice.toString(),
+          (submittedTxHash) => {
+            transaction.txHash = submittedTxHash
+            transaction.status = 'pending'
+          }
+        )
+
+        if (txHash) {
+          transaction.txHash = txHash
+          transaction.status = 'completed'
+          
+          onPurchase(transaction)
+          
+          toast.success(`Bundle purchased! Saved ${bundle.discount}%`, {
+            action: {
+              label: 'View on Etherscan',
+              onClick: () => window.open(`https://etherscan.io/tx/${txHash}`, '_blank'),
+            },
+          })
+        } else {
+          transaction.status = 'failed'
+        }
+      } catch (error) {
+        transaction.status = 'failed'
+        console.error('Bundle purchase error:', error)
+      }
+    } else {
+      transaction.txHash = `0x${Math.random().toString(16).slice(2, 66)}`
+      transaction.status = 'completed'
+      
+      onPurchase(transaction)
+      toast.success(`Bundle purchased! Saved ${bundle.discount}%`)
+    }
+
+    setIsPurchasing(false)
   }
 
-  const handleSubscriptionPurchase = (subscription: Subscription) => {
+  const handleSubscriptionPurchase = async (subscription: Subscription) => {
     if (!walletConnected) {
       toast.error('Please connect your wallet first')
       return
@@ -119,6 +162,8 @@ export default function BundlesView({
       return
     }
 
+    setIsPurchasing(true)
+
     const transaction: Transaction = {
       id: crypto.randomUUID(),
       agentId: agent.id,
@@ -127,14 +172,50 @@ export default function BundlesView({
       serviceName: subscription.name,
       amount: subscription.totalPrice,
       timestamp: Date.now(),
-      status: 'completed',
-      txHash: `0x${Math.random().toString(16).slice(2, 66)}`,
+      status: 'pending',
       type: 'subscription',
       subscriptionId: subscription.id,
     }
 
-    onPurchase(transaction)
-    toast.success(`Subscription activated! Saved ${subscription.discount}%`)
+    if (onTransferMNEE && userAddress) {
+      try {
+        const txHash = await onTransferMNEE(
+          subscription.providerAddress,
+          subscription.totalPrice.toString(),
+          (submittedTxHash) => {
+            transaction.txHash = submittedTxHash
+            transaction.status = 'pending'
+          }
+        )
+
+        if (txHash) {
+          transaction.txHash = txHash
+          transaction.status = 'completed'
+          
+          onPurchase(transaction)
+          
+          toast.success(`Subscription activated! Saved ${subscription.discount}%`, {
+            action: {
+              label: 'View on Etherscan',
+              onClick: () => window.open(`https://etherscan.io/tx/${txHash}`, '_blank'),
+            },
+          })
+        } else {
+          transaction.status = 'failed'
+        }
+      } catch (error) {
+        transaction.status = 'failed'
+        console.error('Subscription purchase error:', error)
+      }
+    } else {
+      transaction.txHash = `0x${Math.random().toString(16).slice(2, 66)}`
+      transaction.status = 'completed'
+      
+      onPurchase(transaction)
+      toast.success(`Subscription activated! Saved ${subscription.discount}%`)
+    }
+
+    setIsPurchasing(false)
   }
 
   const getServiceName = (serviceId: string) => {
@@ -341,10 +422,16 @@ export default function BundlesView({
                       <Button
                         className="w-full gap-2 bg-primary hover:brightness-110"
                         onClick={() => handleBundlePurchase(bundle)}
-                        disabled={!walletConnected || agents.length === 0}
+                        disabled={!walletConnected || agents.length === 0 || isPurchasing}
                       >
-                        <Lightning className="w-4 h-4" />
-                        Purchase Bundle
+                        {isPurchasing ? (
+                          <>Processing...</>
+                        ) : (
+                          <>
+                            <Lightning className="w-4 h-4" />
+                            Purchase Bundle
+                          </>
+                        )}
                       </Button>
                     </CardFooter>
                   </Card>
@@ -420,10 +507,16 @@ export default function BundlesView({
                       <Button
                         className="w-full gap-2 bg-primary hover:brightness-110"
                         onClick={() => handleSubscriptionPurchase(subscription)}
-                        disabled={!walletConnected || agents.length === 0}
+                        disabled={!walletConnected || agents.length === 0 || isPurchasing}
                       >
-                        <Lightning className="w-4 h-4" />
-                        Subscribe Now
+                        {isPurchasing ? (
+                          <>Processing...</>
+                        ) : (
+                          <>
+                            <Lightning className="w-4 h-4" />
+                            Subscribe Now
+                          </>
+                        )}
                       </Button>
                     </CardFooter>
                   </Card>

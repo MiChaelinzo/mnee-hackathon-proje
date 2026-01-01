@@ -18,13 +18,24 @@ interface MarketplaceProps {
   transactions: Transaction[]
   onPurchase: (transaction: Transaction) => void
   walletConnected: boolean
+  onTransferMNEE?: (toAddress: string, amount: string, onTxSubmit?: (txHash: string) => void) => Promise<string | null>
+  userAddress?: string | null
 }
 
-export default function Marketplace({ services, agents, transactions, onPurchase, walletConnected }: MarketplaceProps) {
+export default function Marketplace({ 
+  services, 
+  agents, 
+  transactions, 
+  onPurchase, 
+  walletConnected,
+  onTransferMNEE,
+  userAddress,
+}: MarketplaceProps) {
   const [searchQuery, setSearchQuery] = useState('')
   const [categoryFilter, setCategoryFilter] = useState<string>('all')
   const [selectedService, setSelectedService] = useState<Service | null>(null)
   const [selectedAgent, setSelectedAgent] = useState<string>('')
+  const [isPurchasing, setIsPurchasing] = useState(false)
 
   const filteredServices = services.filter((service) => {
     const matchesSearch = service.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -33,7 +44,7 @@ export default function Marketplace({ services, agents, transactions, onPurchase
     return matchesSearch && matchesCategory && service.available
   })
 
-  const handlePurchase = () => {
+  const handlePurchase = async () => {
     if (!selectedService || !selectedAgent) return
 
     const agent = agents.find((a) => a.id === selectedAgent)
@@ -53,6 +64,8 @@ export default function Marketplace({ services, agents, transactions, onPurchase
       return
     }
 
+    setIsPurchasing(true)
+
     const transaction: Transaction = {
       id: crypto.randomUUID(),
       agentId: agent.id,
@@ -61,17 +74,60 @@ export default function Marketplace({ services, agents, transactions, onPurchase
       serviceName: selectedService.name,
       amount: selectedService.price,
       timestamp: Date.now(),
-      status: 'completed',
-      txHash: generateTxHash(),
+      status: 'pending',
+      type: 'service',
     }
 
-    onPurchase(transaction)
-    setSelectedService(null)
-    setSelectedAgent('')
+    if (onTransferMNEE && userAddress) {
+      try {
+        const txHash = await onTransferMNEE(
+          selectedService.providerAddress,
+          selectedService.price.toString(),
+          (submittedTxHash) => {
+            transaction.txHash = submittedTxHash
+            transaction.status = 'pending'
+          }
+        )
 
-    toast.success('Purchase successful!', {
-      description: `${agent.name} purchased ${selectedService.name} for ${formatMNEE(selectedService.price)}`,
-    })
+        if (txHash) {
+          transaction.txHash = txHash
+          transaction.status = 'completed'
+          
+          onPurchase(transaction)
+          setSelectedService(null)
+          setSelectedAgent('')
+
+          toast.success('Purchase successful!', {
+            description: `${agent.name} purchased ${selectedService.name} for ${formatMNEE(selectedService.price)}`,
+            action: {
+              label: 'View on Etherscan',
+              onClick: () => window.open(`https://etherscan.io/tx/${txHash}`, '_blank'),
+            },
+          })
+        } else {
+          transaction.status = 'failed'
+          toast.error('Purchase failed', {
+            description: 'The blockchain transaction was not completed',
+          })
+        }
+      } catch (error) {
+        transaction.status = 'failed'
+        console.error('Purchase error:', error)
+      }
+    } else {
+      transaction.txHash = generateTxHash()
+      transaction.status = 'completed'
+      
+      onPurchase(transaction)
+      setSelectedService(null)
+      setSelectedAgent('')
+
+      toast.success('Purchase successful!', {
+        description: `${agent.name} purchased ${selectedService.name} for ${formatMNEE(selectedService.price)}`,
+      })
+    }
+
+    setIsPurchasing(false)
   }
 
   if (!walletConnected) {
@@ -246,16 +302,26 @@ export default function Marketplace({ services, agents, transactions, onPurchase
           </div>
 
           <DialogFooter>
-            <Button variant="outline" onClick={() => setSelectedService(null)}>
+            <Button 
+              variant="outline" 
+              onClick={() => setSelectedService(null)}
+              disabled={isPurchasing}
+            >
               Cancel
             </Button>
             <Button
               onClick={handlePurchase}
-              disabled={!selectedAgent}
+              disabled={!selectedAgent || isPurchasing}
               className="gap-2 bg-accent text-accent-foreground hover:brightness-110"
             >
-              <Lightning className="w-4 h-4" />
-              Purchase with MNEE
+              {isPurchasing ? (
+                <>Processing...</>
+              ) : (
+                <>
+                  <Lightning className="w-4 h-4" />
+                  Purchase with MNEE
+                </>
+              )}
             </Button>
           </DialogFooter>
         </DialogContent>
