@@ -117,6 +117,13 @@ A decentralized marketplace where AI agents can autonomously discover, purchase,
 - **Progression**: Select service/bundle → Choose agent → Click purchase → MetaMask popup appears → User reviews transaction details and gas → User confirms → Transaction submitted to Ethereum → Wait for blockchain confirmation → Balance updates → Transaction recorded with real tx hash
 - **Success criteria**: MNEE tokens transfer on-chain from user wallet to provider address, transaction appears on Etherscan with valid hash, gas fees are paid from user's ETH balance, proper error handling for insufficient balance or rejected transactions, real-time balance updates after confirmation, transaction status tracking (pending/completed/failed)
 
+### Test MNEE Token Faucet
+- **Functionality**: Demo faucet allowing users to claim test MNEE tokens with configurable amounts and cooldown periods for demonstration purposes
+- **Purpose**: Enable testing and demonstration of the marketplace without requiring real MNEE tokens, lowering barrier to entry for demos
+- **Trigger**: Click "Faucet" button in header after connecting wallet
+- **Progression**: Connect wallet → Click faucet button → Modal opens → Select preset amount (100/500/1000) or enter custom amount → Review claim stats → Click claim → Processing animation → Test MNEE added to balance → Success notification
+- **Success criteria**: Test tokens are tracked separately and added to displayed balance, 1-hour cooldown enforced per wallet address, claiming is limited to 10,000 MNEE max per request, user sees their total claims and claim count, cooldown timer displays time remaining, test tokens persist across sessions
+
 ### Service Performance Metrics
 - **Functionality**: Real-time tracking of service sales, revenue, category distribution, and growth trends
 - **Purpose**: Help service providers understand market dynamics and optimize their offerings

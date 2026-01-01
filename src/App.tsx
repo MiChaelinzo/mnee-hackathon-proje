@@ -11,6 +11,7 @@ import AgentDashboard from './components/AgentDashboard'
 import TransactionExplorer from './components/TransactionExplorer'
 import AddServiceDialog from './components/AddServiceDialog'
 import BundlesView from './components/BundlesView'
+import FaucetDialog from './components/FaucetDialog'
 import type { Service, Agent, Transaction, ServiceBundle, Subscription } from './lib/types'
 
 function App() {
@@ -20,8 +21,10 @@ function App() {
   const [transactions, setTransactions] = useKV<Transaction[]>('transactions', [])
   const [bundles, setBundles] = useKV<ServiceBundle[]>('bundles', [])
   const [subscriptions, setSubscriptions] = useKV<Subscription[]>('subscriptions', [])
+  const [testMneeBalance, setTestMneeBalance] = useKV<number>('test-mnee-balance', 0)
   const [activeTab, setActiveTab] = useState('marketplace')
   const [isAddServiceOpen, setIsAddServiceOpen] = useState(false)
+  const [isFaucetOpen, setIsFaucetOpen] = useState(false)
 
   useEffect(() => {
     if (services && services.length === 0) {
@@ -506,6 +509,14 @@ function App() {
     setBundles((current = []) => [...current, bundle])
   }
 
+  const handleFaucetClaim = (amount: number) => {
+    setTestMneeBalance((current = 0) => current + amount)
+  }
+
+  const displayMneeBalance = wallet.isConnected 
+    ? (parseFloat(wallet.mneeBalance) + (testMneeBalance || 0)).toFixed(2)
+    : '0.00'
+
   return (
     <div className="min-h-screen bg-background text-foreground grid-pattern">
       <Toaster />
@@ -515,11 +526,12 @@ function App() {
         chainId={wallet.chainId}
         isConnected={wallet.isConnected}
         isConnecting={wallet.isConnecting}
-        mneeBalance={wallet.mneeBalance}
+        mneeBalance={displayMneeBalance}
         ethBalance={wallet.ethBalance}
         onConnect={wallet.connectWallet}
         onDisconnect={wallet.disconnectWallet}
         onSwitchNetwork={wallet.switchToEthereumMainnet}
+        onOpenFaucet={() => setIsFaucetOpen(true)}
       />
 
       <main className="container mx-auto px-4 md:px-8 py-8">
@@ -618,6 +630,13 @@ function App() {
         open={isAddServiceOpen}
         onOpenChange={setIsAddServiceOpen}
         onAddService={handleAddService}
+      />
+
+      <FaucetDialog
+        open={isFaucetOpen}
+        onOpenChange={setIsFaucetOpen}
+        userAddress={wallet.address}
+        onFaucetClaim={handleFaucetClaim}
       />
     </div>
   )

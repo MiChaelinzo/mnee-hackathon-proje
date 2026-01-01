@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button'
-import { Wallet, Warning } from '@phosphor-icons/react'
+import { Wallet, Warning, Drop } from '@phosphor-icons/react'
 import { MNEE_CONTRACT_ADDRESS, formatAddress } from '@/lib/mnee'
 import { Badge } from '@/components/ui/badge'
 
@@ -13,6 +13,7 @@ interface HeaderProps {
   onConnect: () => void
   onDisconnect: () => void
   onSwitchNetwork: () => void
+  onOpenFaucet: () => void
 }
 
 export default function Header({ 
@@ -24,7 +25,8 @@ export default function Header({
   ethBalance,
   onConnect, 
   onDisconnect,
-  onSwitchNetwork
+  onSwitchNetwork,
+  onOpenFaucet
 }: HeaderProps) {
   const isWrongNetwork = isConnected && chainId !== 1
 
@@ -45,10 +47,22 @@ export default function Header({
 
         <div className="flex items-center gap-3">
           {isConnected && (
-            <div className="hidden md:flex flex-col items-end gap-0.5">
-              <div className="text-xs text-muted-foreground">MNEE Balance</div>
-              <div className="text-sm font-mono font-semibold text-accent">{mneeBalance} MNEE</div>
-            </div>
+            <>
+              <div className="hidden md:flex flex-col items-end gap-0.5">
+                <div className="text-xs text-muted-foreground">MNEE Balance</div>
+                <div className="text-sm font-mono font-semibold text-accent">{mneeBalance} MNEE</div>
+              </div>
+              
+              <Button
+                onClick={onOpenFaucet}
+                variant="outline"
+                size="sm"
+                className="gap-2 border-accent/30 hover:bg-accent/10 hover:border-accent/50"
+              >
+                <Drop className="w-4 h-4 text-accent" weight="fill" />
+                <span className="hidden sm:inline">Faucet</span>
+              </Button>
+            </>
           )}
           
           <Button
