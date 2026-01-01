@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -7,22 +6,31 @@ import { motion } from 'framer-motion'
 import { MNEE_CONTRACT_ADDRESS, formatAddress } from '@/lib/mnee'
 
 interface WalletInfoCardProps {
-  walletConnected: boolean
-  onWalletToggle: () => void
+  address: string | null
+  chainId: number | null
+  isConnected: boolean
+  isConnecting: boolean
+  mneeBalance: string
+  ethBalance: string
+  onConnect: () => void
+  onDisconnect: () => void
+  onSwitchNetwork: () => void
 }
 
-export default function WalletInfoCard({ walletConnected, onWalletToggle }: WalletInfoCardProps) {
-  const [isConnecting, setIsConnecting] = useState(false)
+export default function WalletInfoCard({ 
+  address,
+  chainId,
+  isConnected, 
+  isConnecting,
+  mneeBalance,
+  ethBalance,
+  onConnect, 
+  onDisconnect,
+  onSwitchNetwork
+}: WalletInfoCardProps) {
+  const isWrongNetwork = isConnected && chainId !== 1
 
-  const handleConnect = async () => {
-    setIsConnecting(true)
-    setTimeout(() => {
-      onWalletToggle()
-      setIsConnecting(false)
-    }, 800)
-  }
-
-  if (!walletConnected) {
+  if (!isConnected) {
     return (
       <motion.div
         initial={{ opacity: 0, y: 20 }}
@@ -45,7 +53,7 @@ export default function WalletInfoCard({ walletConnected, onWalletToggle }: Wall
             <div className="flex items-start gap-2 p-3 bg-muted/50 rounded-lg">
               <Info className="w-5 h-5 text-primary mt-0.5 shrink-0" />
               <p className="text-sm text-muted-foreground">
-                Connect your Ethereum wallet to access the marketplace and enable autonomous AI agent purchases using MNEE stablecoin.
+                Connect your MetaMask wallet to access the marketplace and enable autonomous AI agent purchases using MNEE stablecoin on Ethereum Mainnet.
               </p>
             </div>
             
@@ -62,15 +70,40 @@ export default function WalletInfoCard({ walletConnected, onWalletToggle }: Wall
                 <CheckCircle className="w-4 h-4 text-accent" weight="fill" />
                 <span>Full transaction transparency</span>
               </div>
+              <div className="flex items-center gap-2">
+                <CheckCircle className="w-4 h-4 text-accent" weight="fill" />
+                <span>Real-time balance updates</span>
+              </div>
             </div>
 
+            {!window.ethereum && (
+              <div className="flex items-start gap-2 p-3 bg-destructive/10 rounded-lg border border-destructive/30">
+                <Warning className="w-5 h-5 text-destructive mt-0.5 shrink-0" />
+                <div className="text-sm">
+                  <p className="font-medium text-destructive mb-1">MetaMask Not Detected</p>
+                  <p className="text-muted-foreground">
+                    Please install{' '}
+                    <a 
+                      href="https://metamask.io/download/" 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="text-primary hover:underline"
+                    >
+                      MetaMask browser extension
+                    </a>
+                    {' '}to continue.
+                  </p>
+                </div>
+              </div>
+            )}
+
             <Button
-              onClick={handleConnect}
-              disabled={isConnecting}
+              onClick={onConnect}
+              disabled={isConnecting || !window.ethereum}
               className="w-full gap-2 bg-primary hover:brightness-110 text-lg py-6"
             >
               <Wallet className="w-5 h-5" />
-              {isConnecting ? 'Connecting...' : 'Connect Wallet'}
+              {isConnecting ? 'Connecting...' : 'Connect MetaMask'}
             </Button>
           </CardContent>
         </Card>
@@ -84,25 +117,34 @@ export default function WalletInfoCard({ walletConnected, onWalletToggle }: Wall
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
     >
-      <Card className="border-accent/30 bg-gradient-to-br from-accent/5 to-transparent">
+      <Card className={`${isWrongNetwork ? 'border-destructive/30 bg-gradient-to-br from-destructive/5 to-transparent' : 'border-accent/30 bg-gradient-to-br from-accent/5 to-transparent'}`}>
         <CardHeader>
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-accent/10 flex items-center justify-center">
-                <Wallet className="w-5 h-5 text-accent" weight="fill" />
+              <div className={`w-10 h-10 rounded-xl ${isWrongNetwork ? 'bg-destructive/10' : 'bg-accent/10'} flex items-center justify-center`}>
+                <Wallet className={`w-5 h-5 ${isWrongNetwork ? 'text-destructive' : 'text-accent'}`} weight="fill" />
               </div>
               <div>
                 <CardTitle className="text-lg">Wallet Connected</CardTitle>
                 <CardDescription className="flex items-center gap-2 mt-1">
-                  <Badge variant="outline" className="bg-accent/10 text-accent border-accent/30">
-                    <CheckCircle className="w-3 h-3 mr-1" weight="fill" />
-                    Active
+                  <Badge variant="outline" className={`${isWrongNetwork ? 'bg-destructive/10 text-destructive border-destructive/30' : 'bg-accent/10 text-accent border-accent/30'}`}>
+                    {isWrongNetwork ? (
+                      <>
+                        <Warning className="w-3 h-3 mr-1" weight="fill" />
+                        Wrong Network
+                      </>
+                    ) : (
+                      <>
+                        <CheckCircle className="w-3 h-3 mr-1" weight="fill" />
+                        Active
+                      </>
+                    )}
                   </Badge>
                 </CardDescription>
               </div>
             </div>
             <Button
-              onClick={onWalletToggle}
+              onClick={onDisconnect}
               variant="outline"
               size="sm"
               className="gap-2"
@@ -112,18 +154,58 @@ export default function WalletInfoCard({ walletConnected, onWalletToggle }: Wall
           </div>
         </CardHeader>
         <CardContent className="space-y-3">
+          {isWrongNetwork && (
+            <div className="flex items-start gap-2 p-3 bg-destructive/10 rounded-lg border border-destructive/30">
+              <Warning className="w-5 h-5 text-destructive mt-0.5 shrink-0" />
+              <div className="flex-1">
+                <p className="text-sm text-destructive font-medium mb-2">
+                  Please switch to Ethereum Mainnet
+                </p>
+                <Button
+                  onClick={onSwitchNetwork}
+                  size="sm"
+                  variant="destructive"
+                  className="gap-2"
+                >
+                  Switch Network
+                </Button>
+              </div>
+            </div>
+          )}
+
+          <div className="flex items-center justify-between p-3 bg-muted/30 rounded-lg">
+            <span className="text-sm text-muted-foreground">Connected Address</span>
+            <code className="text-xs font-mono bg-background px-2 py-1 rounded">
+              {address ? formatAddress(address) : ''}
+            </code>
+          </div>
+
+          <div className="grid grid-cols-2 gap-3">
+            <div className="p-3 bg-muted/30 rounded-lg">
+              <div className="text-xs text-muted-foreground mb-1">MNEE Balance</div>
+              <div className="text-lg font-mono font-bold text-accent">{mneeBalance}</div>
+            </div>
+            <div className="p-3 bg-muted/30 rounded-lg">
+              <div className="text-xs text-muted-foreground mb-1">ETH Balance</div>
+              <div className="text-lg font-mono font-bold">{ethBalance}</div>
+            </div>
+          </div>
+
           <div className="flex items-center justify-between p-3 bg-muted/30 rounded-lg">
             <span className="text-sm text-muted-foreground">MNEE Contract</span>
             <code className="text-xs font-mono bg-background px-2 py-1 rounded">
               {formatAddress(MNEE_CONTRACT_ADDRESS)}
             </code>
           </div>
-          <div className="flex items-center gap-2 p-3 bg-accent/10 rounded-lg border border-accent/20">
-            <CheckCircle className="w-5 h-5 text-accent shrink-0" weight="fill" />
-            <p className="text-sm text-accent-foreground">
-              Your agents can now make autonomous purchases
-            </p>
-          </div>
+
+          {!isWrongNetwork && (
+            <div className="flex items-center gap-2 p-3 bg-accent/10 rounded-lg border border-accent/20">
+              <CheckCircle className="w-5 h-5 text-accent shrink-0" weight="fill" />
+              <p className="text-sm text-accent-foreground">
+                Your agents can now make autonomous purchases
+              </p>
+            </div>
+          )}
         </CardContent>
       </Card>
     </motion.div>

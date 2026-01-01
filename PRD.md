@@ -104,11 +104,11 @@ A decentralized marketplace where AI agents can autonomously discover, purchase,
 - **Success criteria**: Stats update in real-time, trend indicators show directional changes accurately, analytics are contextual to current view, performance metrics are meaningful and actionable
 
 ### Wallet Connection Enhancement
-- **Functionality**: Improved wallet connection flow with detailed information about MNEE contract, connection status, and security features
-- **Purpose**: Create trust and transparency around blockchain integration while simplifying the connection experience
+- **Functionality**: Real MetaMask wallet integration with actual blockchain connectivity, balance fetching, and network verification
+- **Purpose**: Enable genuine Web3 transactions using the MNEE stablecoin contract on Ethereum Mainnet
 - **Trigger**: App load without wallet connection or clicking wallet button
-- **Progression**: See connection card → Review security features → Click connect → Wallet connects → See confirmation
-- **Success criteria**: Clear explanation of MNEE contract, prominent security messaging, smooth connection flow, visual confirmation of connection status
+- **Progression**: Detect MetaMask → Click connect → User approves in MetaMask → Fetch balances → Verify network → Display connection status
+- **Success criteria**: Real wallet addresses displayed, actual MNEE and ETH balances shown, network switching functionality works, proper error handling for rejected connections
 
 ### Service Performance Metrics
 - **Functionality**: Real-time tracking of service sales, revenue, category distribution, and growth trends

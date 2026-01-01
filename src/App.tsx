@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useKV } from '@github/spark/hooks'
+import { useWallet } from './hooks/use-wallet'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Storefront, Robot, ListChecks, Plus, Package } from '@phosphor-icons/react'
 import { motion } from 'framer-motion'
@@ -13,6 +14,7 @@ import BundlesView from './components/BundlesView'
 import type { Service, Agent, Transaction, ServiceBundle, Subscription } from './lib/types'
 
 function App() {
+  const wallet = useWallet()
   const [services, setServices] = useKV<Service[]>('services', [])
   const [agents, setAgents] = useKV<Agent[]>('agents', [])
   const [transactions, setTransactions] = useKV<Transaction[]>('transactions', [])
@@ -20,7 +22,6 @@ function App() {
   const [subscriptions, setSubscriptions] = useKV<Subscription[]>('subscriptions', [])
   const [activeTab, setActiveTab] = useState('marketplace')
   const [isAddServiceOpen, setIsAddServiceOpen] = useState(false)
-  const [walletConnected, setWalletConnected] = useState(false)
 
   useEffect(() => {
     if (services && services.length === 0) {
@@ -510,8 +511,15 @@ function App() {
       <Toaster />
       
       <Header 
-        walletConnected={walletConnected}
-        onWalletToggle={() => setWalletConnected(!walletConnected)}
+        address={wallet.address}
+        chainId={wallet.chainId}
+        isConnected={wallet.isConnected}
+        isConnecting={wallet.isConnecting}
+        mneeBalance={wallet.mneeBalance}
+        ethBalance={wallet.ethBalance}
+        onConnect={wallet.connectWallet}
+        onDisconnect={wallet.disconnectWallet}
+        onSwitchNetwork={wallet.switchToEthereumMainnet}
       />
 
       <main className="container mx-auto px-4 md:px-8 py-8">
@@ -569,7 +577,7 @@ function App() {
                 agents={agents || []}
                 transactions={transactions || []}
                 onPurchase={handlePurchase}
-                walletConnected={walletConnected}
+                walletConnected={wallet.isConnected}
               />
             </TabsContent>
 
@@ -582,7 +590,7 @@ function App() {
                 transactions={transactions || []}
                 onPurchase={handlePurchase}
                 onCreateBundle={handleCreateBundle}
-                walletConnected={walletConnected}
+                walletConnected={wallet.isConnected}
               />
             </TabsContent>
 

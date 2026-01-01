@@ -66,14 +66,17 @@ A decentralized marketplace where AI agents can autonomously discover, purchase,
 - **USD-Backed Stablecoin**: Contract address `0x8ccedbAe4916b79da7F3F612EfB2EB93A2bFD6cF`
 - **Ethereum Mainnet**: Live on-chain transactions
 - **Transparent Pricing**: All prices displayed in MNEE (equivalent to USD)
-- **Mock Transactions**: Simulated blockchain transactions with tx hashes
-- **Balance Management**: Real-time balance tracking and updates
+- **Real Balance Tracking**: Live MNEE and ETH balance display from blockchain
+- **Transaction Support**: Actual token transfers with MetaMask integration
 
-### 🔒 Wallet Connection
-- **Secure Integration**: Connect Ethereum wallet to enable agent purchases
-- **Status Indicators**: Clear visual feedback on connection status
-- **Contract Information**: Display MNEE contract address and network details
-- **Easy Disconnect**: One-click wallet disconnection
+### 🔒 Web3 Wallet Connection
+- **MetaMask Integration**: Real Ethereum wallet connectivity
+- **Live Balance Display**: Actual MNEE token and ETH balances from blockchain
+- **Network Verification**: Automatic Ethereum Mainnet detection and switching
+- **Secure Transactions**: User-approved token transfers through MetaMask
+- **Connection Persistence**: Wallet stays connected across page reloads
+- **Account Management**: Automatic handling of account and network changes
+- **Error Handling**: Comprehensive error messages for connection issues
 
 ### 📱 Transaction Explorer
 - **Real-Time Feed**: Live view of all marketplace transactions
@@ -110,6 +113,8 @@ Every section includes contextual analytics that update in real-time, providing 
 - **AI Integration**: GPT-4o via Spark LLM API
 - **Build Tool**: Vite
 - **Blockchain**: Ethereum (MNEE ERC-20 stablecoin)
+- **Web3**: Ethers.js v6 for wallet integration
+- **Wallet Support**: MetaMask (EIP-1193 compatible)
 
 ## 💎 Design Philosophy
 
@@ -159,25 +164,38 @@ Every section includes contextual analytics that update in real-time, providing 
 
 ## 📝 Getting Started
 
-1. **Connect Wallet**: Click "Connect Wallet" in the header
-2. **Create an Agent**: Navigate to "Agents" tab and click "Add Agent"
-3. **Configure Agent**: Set name, initial balance, and spending limit
-4. **Browse Services**: Explore the marketplace and service categories
-5. **Make a Purchase**: Select a service, choose your agent, and click "Purchase with MNEE"
-6. **Try Bundles**: Check out pre-built bundles or create your own custom combination
-7. **Get AI Recommendations**: Visit "Bundles" tab to see personalized AI suggestions
-8. **Analyze Trends**: View "AI Trends" to see historical recommendation patterns
-9. **Export Data**: Download CSV or PDF reports of AI recommendation trends
+### Prerequisites
+- **MetaMask**: Install the [MetaMask browser extension](https://metamask.io/download/)
+- **Ethereum Wallet**: Have an Ethereum wallet with some ETH for gas
+- **MNEE Tokens**: Acquire MNEE tokens on Ethereum Mainnet
+
+### Quick Start
+1. **Connect Wallet**: Click "Connect Wallet" in the header and approve MetaMask connection
+2. **Verify Network**: Ensure you're on Ethereum Mainnet (or click "Switch to Mainnet")
+3. **Check Balance**: Your MNEE and ETH balances will display automatically
+4. **Create an Agent**: Navigate to "Agents" tab and click "Add Agent"
+5. **Configure Agent**: Set name, initial balance, and spending limit
+6. **Browse Services**: Explore the marketplace and service categories
+7. **Make a Purchase**: Select a service, choose your agent, and click "Purchase with MNEE"
+8. **Try Bundles**: Check out pre-built bundles or create your own custom combination
+9. **Get AI Recommendations**: Visit "Bundles" tab to see personalized AI suggestions
+10. **Analyze Trends**: View "AI Trends" to see historical recommendation patterns
+11. **Export Data**: Download CSV or PDF reports of AI recommendation trends
+
+For detailed Web3 setup instructions, see [WEB3_WALLET_GUIDE.md](./WEB3_WALLET_GUIDE.md)
 
 ## 🔮 Future Enhancements
 
-- Real blockchain integration with Web3 wallets
+- Multi-wallet support (WalletConnect, Coinbase Wallet)
+- Real on-chain transactions with actual MNEE transfers
 - On-chain smart contracts for service fulfillment
 - Decentralized service provider verification
 - Agent-to-agent negotiation and automated pricing
 - Machine learning models for demand forecasting
-- Cross-chain compatibility
+- Cross-chain compatibility (L2s, other chains)
 - DAO governance for marketplace rules
+- ENS name resolution
+- Transaction history from blockchain events
 
 ## 📄 License
 
