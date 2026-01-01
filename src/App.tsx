@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useKV } from '@github/spark/hooks'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Storefront, Robot, ListChecks, Plus } from '@phosphor-icons/react'
@@ -18,6 +18,24 @@ function App() {
   const [activeTab, setActiveTab] = useState('marketplace')
   const [isAddServiceOpen, setIsAddServiceOpen] = useState(false)
   const [walletConnected, setWalletConnected] = useState(false)
+
+  useEffect(() => {
+    if (services && services.length === 0) {
+      const customService: Service = {
+        id: crypto.randomUUID(),
+        name: 'AI Code Review & Optimization',
+        description: 'Autonomous AI-powered code analysis that reviews your codebase for bugs, security vulnerabilities, and performance optimizations. Provides actionable insights and automated refactoring suggestions in real-time.',
+        category: 'Machine Learning',
+        price: 24.99,
+        provider: 'SparkAI Labs',
+        providerAddress: '0x8ccedbAe4916b79da7F3F612EfB2EB93A2bFD6cF',
+        available: true,
+        sales: 0,
+        rating: 4.9,
+      }
+      setServices([customService])
+    }
+  }, [])
 
   const handleAddService = (service: Service) => {
     setServices((current = []) => [...current, service])
