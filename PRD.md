@@ -142,6 +142,41 @@ A decentralized marketplace where AI agents can autonomously discover, purchase,
 - **Progression**: View section → See real-time stats → Identify trends → Make data-driven decisions
 - **Success criteria**: Stats update in real-time, trend indicators show directional changes accurately, analytics are contextual to current view, performance metrics are meaningful and actionable
 
+### AI-Powered Natural Language Service Discovery
+- **Functionality**: Conversational search using GPT-4 that understands complex queries like "I need tools for analyzing customer sentiment from social media posts" and returns ranked services
+- **Purpose**: Make service discovery intuitive and intelligent, reducing friction for agents finding exactly what they need
+- **Trigger**: User types natural language query in enhanced search bar
+- **Progression**: Enter query in plain English → AI analyzes intent → Returns ranked matches with relevance scores → Shows reasoning for each match → One-click purchase
+- **Success criteria**: AI understands context and synonyms, returns highly relevant results, provides clear reasoning, handles complex multi-requirement queries
+
+### Predictive Agent Spending Analytics
+- **Functionality**: Machine learning-powered forecasts that predict future agent spending patterns, service needs, and budget requirements based on historical behavior
+- **Purpose**: Help users optimize agent budgets and anticipate service needs before they arise
+- **Trigger**: View agent detail page, click "View Predictions"
+- **Progression**: AI analyzes purchase history → Generates 30/60/90 day forecasts → Shows projected spending by category → Identifies likely service needs → Recommends budget adjustments
+- **Success criteria**: Predictions based on actual patterns, confidence intervals shown, category breakdowns accurate, recommendations actionable
+
+### Smart Agent Workflows & Orchestration
+- **Functionality**: Visual workflow builder that chains multiple services together with conditional logic, allowing agents to execute complex multi-step operations autonomously
+- **Purpose**: Enable sophisticated automation by combining services into intelligent workflows
+- **Trigger**: Click "Create Workflow" in agents dashboard
+- **Progression**: Open workflow builder → Add service nodes → Define trigger conditions → Set execution order → Configure data passing → Test workflow → Deploy → Monitor execution
+- **Success criteria**: Drag-and-drop interface works smoothly, workflows execute reliably, error handling is robust, execution logs are detailed
+
+### Dynamic Market-Based Pricing Intelligence
+- **Functionality**: Real-time pricing optimization engine that analyzes supply/demand, competitor pricing, and service performance to suggest optimal price points with A/B testing support
+- **Purpose**: Maximize provider revenue while maintaining competitive pricing
+- **Trigger**: Provider views service pricing settings
+- **Progression**: View current price → See market analysis → Review demand curve → Get AI price recommendations → Run pricing experiments → Monitor conversion impact
+- **Success criteria**: Pricing suggestions increase conversions, demand analysis is accurate, A/B testing tracks properly, insights are actionable
+
+### Blockchain Transaction Visualization
+- **Functionality**: Interactive 3D visualization of transaction flows showing money movement between agents, services, and providers with real-time network graph
+- **Purpose**: Make blockchain activity tangible and exciting, demonstrate the network effect
+- **Trigger**: Navigate to "Network" tab
+- **Progression**: View animated transaction graph → See nodes (agents/providers) → Watch transactions flow → Filter by time/amount → Zoom into specific nodes → View transaction details
+- **Success criteria**: Smooth 3D rendering, real-time updates, visually engaging, performance remains good with many transactions
+
 ### Wallet Connection Enhancement
 - **Functionality**: Real MetaMask wallet integration with actual blockchain connectivity, balance fetching, network verification, and MNEE token transfer capability
 - **Purpose**: Enable genuine Web3 transactions using the MNEE stablecoin contract (0x8ccedbAe4916b79da7F3F612EfB2EB93A2bFD6cF) on Ethereum Mainnet

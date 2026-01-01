@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { useKV } from '@github/spark/hooks'
 import { useWallet } from './hooks/use-wallet'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Storefront, Robot, ListChecks, Plus, Package, ChartLine, Crown, ChatCircle, Lightning, Scales, Sparkle, Target } from '@phosphor-icons/react'
+import { Storefront, Robot, ListChecks, Plus, Package, ChartLine, Crown, ChatCircle, Lightning, Scales, Sparkle, Target, FlowArrow, GraphicsCard } from '@phosphor-icons/react'
 import { motion } from 'framer-motion'
 import { Toaster } from '@/components/ui/sonner'
 import Header from './components/Header'
@@ -19,6 +19,10 @@ import RealTimeActivityFeed from './components/RealTimeActivityFeed'
 import ServiceComparison from './components/ServiceComparison'
 import PricingIntelligence from './components/PricingIntelligence'
 import PerformanceAnalytics from './components/PerformanceAnalytics'
+import AISearchBar from './components/AISearchBar'
+import PredictiveAnalytics from './components/PredictiveAnalytics'
+import NetworkVisualization from './components/NetworkVisualization'
+import WorkflowBuilder from './components/WorkflowBuilder'
 import type { Service, Agent, Transaction, ServiceBundle, Subscription, ServiceReview } from './lib/types'
 
 function App() {
@@ -33,6 +37,7 @@ function App() {
   const [activeTab, setActiveTab] = useState('marketplace')
   const [isAddServiceOpen, setIsAddServiceOpen] = useState(false)
   const [isFaucetOpen, setIsFaucetOpen] = useState(false)
+  const [selectedAgent, setSelectedAgent] = useState<Agent | null>(null)
 
   useEffect(() => {
     if (services && services.length === 0) {
@@ -572,6 +577,28 @@ function App() {
             </p>
           </div>
 
+          {activeTab === 'marketplace' && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="mb-6"
+            >
+              <AISearchBar 
+                services={services || []} 
+                onSelectService={(service) => {
+                  const serviceCard = document.getElementById(`service-${service.id}`)
+                  if (serviceCard) {
+                    serviceCard.scrollIntoView({ behavior: 'smooth', block: 'center' })
+                    serviceCard.classList.add('ring-2', 'ring-primary')
+                    setTimeout(() => {
+                      serviceCard.classList.remove('ring-2', 'ring-primary')
+                    }, 2000)
+                  }
+                }}
+              />
+            </motion.div>
+          )}
+
           <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
               <div className="overflow-x-auto">
@@ -615,6 +642,18 @@ function App() {
                   <TabsTrigger value="transactions" className="gap-2">
                     <ListChecks className="w-4 h-4" />
                     <span className="hidden sm:inline">Activity</span>
+                  </TabsTrigger>
+                  <TabsTrigger value="workflows" className="gap-2">
+                    <FlowArrow className="w-4 h-4" />
+                    <span className="hidden sm:inline">Workflows</span>
+                  </TabsTrigger>
+                  <TabsTrigger value="network" className="gap-2">
+                    <GraphicsCard className="w-4 h-4" />
+                    <span className="hidden sm:inline">Network</span>
+                  </TabsTrigger>
+                  <TabsTrigger value="predictions" className="gap-2">
+                    <Sparkle className="w-4 h-4" />
+                    <span className="hidden sm:inline">Predictions</span>
                   </TabsTrigger>
                 </TabsList>
               </div>
@@ -729,6 +768,62 @@ function App() {
 
             <TabsContent value="transactions" className="mt-6">
               <TransactionExplorer transactions={transactions || []} agents={agents || []} />
+            </TabsContent>
+
+            <TabsContent value="workflows" className="mt-6">
+              <WorkflowBuilder
+                services={services || []}
+                agents={agents || []}
+              />
+            </TabsContent>
+
+            <TabsContent value="network" className="mt-6">
+              <NetworkVisualization
+                transactions={transactions || []}
+                agents={agents || []}
+              />
+            </TabsContent>
+
+            <TabsContent value="predictions" className="mt-6">
+              <div className="space-y-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h3 className="text-2xl font-bold">Agent Predictions</h3>
+                    <p className="text-sm text-muted-foreground">
+                      Select an agent to view AI-powered spending forecasts
+                    </p>
+                  </div>
+                </div>
+                <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 mb-6">
+                  {(agents || []).map((agent) => (
+                    <button
+                      key={agent.id}
+                      onClick={() => setSelectedAgent(agent)}
+                      className={`p-4 rounded-lg border-2 transition-all text-left ${
+                        selectedAgent?.id === agent.id
+                          ? 'border-primary bg-primary/5'
+                          : 'border-border hover:border-primary/50'
+                      }`}
+                    >
+                      <div className="font-semibold">{agent.name}</div>
+                      <div className="text-sm text-muted-foreground">
+                        {agent.purchaseCount} purchases
+                      </div>
+                    </button>
+                  ))}
+                </div>
+                {selectedAgent ? (
+                  <PredictiveAnalytics
+                    agent={selectedAgent}
+                    transactions={transactions || []}
+                    services={services || []}
+                  />
+                ) : (
+                  <div className="text-center py-12 text-muted-foreground">
+                    Select an agent to view predictions
+                  </div>
+                )}
+              </div>
             </TabsContent>
           </Tabs>
         </motion.div>
