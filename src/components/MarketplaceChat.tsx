@@ -26,7 +26,13 @@ import {
   MagnifyingGlass,
   Plus,
   File,
-  X
+  X,
+  Image as ImageIcon,
+  Paperclip,
+  FilePdf,
+  FileCode,
+  DownloadSimple,
+  FileText
 } from '@phosphor-icons/react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { toast } from 'sonner'
@@ -36,7 +42,8 @@ import type {
   ChatTopic, 
   Service, 
   Agent,
-  NegotiationOffer 
+  NegotiationOffer,
+  ChatAttachment
 } from '@/lib/types'
 
 interface MarketplaceChatProps {
@@ -67,7 +74,10 @@ export default function MarketplaceChat({
     initialMessage: ''
   })
   const [negotiationOffer, setNegotiationOffer] = useState<Partial<NegotiationOffer> | null>(null)
+  const [attachments, setAttachments] = useState<File[]>([])
+  const [previewUrls, setPreviewUrls] = useState<{ file: File; url: string; type: string }[]>([])
   const messagesEndRef = useRef<HTMLDivElement>(null)
+  const fileInputRef = useRef<HTMLInputElement>(null)
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
@@ -76,6 +86,12 @@ export default function MarketplaceChat({
   useEffect(() => {
     scrollToBottom()
   }, [messages, activeConversation])
+
+  useEffect(() => {
+    return () => {
+      previewUrls.forEach(preview => URL.revokeObjectURL(preview.url))
+    }
+  }, [previewUrls])
 
   const activeConversationData = conversations?.find(c => c.id === activeConversation)
   const conversationMessages = messages?.filter(m => m.conversationId === activeConversation) || []
@@ -154,8 +170,69 @@ export default function MarketplaceChat({
     toast.success('New conversation started')
   }
 
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files || [])
+    if (files.length === 0) return
+
+    const maxSize = 10 * 1024 * 1024
+    const validFiles = files.filter(file => {
+      if (file.size > maxSize) {
+        toast.error(`${file.name} is too large. Maximum size is 10MB.`)
+        return false
+      }
+      return true
+    })
+
+    if (validFiles.length === 0) return
+
+    const newPreviews = validFiles.map(file => ({
+      file,
+      url: URL.createObjectURL(file),
+      type: file.type
+    }))
+
+    setAttachments(prev => [...prev, ...validFiles])
+    setPreviewUrls(prev => [...prev, ...newPreviews])
+  }
+
+  const removeAttachment = (index: number) => {
+    setAttachments(prev => prev.filter((_, i) => i !== index))
+    setPreviewUrls(prev => {
+      const preview = prev[index]
+      if (preview) {
+        URL.revokeObjectURL(preview.url)
+      }
+      return prev.filter((_, i) => i !== index)
+    })
+  }
+
+  const getFileIcon = (type: string) => {
+    if (type.startsWith('image/')) return <ImageIcon className="w-5 h-5" />
+    if (type.includes('pdf')) return <FilePdf className="w-5 h-5" />
+    if (type.includes('code') || type.includes('javascript') || type.includes('typescript') || type.includes('json')) {
+      return <FileCode className="w-5 h-5" />
+    }
+    return <FileText className="w-5 h-5" />
+  }
+
+  const formatFileSize = (bytes: number) => {
+    if (bytes === 0) return '0 Bytes'
+    const k = 1024
+    const sizes = ['Bytes', 'KB', 'MB', 'GB']
+    const i = Math.floor(Math.log(bytes) / Math.log(k))
+    return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i]
+  }
+
   const handleSendMessage = () => {
-    if (!newMessage.trim() || !activeConversation) return
+    if ((!newMessage.trim() && attachments.length === 0) || !activeConversation) return
+
+    const chatAttachments: ChatAttachment[] = previewUrls.map((preview, index) => ({
+      id: crypto.randomUUID(),
+      type: preview.type.startsWith('image/') ? 'image' : 'document',
+      name: preview.file.name,
+      url: preview.url,
+      size: preview.file.size
+    }))
 
     const message: ChatMessage = {
       id: crypto.randomUUID(),
@@ -165,8 +242,9 @@ export default function MarketplaceChat({
         ? agents.find(a => a.address === userAddress)?.name || 'You'
         : 'You',
       senderType: userType,
-      message: newMessage.trim(),
+      message: newMessage.trim() || (attachments.length > 0 ? `📎 Sent ${attachments.length} file(s)` : ''),
       timestamp: Date.now(),
+      attachments: chatAttachments.length > 0 ? chatAttachments : undefined,
       offerDetails: negotiationOffer ? {
         ...negotiationOffer,
         offerId: crypto.randomUUID(),
@@ -183,7 +261,9 @@ export default function MarketplaceChat({
               ...conv, 
               lastMessage: negotiationOffer 
                 ? `💰 Price offer: ${negotiationOffer.offeredPrice} MNEE` 
-                : newMessage.trim(),
+                : attachments.length > 0 
+                  ? `📎 ${attachments.length} file(s)` 
+                  : newMessage.trim(),
               lastMessageTime: Date.now() 
             }
           : conv
@@ -191,6 +271,8 @@ export default function MarketplaceChat({
     )
     
     setNewMessage('')
+    setAttachments([])
+    setPreviewUrls([])
     setNegotiationOffer(null)
     toast.success('Message sent')
   }
@@ -626,7 +708,70 @@ export default function MarketplaceChat({
                                 : 'bg-muted'
                           }`}
                         >
-                          <p className="text-sm whitespace-pre-wrap">{message.message}</p>
+                          {message.message && (
+                            <p className="text-sm whitespace-pre-wrap">{message.message}</p>
+                          )}
+                          
+                          {message.attachments && message.attachments.length > 0 && (
+                            <div className={`space-y-2 ${message.message ? 'mt-3' : ''}`}>
+                              {message.attachments.map((attachment) => (
+                                <div 
+                                  key={attachment.id}
+                                  className={`rounded-lg overflow-hidden border ${
+                                    isSentByUser 
+                                      ? 'border-primary-foreground/20 bg-primary-foreground/10' 
+                                      : 'border-border bg-background/50'
+                                  }`}
+                                >
+                                  {attachment.type === 'image' ? (
+                                    <div className="space-y-2">
+                                      <img 
+                                        src={attachment.url} 
+                                        alt={attachment.name}
+                                        className="w-full max-w-sm rounded-lg cursor-pointer hover:opacity-90 transition-opacity"
+                                        onClick={() => window.open(attachment.url, '_blank')}
+                                      />
+                                      <div className="px-3 pb-2 flex items-center justify-between text-xs">
+                                        <span className="truncate">{attachment.name}</span>
+                                        {attachment.size && (
+                                          <span className="opacity-70">{formatFileSize(attachment.size)}</span>
+                                        )}
+                                      </div>
+                                    </div>
+                                  ) : (
+                                    <div className="p-3 flex items-center gap-3">
+                                      <div className={`p-2 rounded ${
+                                        isSentByUser 
+                                          ? 'bg-primary-foreground/20' 
+                                          : 'bg-muted'
+                                      }`}>
+                                        {getFileIcon(attachment.name)}
+                                      </div>
+                                      <div className="flex-1 min-w-0">
+                                        <p className="text-sm font-medium truncate">{attachment.name}</p>
+                                        {attachment.size && (
+                                          <p className="text-xs opacity-70">{formatFileSize(attachment.size)}</p>
+                                        )}
+                                      </div>
+                                      <Button
+                                        size="sm"
+                                        variant="ghost"
+                                        onClick={() => {
+                                          const link = document.createElement('a')
+                                          link.href = attachment.url
+                                          link.download = attachment.name
+                                          link.click()
+                                        }}
+                                        className="h-8 w-8 p-0"
+                                      >
+                                        <DownloadSimple className="w-4 h-4" />
+                                      </Button>
+                                    </div>
+                                  )}
+                                </div>
+                              ))}
+                            </div>
+                          )}
                           
                           {message.offerDetails && (
                             <div className="mt-3 pt-3 border-t border-current/20">
@@ -706,6 +851,74 @@ export default function MarketplaceChat({
             <Separator />
 
             <CardContent className="pt-4 pb-4 space-y-3">
+              {previewUrls.length > 0 && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: 'auto' }}
+                  className="p-3 bg-muted/50 border border-border rounded-lg space-y-2"
+                >
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-sm font-medium">Attachments ({previewUrls.length})</span>
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      onClick={() => {
+                        previewUrls.forEach(preview => URL.revokeObjectURL(preview.url))
+                        setAttachments([])
+                        setPreviewUrls([])
+                      }}
+                      className="h-6 text-xs"
+                    >
+                      Clear All
+                    </Button>
+                  </div>
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+                    {previewUrls.map((preview, index) => (
+                      <div 
+                        key={index}
+                        className="relative group rounded-lg overflow-hidden border border-border bg-background"
+                      >
+                        {preview.type.startsWith('image/') ? (
+                          <div className="relative aspect-video">
+                            <img 
+                              src={preview.url} 
+                              alt={preview.file.name}
+                              className="w-full h-full object-cover"
+                            />
+                            <Button
+                              size="sm"
+                              variant="destructive"
+                              onClick={() => removeAttachment(index)}
+                              className="absolute top-1 right-1 h-6 w-6 p-0 opacity-0 group-hover:opacity-100 transition-opacity"
+                            >
+                              <X className="w-3 h-3" />
+                            </Button>
+                          </div>
+                        ) : (
+                          <div className="p-3 flex items-center gap-2">
+                            <div className="p-2 rounded bg-muted">
+                              {getFileIcon(preview.type)}
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <p className="text-xs font-medium truncate">{preview.file.name}</p>
+                              <p className="text-xs text-muted-foreground">{formatFileSize(preview.file.size)}</p>
+                            </div>
+                            <Button
+                              size="sm"
+                              variant="ghost"
+                              onClick={() => removeAttachment(index)}
+                              className="h-6 w-6 p-0"
+                            >
+                              <X className="w-3 h-3" />
+                            </Button>
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </motion.div>
+              )}
+
               {negotiationOffer && (
                 <motion.div 
                   initial={{ opacity: 0, height: 0 }}
@@ -792,6 +1005,14 @@ export default function MarketplaceChat({
               )}
 
               <div className="flex gap-2">
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  multiple
+                  accept="image/*,.pdf,.doc,.docx,.txt,.json,.js,.ts,.tsx,.jsx,.css,.html"
+                  onChange={handleFileSelect}
+                  className="hidden"
+                />
                 {activeConversationData.participantType === 'provider' && (
                   <Button
                     size="sm"
@@ -803,6 +1024,16 @@ export default function MarketplaceChat({
                     {negotiationOffer ? 'Cancel' : 'Negotiate'}
                   </Button>
                 )}
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => fileInputRef.current?.click()}
+                  className="gap-2"
+                  title="Attach files or images"
+                >
+                  <Paperclip className="w-4 h-4" />
+                  <span className="hidden sm:inline">Attach</span>
+                </Button>
                 <div className="flex-1 flex gap-2">
                   <Input
                     placeholder="Type your message..."
