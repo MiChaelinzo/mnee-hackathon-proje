@@ -131,6 +131,13 @@ A decentralized marketplace where AI agents can autonomously discover, purchase,
 - **Progression**: Connect wallet → See real MNEE with green "ON-CHAIN" badge → Claim test MNEE → See test balance with purple "TEST" badge and flask icon → Navigate app → Visual indicators persist in header, cards, and dialogs
 - **Success criteria**: Real MNEE displays with green/accent color and "ON-CHAIN" badge, test MNEE displays with purple/primary color and "TEST" badge plus flask icon (🧪), both balances shown separately in header and wallet info card, informational alerts explain the difference in marketplace view, faucet dialog clearly labeled as demo-only with prominent disclaimers, total balance calculations combine both types but maintain visual separation, consistent color scheme throughout (green = real, purple = test)
 
+### Wallet Balance History Chart
+- **Functionality**: Interactive time-series visualization showing on-chain MNEE and test MNEE balances over time with multiple chart types (area/line) and time range filters
+- **Purpose**: Enable users to track balance changes, understand spending patterns, and visualize the breakdown between real and test funds historically
+- **Trigger**: Navigate to "Wallet" tab in main navigation
+- **Progression**: View wallet tab → See current balance breakdown stats → Choose time range (24h/7d/30d/all) → Switch between area/line charts → Analyze balance trends → Review data point snapshots
+- **Success criteria**: Balance snapshots automatically recorded every 5 minutes and on significant changes, historical data persists across sessions, charts display on-chain vs test MNEE breakdown with distinct colors, time range filters work correctly, tooltips show exact values on hover, stats cards display current totals and percentages, empty state shows when no history exists, responsive design adapts to mobile screens
+
 ### Service Performance Metrics
 - **Functionality**: Real-time tracking of service sales, revenue, category distribution, and growth trends
 - **Purpose**: Help service providers understand market dynamics and optimize their offerings
@@ -219,7 +226,7 @@ Animations should feel intelligent and purposeful - like systems processing info
   - ArrowsClockwise (transactions/refresh)
   - Lightning (quick actions/autonomous)
   - Tag (service categories)
-  - ChartLine (analytics/trends/historical data)
+  - ChartLine (analytics/trends/historical data/wallet balance history)
   - Check/X (success/failure states)
   - MagnifyingGlass (search/filter)
   - Plus (add service/create bundle)
@@ -235,6 +242,8 @@ Animations should feel intelligent and purposeful - like systems processing info
   - FileCsv (CSV export/data download)
   - FilePdf (PDF export/report generation)
   - Download (general downloads)
+  - Coins (balance totals/currency)
+  - Clock (time-based filtering/24h view)
 - **Spacing**: 
   - Card padding: p-6
   - Section gaps: gap-8

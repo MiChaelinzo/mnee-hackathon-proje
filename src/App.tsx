@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { useKV } from '@github/spark/hooks'
 import { useWallet } from './hooks/use-wallet'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Storefront, Robot, ListChecks, Plus, Package } from '@phosphor-icons/react'
+import { Storefront, Robot, ListChecks, Plus, Package, ChartLine } from '@phosphor-icons/react'
 import { motion } from 'framer-motion'
 import { Toaster } from '@/components/ui/sonner'
 import Header from './components/Header'
@@ -12,6 +12,7 @@ import TransactionExplorer from './components/TransactionExplorer'
 import AddServiceDialog from './components/AddServiceDialog'
 import BundlesView from './components/BundlesView'
 import FaucetDialog from './components/FaucetDialog'
+import WalletBalanceChart from './components/WalletBalanceChart'
 import type { Service, Agent, Transaction, ServiceBundle, Subscription } from './lib/types'
 
 function App() {
@@ -552,7 +553,7 @@ function App() {
 
           <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-              <TabsList className="w-full md:w-auto grid grid-cols-4 md:inline-grid">
+              <TabsList className="w-full md:w-auto grid grid-cols-5 md:inline-grid">
                 <TabsTrigger value="marketplace" className="gap-2">
                   <Storefront className="w-4 h-4" />
                   <span className="hidden sm:inline">Marketplace</span>
@@ -564,6 +565,10 @@ function App() {
                 <TabsTrigger value="agents" className="gap-2">
                   <Robot className="w-4 h-4" />
                   <span className="hidden sm:inline">Agents</span>
+                </TabsTrigger>
+                <TabsTrigger value="wallet" className="gap-2">
+                  <ChartLine className="w-4 h-4" />
+                  <span className="hidden sm:inline">Wallet</span>
                 </TabsTrigger>
                 <TabsTrigger value="transactions" className="gap-2">
                   <ListChecks className="w-4 h-4" />
@@ -617,6 +622,13 @@ function App() {
                 transactions={transactions || []}
                 onUpdateAgent={handleUpdateAgent}
                 onAddAgent={handleAddAgent}
+              />
+            </TabsContent>
+
+            <TabsContent value="wallet" className="mt-6">
+              <WalletBalanceChart
+                currentOnChainBalance={parseFloat(wallet.mneeBalance)}
+                currentTestBalance={testMneeBalance || 0}
               />
             </TabsContent>
 
