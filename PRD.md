@@ -98,6 +98,45 @@ A decentralized marketplace where AI agents can autonomously discover, purchase,
 
 ### Enhanced Analytics Dashboard
 - **Functionality**: Comprehensive statistics and insights across marketplace activity, agent performance, and service metrics with visual indicators and trend analysis
+- **Purpose**: Enable data-driven decision making by providing deep insights into marketplace dynamics
+- **Trigger**: Navigate to Analytics tab
+- **Progression**: View dashboard → Select time range filter → Browse performance metrics → Analyze category distribution → Review top performers → Export reports
+- **Success criteria**: Real-time data visualization with charts, accurate trend calculations, responsive filtering, and actionable insights
+
+### Real-Time Activity Feed
+- **Functionality**: Live streaming feed of all marketplace events (purchases, reviews, listings, chats) with pause/resume controls and animated updates
+- **Purpose**: Create excitement and transparency by showcasing marketplace activity as it happens in real-time
+- **Trigger**: Navigate to Live Feed tab or widget on dashboard
+- **Progression**: View live stream → See event animations → Pause to review details → Resume live updates → Filter by event type
+- **Success criteria**: Events appear immediately with smooth animations, pause functionality works correctly, simulated activity feels realistic when no real events occur
+
+### Service Comparison Tool
+- **Functionality**: Side-by-side comparison interface allowing users to select up to 4 services/bundles/subscriptions and view detailed feature matrices
+- **Purpose**: Help users make informed purchase decisions by clearly showing differences between options
+- **Trigger**: Click "Compare Services" button in marketplace or bundles view
+- **Progression**: Open comparison modal → Search/filter items → Add items to comparison (up to 4) → View side-by-side features → See "Best Value" highlighting → Select and purchase
+- **Success criteria**: Smooth addition/removal of items, accurate "Best Value" calculation based on price and rating, responsive layout for multiple items
+
+### AI Pricing Intelligence
+- **Functionality**: Advanced AI-powered pricing recommendation engine that analyzes market data, competitor pricing, and service attributes to suggest optimal pricing
+- **Purpose**: Help service providers set competitive and profitable prices using data-driven insights
+- **Trigger**: Navigate to AI Pricing tab
+- **Progression**: Enter service details → Select category → Input current price → Click Analyze → View AI recommendations → Review insights and reasoning → Adjust pricing strategy
+- **Success criteria**: AI provides accurate price suggestions with confidence scores, detailed reasoning explains recommendations, competitor analysis shows market positioning
+
+### Smart AI Recommendations
+- **Functionality**: Personalized service recommendations for each agent based on purchase history, preferences, and behavior patterns using GPT-4
+- **Purpose**: Increase relevant purchases by showing agents services they're likely to need based on their unique patterns
+- **Trigger**: View agent dashboard or agent detail page → Click "Generate Recommendations"
+- **Progression**: AI analyzes purchase history → Evaluates available services → Generates top 5 recommendations with match scores → Shows reasoning for each → One-click purchase
+- **Success criteria**: Recommendations are contextually relevant to agent history, match scores accurately reflect fit, reasoning is clear and specific
+
+### Advanced Performance Analytics Dashboard
+- **Functionality**: Multi-dimensional analytics with interactive charts showing revenue trends, category performance, top services, and agent spending patterns
+- **Purpose**: Provide comprehensive business intelligence for marketplace optimization and strategic decision-making
+- **Trigger**: Navigate to Analytics tab
+- **Progression**: View overview metrics → Select time range → Analyze revenue charts → Review category distribution → Examine top performers → Study trends
+- **Success criteria**: Charts render correctly with accurate data, time range filtering works smoothly, visualizations are clear and informative, insights are actionable
 - **Purpose**: Provide users with actionable insights into marketplace performance, spending patterns, and agent behavior to optimize their strategies
 - **Trigger**: Viewing any major section (Marketplace, Agents, Bundles) automatically displays relevant analytics
 - **Progression**: View section → See real-time stats → Identify trends → Make data-driven decisions

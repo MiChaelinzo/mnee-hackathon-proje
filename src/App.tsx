@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { useKV } from '@github/spark/hooks'
 import { useWallet } from './hooks/use-wallet'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Storefront, Robot, ListChecks, Plus, Package, ChartLine, Crown, ChatCircle } from '@phosphor-icons/react'
+import { Storefront, Robot, ListChecks, Plus, Package, ChartLine, Crown, ChatCircle, Lightning, Scales, Sparkle, Target } from '@phosphor-icons/react'
 import { motion } from 'framer-motion'
 import { Toaster } from '@/components/ui/sonner'
 import Header from './components/Header'
@@ -15,6 +15,10 @@ import FaucetDialog from './components/FaucetDialog'
 import WalletBalanceChart from './components/WalletBalanceChart'
 import ProviderDashboard from './components/ProviderDashboard'
 import MarketplaceChat from './components/MarketplaceChat'
+import RealTimeActivityFeed from './components/RealTimeActivityFeed'
+import ServiceComparison from './components/ServiceComparison'
+import PricingIntelligence from './components/PricingIntelligence'
+import PerformanceAnalytics from './components/PerformanceAnalytics'
 import type { Service, Agent, Transaction, ServiceBundle, Subscription, ServiceReview } from './lib/types'
 
 function App() {
@@ -570,48 +574,71 @@ function App() {
 
           <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-              <TabsList className="w-full md:w-auto grid grid-cols-7 md:inline-grid">
-                <TabsTrigger value="marketplace" className="gap-2">
-                  <Storefront className="w-4 h-4" />
-                  <span className="hidden sm:inline">Marketplace</span>
-                </TabsTrigger>
-                <TabsTrigger value="bundles" className="gap-2">
-                  <Package className="w-4 h-4" />
-                  <span className="hidden sm:inline">Bundles</span>
-                </TabsTrigger>
-                <TabsTrigger value="chat" className="gap-2">
-                  <ChatCircle className="w-4 h-4" />
-                  <span className="hidden sm:inline">Chat</span>
-                </TabsTrigger>
-                <TabsTrigger value="agents" className="gap-2">
-                  <Robot className="w-4 h-4" />
-                  <span className="hidden sm:inline">Agents</span>
-                </TabsTrigger>
-                <TabsTrigger value="providers" className="gap-2">
-                  <Crown className="w-4 h-4" />
-                  <span className="hidden sm:inline">Providers</span>
-                </TabsTrigger>
-                <TabsTrigger value="wallet" className="gap-2">
-                  <ChartLine className="w-4 h-4" />
-                  <span className="hidden sm:inline">Wallet</span>
-                </TabsTrigger>
-                <TabsTrigger value="transactions" className="gap-2">
-                  <ListChecks className="w-4 h-4" />
-                  <span className="hidden sm:inline">Activity</span>
-                </TabsTrigger>
-              </TabsList>
+              <div className="overflow-x-auto">
+                <TabsList className="w-full md:w-auto inline-flex">
+                  <TabsTrigger value="marketplace" className="gap-2">
+                    <Storefront className="w-4 h-4" />
+                    <span className="hidden sm:inline">Marketplace</span>
+                  </TabsTrigger>
+                  <TabsTrigger value="bundles" className="gap-2">
+                    <Package className="w-4 h-4" />
+                    <span className="hidden sm:inline">Bundles</span>
+                  </TabsTrigger>
+                  <TabsTrigger value="analytics" className="gap-2">
+                    <Target className="w-4 h-4" />
+                    <span className="hidden sm:inline">Analytics</span>
+                  </TabsTrigger>
+                  <TabsTrigger value="live-feed" className="gap-2">
+                    <Lightning className="w-4 h-4" />
+                    <span className="hidden sm:inline">Live Feed</span>
+                  </TabsTrigger>
+                  <TabsTrigger value="pricing" className="gap-2">
+                    <Sparkle className="w-4 h-4" />
+                    <span className="hidden sm:inline">AI Pricing</span>
+                  </TabsTrigger>
+                  <TabsTrigger value="chat" className="gap-2">
+                    <ChatCircle className="w-4 h-4" />
+                    <span className="hidden sm:inline">Chat</span>
+                  </TabsTrigger>
+                  <TabsTrigger value="agents" className="gap-2">
+                    <Robot className="w-4 h-4" />
+                    <span className="hidden sm:inline">Agents</span>
+                  </TabsTrigger>
+                  <TabsTrigger value="providers" className="gap-2">
+                    <Crown className="w-4 h-4" />
+                    <span className="hidden sm:inline">Providers</span>
+                  </TabsTrigger>
+                  <TabsTrigger value="wallet" className="gap-2">
+                    <ChartLine className="w-4 h-4" />
+                    <span className="hidden sm:inline">Wallet</span>
+                  </TabsTrigger>
+                  <TabsTrigger value="transactions" className="gap-2">
+                    <ListChecks className="w-4 h-4" />
+                    <span className="hidden sm:inline">Activity</span>
+                  </TabsTrigger>
+                </TabsList>
+              </div>
 
-              {activeTab === 'marketplace' && (
-                <motion.button
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  onClick={() => setIsAddServiceOpen(true)}
-                  className="flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded-lg hover:brightness-110 transition-all hover:shadow-lg hover:shadow-primary/20"
-                >
-                  <Plus className="w-5 h-5" />
-                  List Service
-                </motion.button>
-              )}
+              <div className="flex items-center gap-2">
+                {activeTab === 'marketplace' && (
+                  <motion.button
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    onClick={() => setIsAddServiceOpen(true)}
+                    className="flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded-lg hover:brightness-110 transition-all hover:shadow-lg hover:shadow-primary/20"
+                  >
+                    <Plus className="w-5 h-5" />
+                    <span className="hidden sm:inline">List Service</span>
+                  </motion.button>
+                )}
+                {(activeTab === 'marketplace' || activeTab === 'bundles') && (
+                  <ServiceComparison 
+                    services={services || []} 
+                    bundles={bundles || []} 
+                    subscriptions={subscriptions || []} 
+                  />
+                )}
+              </div>
             </div>
 
             <TabsContent value="marketplace" className="mt-6">
@@ -642,6 +669,29 @@ function App() {
                 onTransferMNEE={wallet.transferMNEE}
                 userAddress={wallet.address}
               />
+            </TabsContent>
+
+            <TabsContent value="analytics" className="mt-6">
+              <PerformanceAnalytics
+                services={services || []}
+                transactions={transactions || []}
+                agents={agents || []}
+                reviews={reviews || []}
+              />
+            </TabsContent>
+
+            <TabsContent value="live-feed" className="mt-6">
+              <div className="grid grid-cols-1 h-[calc(100vh-16rem)]">
+                <RealTimeActivityFeed
+                  transactions={transactions || []}
+                  reviews={reviews || []}
+                  showLive={true}
+                />
+              </div>
+            </TabsContent>
+
+            <TabsContent value="pricing" className="mt-6">
+              <PricingIntelligence services={services || []} />
             </TabsContent>
 
             <TabsContent value="chat" className="mt-6">
