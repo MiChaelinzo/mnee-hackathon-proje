@@ -526,7 +526,8 @@ function App() {
         chainId={wallet.chainId}
         isConnected={wallet.isConnected}
         isConnecting={wallet.isConnecting}
-        mneeBalance={displayMneeBalance}
+        mneeBalance={wallet.mneeBalance}
+        testMneeBalance={testMneeBalance || 0}
         ethBalance={wallet.ethBalance}
         onConnect={wallet.connectWallet}
         onDisconnect={wallet.disconnectWallet}

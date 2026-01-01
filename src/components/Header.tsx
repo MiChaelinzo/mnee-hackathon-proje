@@ -1,7 +1,8 @@
 import { Button } from '@/components/ui/button'
-import { Wallet, Warning, Drop } from '@phosphor-icons/react'
+import { Wallet, Warning, Drop, Flask } from '@phosphor-icons/react'
 import { MNEE_CONTRACT_ADDRESS, formatAddress } from '@/lib/mnee'
 import { Badge } from '@/components/ui/badge'
+import { Separator } from '@/components/ui/separator'
 
 interface HeaderProps {
   address: string | null
@@ -9,6 +10,7 @@ interface HeaderProps {
   isConnected: boolean
   isConnecting: boolean
   mneeBalance: string
+  testMneeBalance: number
   ethBalance: string
   onConnect: () => void
   onDisconnect: () => void
@@ -22,6 +24,7 @@ export default function Header({
   isConnected, 
   isConnecting,
   mneeBalance,
+  testMneeBalance,
   ethBalance,
   onConnect, 
   onDisconnect,
@@ -29,6 +32,8 @@ export default function Header({
   onOpenFaucet
 }: HeaderProps) {
   const isWrongNetwork = isConnected && chainId !== 1
+  const hasTestMnee = testMneeBalance > 0
+  const hasOnChainMnee = parseFloat(mneeBalance) > 0
 
   return (
     <header className="border-b border-border bg-card/50 backdrop-blur-sm sticky top-0 z-50">
@@ -48,19 +53,41 @@ export default function Header({
         <div className="flex items-center gap-3">
           {isConnected && (
             <>
-              <div className="hidden md:flex flex-col items-end gap-0.5">
-                <div className="text-xs text-muted-foreground">MNEE Balance</div>
-                <div className="text-sm font-mono font-semibold text-accent">{mneeBalance} MNEE</div>
+              <div className="hidden lg:flex flex-col items-end gap-1">
+                {hasOnChainMnee && (
+                  <div className="flex items-center gap-2">
+                    <Badge variant="outline" className="border-accent/50 bg-accent/10 text-accent px-1.5 py-0">
+                      <span className="text-[10px] font-medium">ON-CHAIN</span>
+                    </Badge>
+                    <div className="text-sm font-mono font-semibold text-accent">
+                      {mneeBalance} MNEE
+                    </div>
+                  </div>
+                )}
+                {hasTestMnee && (
+                  <div className="flex items-center gap-2">
+                    <Badge variant="outline" className="border-primary/50 bg-primary/10 text-primary px-1.5 py-0">
+                      <Flask className="w-2.5 h-2.5 mr-0.5" weight="fill" />
+                      <span className="text-[10px] font-medium">TEST</span>
+                    </Badge>
+                    <div className="text-sm font-mono font-semibold text-primary">
+                      {testMneeBalance.toFixed(2)} MNEE
+                    </div>
+                  </div>
+                )}
+                {!hasOnChainMnee && !hasTestMnee && (
+                  <div className="text-xs text-muted-foreground">No MNEE Balance</div>
+                )}
               </div>
               
               <Button
                 onClick={onOpenFaucet}
                 variant="outline"
                 size="sm"
-                className="gap-2 border-accent/30 hover:bg-accent/10 hover:border-accent/50"
+                className="gap-2 border-primary/30 hover:bg-primary/10 hover:border-primary/50"
               >
-                <Drop className="w-4 h-4 text-accent" weight="fill" />
-                <span className="hidden sm:inline">Faucet</span>
+                <Flask className="w-4 h-4 text-primary" weight="fill" />
+                <span className="hidden sm:inline">Test Faucet</span>
               </Button>
             </>
           )}

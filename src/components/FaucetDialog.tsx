@@ -4,10 +4,11 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { useKV } from '@github/spark/hooks'
-import { Drop, Wallet, CheckCircle, Warning } from '@phosphor-icons/react'
+import { Drop, Wallet, CheckCircle, Warning, Flask } from '@phosphor-icons/react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { toast } from 'sonner'
 import { cn } from '@/lib/utils'
+import { Badge } from '@/components/ui/badge'
 
 interface FaucetDialogProps {
   open: boolean
@@ -111,8 +112,8 @@ export default function FaucetDialog({ open, onOpenChange, userAddress, onFaucet
       onFaucetClaim(amount)
 
       toast.success('Test MNEE Claimed!', {
-        description: `${amount} MNEE has been added to your balance for testing.`,
-        icon: <Drop className="text-accent" weight="fill" />,
+        description: `${amount} test MNEE added to your demo balance (not real currency).`,
+        icon: <Flask className="text-primary" weight="fill" />,
       })
 
       onOpenChange(false)
@@ -140,13 +141,18 @@ export default function FaucetDialog({ open, onOpenChange, userAddress, onFaucet
       <DialogContent className="sm:max-w-[500px] border-primary/20">
         <DialogHeader>
           <div className="flex items-center gap-3 mb-2">
-            <div className="p-3 rounded-xl bg-accent/10 border border-accent/20">
-              <Drop className="w-6 h-6 text-accent" weight="fill" />
+            <div className="p-3 rounded-xl bg-primary/10 border border-primary/20">
+              <Flask className="w-6 h-6 text-primary" weight="fill" />
             </div>
             <div>
-              <DialogTitle className="text-2xl">Test MNEE Faucet</DialogTitle>
+              <div className="flex items-center gap-2">
+                <DialogTitle className="text-2xl">Test MNEE Faucet</DialogTitle>
+                <Badge variant="outline" className="border-primary/50 bg-primary/10 text-primary px-2 py-0.5">
+                  <span className="text-xs font-medium">DEMO</span>
+                </Badge>
+              </div>
               <DialogDescription className="text-base mt-1">
-                Get free test tokens for demo purposes
+                Get free test tokens for demo purposes only
               </DialogDescription>
             </div>
           </div>
@@ -221,6 +227,18 @@ export default function FaucetDialog({ open, onOpenChange, userAddress, onFaucet
                 )}
               </AnimatePresence>
 
+              <div className="p-4 rounded-lg bg-primary/5 border border-primary/20">
+                <div className="flex items-start gap-2">
+                  <Flask className="w-5 h-5 text-primary mt-0.5 shrink-0" weight="fill" />
+                  <div className="space-y-1">
+                    <p className="text-sm font-medium text-primary">About Test MNEE</p>
+                    <p className="text-xs text-muted-foreground">
+                      Test MNEE is a demo currency for exploring the marketplace. It has no real value and cannot be withdrawn or converted to real MNEE. Use the faucet to experiment with AI agent purchases.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
               {userAddress && claimCount > 0 && (
                 <div className="flex items-start gap-3 p-4 rounded-lg bg-accent/5 border border-accent/20">
                   <CheckCircle className="w-5 h-5 text-accent mt-0.5 flex-shrink-0" weight="fill" />
@@ -228,7 +246,7 @@ export default function FaucetDialog({ open, onOpenChange, userAddress, onFaucet
                     <p className="text-sm font-medium">Your Faucet Stats</p>
                     <div className="flex gap-4 text-xs text-muted-foreground">
                       <span>Claims: {claimCount}</span>
-                      <span>Total: {totalClaimed.toLocaleString()} MNEE</span>
+                      <span>Total: {totalClaimed.toLocaleString()} test MNEE</span>
                     </div>
                   </div>
                 </div>
@@ -254,21 +272,21 @@ export default function FaucetDialog({ open, onOpenChange, userAddress, onFaucet
                         animate={{ rotate: 360 }}
                         transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
                       >
-                        <Drop className="w-4 h-4" weight="fill" />
+                        <Flask className="w-4 h-4" weight="fill" />
                       </motion.div>
                       Processing...
                     </>
                   ) : (
                     <>
-                      <Drop className="w-4 h-4" weight="fill" />
-                      Claim {customAmount || selectedAmount} MNEE
+                      <Flask className="w-4 h-4" weight="fill" />
+                      Claim {customAmount || selectedAmount} Test MNEE
                     </>
                   )}
                 </Button>
               </div>
 
               <p className="text-xs text-muted-foreground text-center">
-                ⚠️ For demo purposes only • Cooldown: 1 hour between claims
+                ⏱️ Cooldown: 1 hour between claims • 🧪 Demo currency only
               </p>
             </>
           )}

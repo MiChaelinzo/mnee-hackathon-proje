@@ -1,9 +1,10 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { Wallet, CheckCircle, Warning, Info } from '@phosphor-icons/react'
+import { Wallet, CheckCircle, Warning, Info, Flask } from '@phosphor-icons/react'
 import { motion } from 'framer-motion'
 import { MNEE_CONTRACT_ADDRESS, formatAddress } from '@/lib/mnee'
+import { Separator } from '@/components/ui/separator'
 
 interface WalletInfoCardProps {
   address: string | null
@@ -11,6 +12,7 @@ interface WalletInfoCardProps {
   isConnected: boolean
   isConnecting: boolean
   mneeBalance: string
+  testMneeBalance: number
   ethBalance: string
   onConnect: () => void
   onDisconnect: () => void
@@ -23,12 +25,16 @@ export default function WalletInfoCard({
   isConnected, 
   isConnecting,
   mneeBalance,
+  testMneeBalance,
   ethBalance,
   onConnect, 
   onDisconnect,
   onSwitchNetwork
 }: WalletInfoCardProps) {
   const isWrongNetwork = isConnected && chainId !== 1
+  const hasTestMnee = testMneeBalance > 0
+  const hasOnChainMnee = parseFloat(mneeBalance) > 0
+  const totalMnee = parseFloat(mneeBalance) + testMneeBalance
 
   if (!isConnected) {
     return (
@@ -180,15 +186,55 @@ export default function WalletInfoCard({
             </code>
           </div>
 
-          <div className="grid grid-cols-2 gap-3">
-            <div className="p-3 bg-muted/30 rounded-lg">
-              <div className="text-xs text-muted-foreground mb-1">MNEE Balance</div>
-              <div className="text-lg font-mono font-bold text-accent">{mneeBalance}</div>
+          <div className="space-y-2">
+            <div className="flex items-center justify-between">
+              <span className="text-sm font-medium">MNEE Balances</span>
+              <span className="text-xs text-muted-foreground">Total: {totalMnee.toFixed(2)} MNEE</span>
             </div>
-            <div className="p-3 bg-muted/30 rounded-lg">
-              <div className="text-xs text-muted-foreground mb-1">ETH Balance</div>
-              <div className="text-lg font-mono font-bold">{ethBalance}</div>
+            
+            <div className="grid grid-cols-1 gap-2">
+              <div className="p-3 bg-gradient-to-br from-accent/10 to-accent/5 rounded-lg border border-accent/20">
+                <div className="flex items-center justify-between mb-2">
+                  <div className="flex items-center gap-2">
+                    <Badge variant="outline" className="border-accent/50 bg-accent/10 text-accent px-2 py-0.5">
+                      <span className="text-xs font-medium">ON-CHAIN</span>
+                    </Badge>
+                    <span className="text-xs text-muted-foreground">Real MNEE</span>
+                  </div>
+                  {hasOnChainMnee && (
+                    <CheckCircle className="w-4 h-4 text-accent" weight="fill" />
+                  )}
+                </div>
+                <div className="text-2xl font-mono font-bold text-accent">{mneeBalance}</div>
+                <div className="text-xs text-muted-foreground mt-1">
+                  From Ethereum Mainnet
+                </div>
+              </div>
+
+              <div className="p-3 bg-gradient-to-br from-primary/10 to-primary/5 rounded-lg border border-primary/20">
+                <div className="flex items-center justify-between mb-2">
+                  <div className="flex items-center gap-2">
+                    <Badge variant="outline" className="border-primary/50 bg-primary/10 text-primary px-2 py-0.5">
+                      <Flask className="w-3 h-3 mr-1" weight="fill" />
+                      <span className="text-xs font-medium">TEST</span>
+                    </Badge>
+                    <span className="text-xs text-muted-foreground">Demo only</span>
+                  </div>
+                  {hasTestMnee && (
+                    <CheckCircle className="w-4 h-4 text-primary" weight="fill" />
+                  )}
+                </div>
+                <div className="text-2xl font-mono font-bold text-primary">{testMneeBalance.toFixed(2)}</div>
+                <div className="text-xs text-muted-foreground mt-1">
+                  From test faucet • Not real currency
+                </div>
+              </div>
             </div>
+          </div>
+
+          <div className="p-3 bg-muted/30 rounded-lg">
+            <div className="text-xs text-muted-foreground mb-1">ETH Balance</div>
+            <div className="text-lg font-mono font-bold">{ethBalance}</div>
           </div>
 
           <div className="flex items-center justify-between p-3 bg-muted/30 rounded-lg">

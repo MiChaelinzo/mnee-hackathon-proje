@@ -120,9 +120,16 @@ A decentralized marketplace where AI agents can autonomously discover, purchase,
 ### Test MNEE Token Faucet
 - **Functionality**: Demo faucet allowing users to claim test MNEE tokens with configurable amounts and cooldown periods for demonstration purposes
 - **Purpose**: Enable testing and demonstration of the marketplace without requiring real MNEE tokens, lowering barrier to entry for demos
-- **Trigger**: Click "Faucet" button in header after connecting wallet
+- **Trigger**: Click "Test Faucet" button in header after connecting wallet
 - **Progression**: Connect wallet → Click faucet button → Modal opens → Select preset amount (100/500/1000) or enter custom amount → Review claim stats → Click claim → Processing animation → Test MNEE added to balance → Success notification
 - **Success criteria**: Test tokens are tracked separately and added to displayed balance, 1-hour cooldown enforced per wallet address, claiming is limited to 10,000 MNEE max per request, user sees their total claims and claim count, cooldown timer displays time remaining, test tokens persist across sessions
+
+### Visual Balance Type Indicators
+- **Functionality**: Clear visual distinction between real on-chain MNEE and test demo MNEE throughout the entire application using color-coding, badges, and icons
+- **Purpose**: Prevent confusion between real and test funds, ensure users understand which balance type they're using, maintain transparency about currency types
+- **Trigger**: Wallet connection displays both balance types automatically across all views
+- **Progression**: Connect wallet → See real MNEE with green "ON-CHAIN" badge → Claim test MNEE → See test balance with purple "TEST" badge and flask icon → Navigate app → Visual indicators persist in header, cards, and dialogs
+- **Success criteria**: Real MNEE displays with green/accent color and "ON-CHAIN" badge, test MNEE displays with purple/primary color and "TEST" badge plus flask icon (🧪), both balances shown separately in header and wallet info card, informational alerts explain the difference in marketplace view, faucet dialog clearly labeled as demo-only with prominent disclaimers, total balance calculations combine both types but maintain visual separation, consistent color scheme throughout (green = real, purple = test)
 
 ### Service Performance Metrics
 - **Functionality**: Real-time tracking of service sales, revenue, category distribution, and growth trends

@@ -5,7 +5,8 @@ import { Badge } from '@/components/ui/badge'
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
-import { MagnifyingGlass, Tag, ShoppingCart, Star, Lightning } from '@phosphor-icons/react'
+import { Alert, AlertDescription } from '@/components/ui/alert'
+import { MagnifyingGlass, Tag, ShoppingCart, Star, Lightning, Flask, Info } from '@phosphor-icons/react'
 import { motion } from 'framer-motion'
 import { toast } from 'sonner'
 import EnhancedServiceStats from './EnhancedServiceStats'
@@ -160,6 +161,26 @@ export default function Marketplace({
 
   return (
     <div className="space-y-6">
+      <Alert className="border-primary/30 bg-gradient-to-r from-primary/5 to-accent/5">
+        <div className="flex items-start gap-3">
+          <Info className="w-5 h-5 text-primary mt-0.5 shrink-0" />
+          <div className="flex-1">
+            <AlertDescription className="text-sm">
+              <span className="font-medium">Payment Methods:</span> This marketplace accepts both{' '}
+              <Badge variant="outline" className="border-accent/50 bg-accent/10 text-accent px-1.5 py-0 mx-1">
+                <span className="text-xs">ON-CHAIN</span>
+              </Badge>
+              real MNEE from your connected wallet and{' '}
+              <Badge variant="outline" className="border-primary/50 bg-primary/10 text-primary px-1.5 py-0 mx-1">
+                <Flask className="w-2.5 h-2.5 inline mr-0.5" weight="fill" />
+                <span className="text-xs">TEST</span>
+              </Badge>
+              demo MNEE from the faucet. Agents use their internal balance for purchases.
+            </AlertDescription>
+          </div>
+        </div>
+      </Alert>
+
       <EnhancedServiceStats services={services} transactions={transactions} />
       
       <div className="flex flex-col md:flex-row gap-4">
