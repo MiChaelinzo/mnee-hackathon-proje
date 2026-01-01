@@ -181,11 +181,11 @@ A decentralized marketplace where AI agents can autonomously discover, purchase,
 - **Success criteria**: Trust score calculated from multiple factors (purchases, spending, reviews, activity, age), score updates after each transaction or review, achievement badges unlock at appropriate milestones (Early Adopter, Big Spender 1000+ MNEE, Frequent Buyer 50+, Helpful Reviewer 10+, Verified Agent, Trusted Trader 80+ score), trust level displays (Excellent 80+, Good 60+, Fair 40+, Building <40), visual indicators color-coded appropriately
 
 ### Marketplace Chat System
-- **Functionality**: Real-time messaging system enabling direct communication between AI agents and service providers with conversation management, topic categorization, price negotiation tools, and status tracking
-- **Purpose**: Facilitate direct communication for inquiries, technical support, custom service requests, and price negotiations, creating a more interactive and trustworthy marketplace
+- **Functionality**: Real-time messaging system enabling direct communication between AI agents and service providers with conversation management, topic categorization, price negotiation tools, file attachments, drag-and-drop uploads, and status tracking
+- **Purpose**: Facilitate direct communication for inquiries, technical support, custom service requests, price negotiations, and file sharing, creating a more interactive and trustworthy marketplace
 - **Trigger**: Click "Chat" tab in main navigation or initiate chat from service/provider details
-- **Progression**: Start new conversation → Select recipient type (agent/provider) → Choose specific participant → Select related service (optional) → Pick conversation topic → Send initial message → Exchange messages in real-time → Negotiate prices with offer system → Accept/reject/counter offers → Mark conversation as resolved or archive → Search/filter conversations by status and content
-- **Success criteria**: Messages persist across sessions, conversations organized by topics (General Inquiry, Technical Support, Pricing Negotiation, Custom Service, Issue Resolution, Feedback), price offers include service details with original vs offered pricing and custom terms, offer status tracked (pending/accepted/rejected/expired with 7-day expiration), conversation filtering by status (active/resolved/archived), search functionality across participant names and message content, clear visual distinction between sent/received messages, system messages for offer actions, conversation metadata (last message, timestamp, unread count), mobile-responsive chat interface
+- **Progression**: Start new conversation → Select recipient type (agent/provider) → Choose specific participant → Select related service (optional) → Pick conversation topic → Send initial message → Exchange messages in real-time → Attach files via button or drag-and-drop → Preview attachments before sending → Negotiate prices with offer system → Accept/reject/counter offers → Mark conversation as resolved or archive → Search/filter conversations by status and content
+- **Success criteria**: Messages persist across sessions, conversations organized by topics (General Inquiry, Technical Support, Pricing Negotiation, Custom Service, Issue Resolution, Feedback), price offers include service details with original vs offered pricing and custom terms, offer status tracked (pending/accepted/rejected/expired with 7-day expiration), conversation filtering by status (active/resolved/archived), search functionality across participant names and message content, clear visual distinction between sent/received messages, system messages for offer actions, conversation metadata (last message, timestamp, unread count), mobile-responsive chat interface, file attachments support images and documents up to 10MB each, drag-and-drop works across entire chat area with visual feedback, attachment previews show before sending, inline image display in messages, document attachments downloadable
 
 ## Edge Case Handling
 - **Insufficient Balance**: Display clear error message with "Add MNEE" button when agent lacks funds
@@ -279,6 +279,12 @@ Animations should feel intelligent and purposeful - like systems processing info
   - Download (general downloads)
   - Coins (balance totals/currency)
   - Clock (time-based filtering/24h view)
+  - ChatCircle (messaging/conversations)
+  - Paperclip (file attachments/drag-and-drop)
+  - Image (image attachments/previews)
+  - File/FileText (document attachments)
+  - FileCode (code file attachments)
+  - PaperPlaneRight (send messages)
 - **Spacing**: 
   - Card padding: p-6
   - Section gaps: gap-8

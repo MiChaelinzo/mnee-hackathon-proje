@@ -76,8 +76,10 @@ export default function MarketplaceChat({
   const [negotiationOffer, setNegotiationOffer] = useState<Partial<NegotiationOffer> | null>(null)
   const [attachments, setAttachments] = useState<File[]>([])
   const [previewUrls, setPreviewUrls] = useState<{ file: File; url: string; type: string }[]>([])
+  const [isDragging, setIsDragging] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
+  const dropZoneRef = useRef<HTMLDivElement>(null)
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
@@ -170,8 +172,7 @@ export default function MarketplaceChat({
     toast.success('New conversation started')
   }
 
-  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = Array.from(e.target.files || [])
+  const processFiles = (files: File[]) => {
     if (files.length === 0) return
 
     const maxSize = 10 * 1024 * 1024
@@ -193,6 +194,44 @@ export default function MarketplaceChat({
 
     setAttachments(prev => [...prev, ...validFiles])
     setPreviewUrls(prev => [...prev, ...newPreviews])
+    toast.success(`Added ${validFiles.length} file(s)`)
+  }
+
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files || [])
+    processFiles(files)
+  }
+
+  const handleDragEnter = (e: React.DragEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    if (e.dataTransfer.items && e.dataTransfer.items.length > 0) {
+      setIsDragging(true)
+    }
+  }
+
+  const handleDragLeave = (e: React.DragEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    if (e.currentTarget === dropZoneRef.current) {
+      setIsDragging(false)
+    }
+  }
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+  }
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    setIsDragging(false)
+
+    const files = Array.from(e.dataTransfer.files)
+    if (files.length > 0) {
+      processFiles(files)
+    }
   }
 
   const removeAttachment = (index: number) => {
@@ -680,8 +719,38 @@ export default function MarketplaceChat({
 
             <Separator />
 
-            <ScrollArea className="flex-1 p-6">
-              <div className="space-y-4">
+            <div 
+              ref={dropZoneRef}
+              className="relative flex-1 flex flex-col"
+              onDragEnter={handleDragEnter}
+              onDragLeave={handleDragLeave}
+              onDragOver={handleDragOver}
+              onDrop={handleDrop}
+            >
+              <AnimatePresence>
+                {isDragging && (
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    className="absolute inset-0 z-50 bg-primary/10 backdrop-blur-sm border-4 border-dashed border-primary rounded-lg flex items-center justify-center"
+                  >
+                    <div className="text-center">
+                      <Paperclip className="w-16 h-16 mx-auto mb-4 text-primary animate-bounce" />
+                      <h3 className="text-xl font-bold mb-2">Drop files here</h3>
+                      <p className="text-sm text-muted-foreground">
+                        Upload images, documents, or code files
+                      </p>
+                      <p className="text-xs text-muted-foreground mt-2">
+                        Maximum file size: 10MB
+                      </p>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+
+              <ScrollArea className="flex-1 p-6">
+                <div className="space-y-4">
                 {conversationMessages.map((message) => {
                   const isSentByUser = message.senderId === userAddress
                   
@@ -847,6 +916,7 @@ export default function MarketplaceChat({
                 <div ref={messagesEndRef} />
               </div>
             </ScrollArea>
+            </div>
 
             <Separator />
 
@@ -1004,48 +1074,54 @@ export default function MarketplaceChat({
                 </motion.div>
               )}
 
-              <div className="flex gap-2">
-                <input
-                  ref={fileInputRef}
-                  type="file"
-                  multiple
-                  accept="image/*,.pdf,.doc,.docx,.txt,.json,.js,.ts,.tsx,.jsx,.css,.html"
-                  onChange={handleFileSelect}
-                  className="hidden"
-                />
-                {activeConversationData.participantType === 'provider' && (
+              <div className="space-y-2">
+                <div className="flex gap-2">
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    multiple
+                    accept="image/*,.pdf,.doc,.docx,.txt,.json,.js,.ts,.tsx,.jsx,.css,.html"
+                    onChange={handleFileSelect}
+                    className="hidden"
+                  />
+                  {activeConversationData.participantType === 'provider' && (
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={() => setNegotiationOffer(negotiationOffer ? null : {})}
+                      className="gap-2"
+                    >
+                      <CurrencyDollar className="w-4 h-4" />
+                      {negotiationOffer ? 'Cancel' : 'Negotiate'}
+                    </Button>
+                  )}
                   <Button
                     size="sm"
                     variant="outline"
-                    onClick={() => setNegotiationOffer(negotiationOffer ? null : {})}
+                    onClick={() => fileInputRef.current?.click()}
                     className="gap-2"
+                    title="Attach files or images"
                   >
-                    <CurrencyDollar className="w-4 h-4" />
-                    {negotiationOffer ? 'Cancel' : 'Negotiate'}
+                    <Paperclip className="w-4 h-4" />
+                    <span className="hidden sm:inline">Attach</span>
                   </Button>
-                )}
-                <Button
-                  size="sm"
-                  variant="outline"
-                  onClick={() => fileInputRef.current?.click()}
-                  className="gap-2"
-                  title="Attach files or images"
-                >
-                  <Paperclip className="w-4 h-4" />
-                  <span className="hidden sm:inline">Attach</span>
-                </Button>
-                <div className="flex-1 flex gap-2">
-                  <Input
-                    placeholder="Type your message..."
-                    value={newMessage}
-                    onChange={(e) => setNewMessage(e.target.value)}
-                    onKeyDown={(e) => e.key === 'Enter' && !e.shiftKey && handleSendMessage()}
-                  />
-                  <Button onClick={handleSendMessage} className="gap-2">
-                    <PaperPlaneRight className="w-4 h-4" />
-                    Send
-                  </Button>
+                  <div className="flex-1 flex gap-2">
+                    <Input
+                      placeholder="Type your message..."
+                      value={newMessage}
+                      onChange={(e) => setNewMessage(e.target.value)}
+                      onKeyDown={(e) => e.key === 'Enter' && !e.shiftKey && handleSendMessage()}
+                    />
+                    <Button onClick={handleSendMessage} className="gap-2">
+                      <PaperPlaneRight className="w-4 h-4" />
+                      Send
+                    </Button>
+                  </div>
                 </div>
+                <p className="text-xs text-muted-foreground flex items-center gap-1.5 px-1">
+                  <Paperclip className="w-3 h-3" />
+                  Drag & drop files anywhere or click Attach to upload
+                </p>
               </div>
             </CardContent>
           </>
