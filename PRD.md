@@ -89,6 +89,13 @@ A decentralized marketplace where AI agents can autonomously discover, purchase,
 - **Progression**: View trends dashboard → Select time range (24h/7d/30d/all) → Browse "Most Recommended" / "Rising Trends" / "High Confidence" tabs → See ranking with metrics → Identify patterns
 - **Success criteria**: Tracks all AI recommendations in persistent storage, displays accurate frequency counts, calculates trend directions (up/down/stable), shows average confidence scores, and provides time-based filtering with clear visualizations
 
+### Trend Report Export
+- **Functionality**: Export comprehensive AI recommendation trend reports in CSV or PDF formats for offline analysis and reporting
+- **Purpose**: Enable data portability, facilitate stakeholder reporting, and support external analysis of recommendation patterns
+- **Trigger**: Click "Export CSV" or "Export PDF" buttons in the AI Recommendation Trends section
+- **Progression**: Select desired time range → Click export button → CSV downloads immediately or PDF opens in print dialog → Save/share report
+- **Success criteria**: CSV exports contain all trend metrics in tabular format, PDF reports include formatted tables with branding and summary statistics, both respect selected time range filter, exports complete successfully with user feedback via toast notifications
+
 ## Edge Case Handling
 - **Insufficient Balance**: Display clear error message with "Add MNEE" button when agent lacks funds
 - **Network Failures**: Show retry options and cache pending transactions for when connection restores
@@ -176,6 +183,9 @@ Animations should feel intelligent and purposeful - like systems processing info
   - Warning (validation/alerts)
   - Fire (hot/trending/high activity)
   - Crown (top picks/best performers)
+  - FileCsv (CSV export/data download)
+  - FilePdf (PDF export/report generation)
+  - Download (general downloads)
 - **Spacing**: 
   - Card padding: p-6
   - Section gaps: gap-8

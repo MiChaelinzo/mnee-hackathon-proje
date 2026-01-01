@@ -3,9 +3,12 @@ import { useKV } from '@github/spark/hooks'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { ChartLine, TrendUp, Fire, Crown, Package, CalendarBlank } from '@phosphor-icons/react'
+import { Button } from '@/components/ui/button'
+import { ChartLine, TrendUp, Fire, Crown, Package, CalendarBlank, FileCsv, FilePdf, Download } from '@phosphor-icons/react'
 import { motion } from 'framer-motion'
+import { toast } from 'sonner'
 import type { ServiceBundle, Subscription } from '@/lib/types'
+import { generateCSV, downloadCSV, generatePDF, downloadPDF } from '@/lib/export'
 
 interface AIRecommendationHistory {
   bundleId: string
@@ -98,7 +101,7 @@ export default function AIRecommendationTrends({ bundles, subscriptions }: AIRec
     setTrendData(trends)
   }, [recommendationHistory, timeRange])
 
-  const getBundleName = (bundleId: string) => {
+  const getBundleName = (bundleId: string): { name: string; type: 'bundle' | 'subscription'; category: string; discount: number } => {
     const bundle = bundles.find((b) => b.id === bundleId)
     if (bundle) return { name: bundle.name, type: 'bundle', category: bundle.category, discount: bundle.discount }
     
@@ -133,6 +136,41 @@ export default function AIRecommendationTrends({ bundles, subscriptions }: AIRec
   const risingTrends = trendData.filter(t => t.trendDirection === 'up').slice(0, 5)
   const highConfidence = [...trendData].sort((a, b) => b.avgConfidence - a.avgConfidence).slice(0, 5)
 
+  const handleExportCSV = () => {
+    try {
+      const csvContent = generateCSV(trendData, getBundleName, timeRange)
+      const filename = `ai-recommendations-${timeRange}-${Date.now()}.csv`
+      downloadCSV(csvContent, filename)
+      toast.success('CSV exported successfully', {
+        description: `Downloaded ${filename}`,
+      })
+    } catch (error) {
+      toast.error('Failed to export CSV', {
+        description: 'Please try again',
+      })
+    }
+  }
+
+  const handleExportPDF = () => {
+    try {
+      const totalRecs = recommendationHistory?.filter(h => {
+        const cutoff = timeRange === 'all' ? 0 : Date.now() - (timeRange === '24h' ? 24 * 60 * 60 * 1000 : timeRange === '7d' ? 7 * 24 * 60 * 60 * 1000 : 30 * 24 * 60 * 60 * 1000)
+        return h.timestamp >= cutoff
+      }).length || 0
+
+      const htmlContent = generatePDF(trendData, getBundleName, timeRange, totalRecs)
+      const filename = `ai-recommendations-${timeRange}-${Date.now()}.html`
+      downloadPDF(htmlContent, filename)
+      toast.success('PDF report opened', {
+        description: 'Use your browser print dialog to save as PDF',
+      })
+    } catch (error) {
+      toast.error('Failed to generate PDF', {
+        description: 'Please try again',
+      })
+    }
+  }
+
   if (trendData.length === 0) {
     return (
       <Card className="border-dashed">
@@ -163,22 +201,43 @@ export default function AIRecommendationTrends({ bundles, subscriptions }: AIRec
           </div>
         </div>
         
-        <div className="flex items-center gap-2">
-          <span className="text-sm text-muted-foreground">Time Range:</span>
-          <div className="flex gap-1 p-1 bg-muted rounded-lg">
-            {(['24h', '7d', '30d', 'all'] as const).map((range) => (
-              <button
-                key={range}
-                onClick={() => setTimeRange(range)}
-                className={`px-3 py-1.5 text-sm rounded-md transition-all ${
-                  timeRange === range
-                    ? 'bg-primary text-primary-foreground font-medium'
-                    : 'text-muted-foreground hover:text-foreground'
-                }`}
-              >
-                {range === 'all' ? 'All Time' : range}
-              </button>
-            ))}
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+          <div className="flex items-center gap-2">
+            <span className="text-sm text-muted-foreground whitespace-nowrap">Time Range:</span>
+            <div className="flex gap-1 p-1 bg-muted rounded-lg">
+              {(['24h', '7d', '30d', 'all'] as const).map((range) => (
+                <button
+                  key={range}
+                  onClick={() => setTimeRange(range)}
+                  className={`px-3 py-1.5 text-sm rounded-md transition-all ${
+                    timeRange === range
+                      ? 'bg-primary text-primary-foreground font-medium'
+                      : 'text-muted-foreground hover:text-foreground'
+                  }`}
+                >
+                  {range === 'all' ? 'All Time' : range}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="flex gap-2">
+            <Button
+              onClick={handleExportCSV}
+              variant="outline"
+              className="gap-2 flex-1 sm:flex-initial"
+            >
+              <FileCsv className="w-4 h-4" />
+              Export CSV
+            </Button>
+            <Button
+              onClick={handleExportPDF}
+              variant="outline"
+              className="gap-2 flex-1 sm:flex-initial"
+            >
+              <FilePdf className="w-4 h-4" />
+              Export PDF
+            </Button>
           </div>
         </div>
       </div>
