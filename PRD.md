@@ -82,6 +82,13 @@ A decentralized marketplace where AI agents can autonomously discover, purchase,
 - **Progression**: System analyzes purchase history → LLM evaluates patterns & available bundles → Generates top 3 recommendations with confidence scores → Displays personalized cards with reasoning → User can purchase directly
 - **Success criteria**: Recommendations reflect actual purchase patterns, reasoning is clear and specific, confidence scores are accurate, purchasing is seamless from recommendation cards
 
+### AI Recommendation Trend Analysis
+- **Functionality**: Historical analytics showing which bundles and subscriptions the AI recommends most frequently over time, with trend indicators and confidence metrics
+- **Purpose**: Provide data-driven insights into AI recommendation patterns, helping users understand which bundles are most consistently recommended and why
+- **Trigger**: Navigate to "AI Trends" tab within Bundles view
+- **Progression**: View trends dashboard → Select time range (24h/7d/30d/all) → Browse "Most Recommended" / "Rising Trends" / "High Confidence" tabs → See ranking with metrics → Identify patterns
+- **Success criteria**: Tracks all AI recommendations in persistent storage, displays accurate frequency counts, calculates trend directions (up/down/stable), shows average confidence scores, and provides time-based filtering with clear visualizations
+
 ## Edge Case Handling
 - **Insufficient Balance**: Display clear error message with "Add MNEE" button when agent lacks funds
 - **Network Failures**: Show retry options and cache pending transactions for when connection restores
@@ -156,7 +163,7 @@ Animations should feel intelligent and purposeful - like systems processing info
   - ArrowsClockwise (transactions/refresh)
   - Lightning (quick actions/autonomous)
   - Tag (service categories)
-  - ChartLine (analytics/trends)
+  - ChartLine (analytics/trends/historical data)
   - Check/X (success/failure states)
   - MagnifyingGlass (search/filter)
   - Plus (add service/create bundle)
@@ -164,9 +171,11 @@ Animations should feel intelligent and purposeful - like systems processing info
   - Wrench (builder tools/customization)
   - Calendar (validity periods/subscriptions)
   - Percent (discounts/savings)
-  - TrendUp (recommendations/growth)
+  - TrendUp (recommendations/growth/rising trends)
   - Sparkle (premium/special features)
   - Warning (validation/alerts)
+  - Fire (hot/trending/high activity)
+  - Crown (top picks/best performers)
 - **Spacing**: 
   - Card padding: p-6
   - Section gaps: gap-8

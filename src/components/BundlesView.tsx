@@ -4,11 +4,12 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
-import { Package, Lightning, Tag, Check, CalendarBlank, Percent, TrendUp, Plus, Wrench } from '@phosphor-icons/react'
+import { Package, Lightning, Tag, Check, CalendarBlank, Percent, TrendUp, Plus, Wrench, ChartLine } from '@phosphor-icons/react'
 import { motion } from 'framer-motion'
 import { toast } from 'sonner'
 import BundleBuilder from './BundleBuilder'
 import AIBundleRecommendations from './AIBundleRecommendations'
+import AIRecommendationTrends from './AIRecommendationTrends'
 import type { ServiceBundle, Subscription, Agent, Transaction, Service } from '@/lib/types'
 
 interface BundlesViewProps {
@@ -253,7 +254,7 @@ export default function BundlesView({
       )}
 
       <Tabs defaultValue="bundles" className="space-y-6">
-        <TabsList className="grid w-full md:w-auto grid-cols-2 md:inline-grid">
+        <TabsList className="grid w-full md:w-auto grid-cols-3 md:inline-grid">
           <TabsTrigger value="bundles" className="gap-2">
             <Package className="w-4 h-4" />
             Service Bundles
@@ -261,6 +262,10 @@ export default function BundlesView({
           <TabsTrigger value="subscriptions" className="gap-2">
             <CalendarBlank className="w-4 h-4" />
             Subscriptions
+          </TabsTrigger>
+          <TabsTrigger value="trends" className="gap-2">
+            <ChartLine className="w-4 h-4" />
+            AI Trends
           </TabsTrigger>
         </TabsList>
 
@@ -426,6 +431,13 @@ export default function BundlesView({
               ))}
             </div>
           )}
+        </TabsContent>
+
+        <TabsContent value="trends" className="space-y-6">
+          <AIRecommendationTrends
+            bundles={bundles}
+            subscriptions={subscriptions}
+          />
         </TabsContent>
       </Tabs>
     </div>

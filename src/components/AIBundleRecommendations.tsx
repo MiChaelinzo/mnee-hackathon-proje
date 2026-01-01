@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { useKV } from '@github/spark/hooks'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -25,6 +26,14 @@ interface AIRecommendation {
   matchScore: number
 }
 
+interface AIRecommendationHistory {
+  bundleId: string
+  timestamp: number
+  agentId: string
+  confidence: number
+  position: number
+}
+
 export default function AIBundleRecommendations({
   agents,
   transactions,
@@ -37,6 +46,7 @@ export default function AIBundleRecommendations({
   const [recommendations, setRecommendations] = useState<AIRecommendation[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [recommendationHistory, setRecommendationHistory] = useKV<AIRecommendationHistory[]>('ai-recommendation-history', [])
 
   const generateRecommendations = async () => {
     if (!selectedAgent || agents.length === 0) return
@@ -128,7 +138,19 @@ If there's insufficient purchase history, recommend bundles that offer the best 
       const result = JSON.parse(response)
 
       if (result.recommendations && Array.isArray(result.recommendations)) {
-        setRecommendations(result.recommendations.slice(0, 3))
+        const recs = result.recommendations.slice(0, 3)
+        setRecommendations(recs)
+        
+        const timestamp = Date.now()
+        const historyEntries: AIRecommendationHistory[] = recs.map((rec, index) => ({
+          bundleId: rec.bundleId,
+          timestamp,
+          agentId: selectedAgent,
+          confidence: rec.confidence,
+          position: index + 1,
+        }))
+        
+        setRecommendationHistory((current = []) => [...current, ...historyEntries])
       } else {
         throw new Error('Invalid response format')
       }
