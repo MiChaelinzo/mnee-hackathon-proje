@@ -175,14 +175,29 @@ export interface ChatMessage {
   attachments?: ChatAttachment[]
   isSystem?: boolean
   offerDetails?: NegotiationOffer
+  replyTo?: string
+  reactions?: MessageReaction[]
+  edited?: boolean
+  editedAt?: number
+  deleted?: boolean
+  readBy?: string[]
 }
 
 export interface ChatAttachment {
   id: string
-  type: 'image' | 'document' | 'code' | 'transaction'
+  type: 'image' | 'document' | 'code' | 'transaction' | 'voice'
   name: string
   url: string
   size?: number
+  duration?: number
+  mimeType?: string
+}
+
+export interface MessageReaction {
+  emoji: string
+  userId: string
+  userName: string
+  timestamp: number
 }
 
 export interface NegotiationOffer {

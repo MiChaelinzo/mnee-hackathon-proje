@@ -11,6 +11,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { Label } from '@/components/ui/label'
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { 
   ChatCircle, 
   PaperPlaneRight, 
@@ -32,7 +33,18 @@ import {
   FilePdf,
   FileCode,
   DownloadSimple,
-  FileText
+  FileText,
+  Microphone,
+  Stop,
+  Play,
+  Pause,
+  Smiley,
+  DotsThree,
+  PencilSimple,
+  Trash,
+  ArrowBendUpLeft,
+  Checks,
+  Eye
 } from '@phosphor-icons/react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { toast } from 'sonner'
@@ -43,7 +55,8 @@ import type {
   Service, 
   Agent,
   NegotiationOffer,
-  ChatAttachment
+  ChatAttachment,
+  MessageReaction
 } from '@/lib/types'
 
 interface MarketplaceChatProps {
@@ -64,6 +77,7 @@ export default function MarketplaceChat({
   const [activeConversation, setActiveConversation] = useState<string | null>(null)
   const [newMessage, setNewMessage] = useState('')
   const [searchQuery, setSearchQuery] = useState('')
+  const [messageSearchQuery, setMessageSearchQuery] = useState('')
   const [statusFilter, setStatusFilter] = useState<'all' | 'active' | 'resolved' | 'archived'>('all')
   const [isNewChatOpen, setIsNewChatOpen] = useState(false)
   const [newChatForm, setNewChatForm] = useState({
@@ -77,9 +91,20 @@ export default function MarketplaceChat({
   const [attachments, setAttachments] = useState<File[]>([])
   const [previewUrls, setPreviewUrls] = useState<{ file: File; url: string; type: string }[]>([])
   const [isDragging, setIsDragging] = useState(false)
+  const [isRecording, setIsRecording] = useState(false)
+  const [audioBlob, setAudioBlob] = useState<Blob | null>(null)
+  const [recordingDuration, setRecordingDuration] = useState(0)
+  const [replyingTo, setReplyingTo] = useState<ChatMessage | null>(null)
+  const [editingMessage, setEditingMessage] = useState<ChatMessage | null>(null)
+  const [editText, setEditText] = useState('')
+  const [lightboxImage, setLightboxImage] = useState<string | null>(null)
+  const [playingAudio, setPlayingAudio] = useState<string | null>(null)
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
   const dropZoneRef = useRef<HTMLDivElement>(null)
+  const mediaRecorderRef = useRef<MediaRecorder | null>(null)
+  const recordingIntervalRef = useRef<number | null>(null)
+  const audioRef = useRef<HTMLAudioElement | null>(null)
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
@@ -95,8 +120,28 @@ export default function MarketplaceChat({
     }
   }, [previewUrls])
 
+  useEffect(() => {
+    return () => {
+      if (recordingIntervalRef.current) {
+        clearInterval(recordingIntervalRef.current)
+      }
+      if (mediaRecorderRef.current && mediaRecorderRef.current.state !== 'inactive') {
+        mediaRecorderRef.current.stop()
+      }
+    }
+  }, [])
+
   const activeConversationData = conversations?.find(c => c.id === activeConversation)
-  const conversationMessages = messages?.filter(m => m.conversationId === activeConversation) || []
+  const allConversationMessages = messages?.filter(m => m.conversationId === activeConversation && !m.deleted) || []
+  
+  const conversationMessages = messageSearchQuery
+    ? allConversationMessages.filter(m => 
+        m.message.toLowerCase().includes(messageSearchQuery.toLowerCase()) ||
+        m.senderName.toLowerCase().includes(messageSearchQuery.toLowerCase())
+      )
+    : allConversationMessages
+
+  const commonEmojis = ['👍', '❤️', '😊', '🎉', '🔥', '👏', '💯', '🤔']
 
   const filteredConversations = (conversations || [])
     .filter(conv => {
@@ -245,6 +290,150 @@ export default function MarketplaceChat({
     })
   }
 
+  const startRecording = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
+      const mediaRecorder = new MediaRecorder(stream)
+      const audioChunks: BlobPart[] = []
+
+      mediaRecorder.ondataavailable = (event) => {
+        audioChunks.push(event.data)
+      }
+
+      mediaRecorder.onstop = () => {
+        const audioBlob = new Blob(audioChunks, { type: 'audio/webm' })
+        setAudioBlob(audioBlob)
+        stream.getTracks().forEach(track => track.stop())
+      }
+
+      mediaRecorderRef.current = mediaRecorder
+      mediaRecorder.start()
+      setIsRecording(true)
+      setRecordingDuration(0)
+
+      recordingIntervalRef.current = window.setInterval(() => {
+        setRecordingDuration(prev => prev + 1)
+      }, 1000)
+
+      toast.success('Recording started')
+    } catch (error) {
+      toast.error('Failed to access microphone')
+      console.error('Recording error:', error)
+    }
+  }
+
+  const stopRecording = () => {
+    if (mediaRecorderRef.current && mediaRecorderRef.current.state !== 'inactive') {
+      mediaRecorderRef.current.stop()
+      setIsRecording(false)
+      if (recordingIntervalRef.current) {
+        clearInterval(recordingIntervalRef.current)
+      }
+    }
+  }
+
+  const cancelRecording = () => {
+    stopRecording()
+    setAudioBlob(null)
+    setRecordingDuration(0)
+    toast.info('Recording cancelled')
+  }
+
+  const formatDuration = (seconds: number) => {
+    const mins = Math.floor(seconds / 60)
+    const secs = seconds % 60
+    return `${mins}:${secs.toString().padStart(2, '0')}`
+  }
+
+  const handleReaction = (messageId: string, emoji: string) => {
+    setMessages((current = []) =>
+      current.map(msg => {
+        if (msg.id !== messageId) return msg
+        
+        const reactions = msg.reactions || []
+        const existingReaction = reactions.find(r => r.userId === userAddress && r.emoji === emoji)
+        
+        if (existingReaction) {
+          return {
+            ...msg,
+            reactions: reactions.filter(r => !(r.userId === userAddress && r.emoji === emoji))
+          }
+        } else {
+          return {
+            ...msg,
+            reactions: [
+              ...reactions.filter(r => r.userId !== userAddress || r.emoji !== emoji),
+              {
+                emoji,
+                userId: userAddress,
+                userName: userType === 'agent'
+                  ? agents.find(a => a.address === userAddress)?.name || 'You'
+                  : 'You',
+                timestamp: Date.now()
+              }
+            ]
+          }
+        }
+      })
+    )
+  }
+
+  const handleEditMessage = (message: ChatMessage) => {
+    setEditingMessage(message)
+    setEditText(message.message)
+  }
+
+  const saveEditMessage = () => {
+    if (!editingMessage || !editText.trim()) return
+
+    setMessages((current = []) =>
+      current.map(msg =>
+        msg.id === editingMessage.id
+          ? { ...msg, message: editText.trim(), edited: true, editedAt: Date.now() }
+          : msg
+      )
+    )
+
+    setEditingMessage(null)
+    setEditText('')
+    toast.success('Message updated')
+  }
+
+  const handleDeleteMessage = (messageId: string) => {
+    setMessages((current = []) =>
+      current.map(msg =>
+        msg.id === messageId
+          ? { ...msg, deleted: true, message: 'This message was deleted' }
+          : msg
+      )
+    )
+    toast.success('Message deleted')
+  }
+
+  const handleMarkAsRead = (messageId: string) => {
+    setMessages((current = []) =>
+      current.map(msg => {
+        if (msg.id === messageId && msg.senderId !== userAddress) {
+          const readBy = msg.readBy || []
+          if (!readBy.includes(userAddress)) {
+            return { ...msg, readBy: [...readBy, userAddress] }
+          }
+        }
+        return msg
+      })
+    )
+  }
+
+  useEffect(() => {
+    if (activeConversation) {
+      conversationMessages.forEach(msg => {
+        if (msg.senderId !== userAddress) {
+          handleMarkAsRead(msg.id)
+        }
+      })
+    }
+  }, [activeConversation, conversationMessages.length])
+
   const getFileIcon = (type: string) => {
     if (type.startsWith('image/')) return <ImageIcon className="w-5 h-5" />
     if (type.includes('pdf')) return <FilePdf className="w-5 h-5" />
@@ -263,15 +452,34 @@ export default function MarketplaceChat({
   }
 
   const handleSendMessage = () => {
-    if ((!newMessage.trim() && attachments.length === 0) || !activeConversation) return
+    if ((!newMessage.trim() && attachments.length === 0 && !audioBlob) || !activeConversation) return
 
-    const chatAttachments: ChatAttachment[] = previewUrls.map((preview, index) => ({
+    if (editingMessage) {
+      saveEditMessage()
+      return
+    }
+
+    let chatAttachments: ChatAttachment[] = previewUrls.map((preview, index) => ({
       id: crypto.randomUUID(),
       type: preview.type.startsWith('image/') ? 'image' : 'document',
       name: preview.file.name,
       url: preview.url,
-      size: preview.file.size
+      size: preview.file.size,
+      mimeType: preview.type
     }))
+
+    if (audioBlob) {
+      const audioUrl = URL.createObjectURL(audioBlob)
+      chatAttachments.push({
+        id: crypto.randomUUID(),
+        type: 'voice',
+        name: `voice-${Date.now()}.webm`,
+        url: audioUrl,
+        size: audioBlob.size,
+        duration: recordingDuration,
+        mimeType: 'audio/webm'
+      })
+    }
 
     const message: ChatMessage = {
       id: crypto.randomUUID(),
@@ -281,9 +489,10 @@ export default function MarketplaceChat({
         ? agents.find(a => a.address === userAddress)?.name || 'You'
         : 'You',
       senderType: userType,
-      message: newMessage.trim() || (attachments.length > 0 ? `📎 Sent ${attachments.length} file(s)` : ''),
+      message: newMessage.trim() || (audioBlob ? '🎤 Voice message' : attachments.length > 0 ? `📎 Sent ${attachments.length} file(s)` : ''),
       timestamp: Date.now(),
       attachments: chatAttachments.length > 0 ? chatAttachments : undefined,
+      replyTo: replyingTo?.id,
       offerDetails: negotiationOffer ? {
         ...negotiationOffer,
         offerId: crypto.randomUUID(),
@@ -300,9 +509,11 @@ export default function MarketplaceChat({
               ...conv, 
               lastMessage: negotiationOffer 
                 ? `💰 Price offer: ${negotiationOffer.offeredPrice} MNEE` 
-                : attachments.length > 0 
-                  ? `📎 ${attachments.length} file(s)` 
-                  : newMessage.trim(),
+                : audioBlob
+                  ? '🎤 Voice message'
+                  : attachments.length > 0 
+                    ? `📎 ${attachments.length} file(s)` 
+                    : newMessage.trim(),
               lastMessageTime: Date.now() 
             }
           : conv
@@ -313,6 +524,9 @@ export default function MarketplaceChat({
     setAttachments([])
     setPreviewUrls([])
     setNegotiationOffer(null)
+    setAudioBlob(null)
+    setRecordingDuration(0)
+    setReplyingTo(null)
     toast.success('Message sent')
   }
 
@@ -662,7 +876,7 @@ export default function MarketplaceChat({
         {activeConversationData ? (
           <>
             <CardHeader className="pb-4">
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-3">
                   <div className={`w-12 h-12 rounded-full flex items-center justify-center ${
                     activeConversationData.participantType === 'provider' 
@@ -715,6 +929,16 @@ export default function MarketplaceChat({
                   </Button>
                 </div>
               </div>
+              
+              <div className="relative">
+                <MagnifyingGlass className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                <Input
+                  placeholder="Search messages..."
+                  value={messageSearchQuery}
+                  onChange={(e) => setMessageSearchQuery(e.target.value)}
+                  className="pl-9 h-9"
+                />
+              </div>
             </CardHeader>
 
             <Separator />
@@ -753,13 +977,14 @@ export default function MarketplaceChat({
                 <div className="space-y-4">
                 {conversationMessages.map((message) => {
                   const isSentByUser = message.senderId === userAddress
+                  const replyToMessage = message.replyTo ? messages?.find(m => m.id === message.replyTo) : null
                   
                   return (
                     <motion.div
                       key={message.id}
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
-                      className={`flex ${isSentByUser ? 'justify-end' : 'justify-start'}`}
+                      className={`flex ${isSentByUser ? 'justify-end' : 'justify-start'} group`}
                     >
                       <div className={`max-w-[80%] ${isSentByUser ? 'items-end' : 'items-start'} space-y-1`}>
                         <div className="flex items-center gap-2 text-xs text-muted-foreground">
@@ -767,146 +992,308 @@ export default function MarketplaceChat({
                             <span className="font-medium">{message.senderName}</span>
                           )}
                           <span>{new Date(message.timestamp).toLocaleTimeString()}</span>
-                        </div>
-                        <div 
-                          className={`px-4 py-3 rounded-lg ${
-                            message.isSystem
-                              ? 'bg-muted/50 border border-border'
-                              : isSentByUser 
-                                ? 'bg-primary text-primary-foreground'
-                                : 'bg-muted'
-                          }`}
-                        >
-                          {message.message && (
-                            <p className="text-sm whitespace-pre-wrap">{message.message}</p>
+                          {message.edited && (
+                            <span className="italic">(edited)</span>
                           )}
-                          
-                          {message.attachments && message.attachments.length > 0 && (
-                            <div className={`space-y-2 ${message.message ? 'mt-3' : ''}`}>
-                              {message.attachments.map((attachment) => (
-                                <div 
-                                  key={attachment.id}
-                                  className={`rounded-lg overflow-hidden border ${
-                                    isSentByUser 
-                                      ? 'border-primary-foreground/20 bg-primary-foreground/10' 
-                                      : 'border-border bg-background/50'
-                                  }`}
-                                >
-                                  {attachment.type === 'image' ? (
-                                    <div className="space-y-2">
-                                      <img 
-                                        src={attachment.url} 
-                                        alt={attachment.name}
-                                        className="w-full max-w-sm rounded-lg cursor-pointer hover:opacity-90 transition-opacity"
-                                        onClick={() => window.open(attachment.url, '_blank')}
-                                      />
-                                      <div className="px-3 pb-2 flex items-center justify-between text-xs">
-                                        <span className="truncate">{attachment.name}</span>
-                                        {attachment.size && (
-                                          <span className="opacity-70">{formatFileSize(attachment.size)}</span>
-                                        )}
+                          {message.readBy && message.readBy.length > 0 && isSentByUser && (
+                            <Checks className="w-3 h-3 text-accent" />
+                          )}
+                        </div>
+                        
+                        <div className="relative">
+                          <div 
+                            className={`px-4 py-3 rounded-lg ${
+                              message.isSystem
+                                ? 'bg-muted/50 border border-border'
+                                : message.deleted
+                                  ? 'bg-muted/30 border border-border italic opacity-60'
+                                  : isSentByUser 
+                                    ? 'bg-primary text-primary-foreground'
+                                    : 'bg-muted'
+                            }`}
+                          >
+                            {replyToMessage && (
+                              <div className={`mb-2 p-2 rounded text-xs border-l-2 ${
+                                isSentByUser
+                                  ? 'bg-primary-foreground/10 border-primary-foreground/30'
+                                  : 'bg-background/50 border-border'
+                              }`}>
+                                <div className="flex items-center gap-1 mb-1 opacity-70">
+                                  <ArrowBendUpLeft className="w-3 h-3" />
+                                  <span>{replyToMessage.senderName}</span>
+                                </div>
+                                <p className="line-clamp-2 opacity-80">{replyToMessage.message}</p>
+                              </div>
+                            )}
+                            
+                            {message.message && (
+                              <p className="text-sm whitespace-pre-wrap">{message.message}</p>
+                            )}
+                            
+                            {message.attachments && message.attachments.length > 0 && (
+                              <div className={`space-y-2 ${message.message ? 'mt-3' : ''}`}>
+                                {message.attachments.map((attachment) => (
+                                  <div 
+                                    key={attachment.id}
+                                    className={`rounded-lg overflow-hidden border ${
+                                      isSentByUser 
+                                        ? 'border-primary-foreground/20 bg-primary-foreground/10' 
+                                        : 'border-border bg-background/50'
+                                    }`}
+                                  >
+                                    {attachment.type === 'image' ? (
+                                      <div className="space-y-2">
+                                        <img 
+                                          src={attachment.url} 
+                                          alt={attachment.name}
+                                          className="w-full max-w-sm rounded-lg cursor-pointer hover:opacity-90 transition-opacity"
+                                          onClick={() => setLightboxImage(attachment.url)}
+                                        />
+                                        <div className="px-3 pb-2 flex items-center justify-between text-xs">
+                                          <span className="truncate">{attachment.name}</span>
+                                          {attachment.size && (
+                                            <span className="opacity-70">{formatFileSize(attachment.size)}</span>
+                                          )}
+                                        </div>
                                       </div>
+                                    ) : attachment.type === 'voice' ? (
+                                      <div className="p-3 flex items-center gap-3">
+                                        <Button
+                                          size="sm"
+                                          variant="ghost"
+                                          onClick={() => {
+                                            if (playingAudio === attachment.id) {
+                                              audioRef.current?.pause()
+                                              setPlayingAudio(null)
+                                            } else {
+                                              if (audioRef.current) {
+                                                audioRef.current.src = attachment.url
+                                                audioRef.current.play()
+                                                setPlayingAudio(attachment.id)
+                                              }
+                                            }
+                                          }}
+                                          className="h-8 w-8 p-0"
+                                        >
+                                          {playingAudio === attachment.id ? (
+                                            <Pause className="w-4 h-4" />
+                                          ) : (
+                                            <Play className="w-4 h-4" />
+                                          )}
+                                        </Button>
+                                        <div className="flex-1">
+                                          <p className="text-sm font-medium">Voice Message</p>
+                                          {attachment.duration && (
+                                            <p className="text-xs opacity-70">{formatDuration(attachment.duration)}</p>
+                                          )}
+                                        </div>
+                                        <Microphone className="w-5 h-5 opacity-50" />
+                                      </div>
+                                    ) : (
+                                      <div className="p-3 flex items-center gap-3">
+                                        <div className={`p-2 rounded ${
+                                          isSentByUser 
+                                            ? 'bg-primary-foreground/20' 
+                                            : 'bg-muted'
+                                        }`}>
+                                          {getFileIcon(attachment.name)}
+                                        </div>
+                                        <div className="flex-1 min-w-0">
+                                          <p className="text-sm font-medium truncate">{attachment.name}</p>
+                                          {attachment.size && (
+                                            <p className="text-xs opacity-70">{formatFileSize(attachment.size)}</p>
+                                          )}
+                                        </div>
+                                        <Button
+                                          size="sm"
+                                          variant="ghost"
+                                          onClick={() => {
+                                            const link = document.createElement('a')
+                                            link.href = attachment.url
+                                            link.download = attachment.name
+                                            link.click()
+                                          }}
+                                          className="h-8 w-8 p-0"
+                                        >
+                                          <DownloadSimple className="w-4 h-4" />
+                                        </Button>
+                                      </div>
+                                    )}
+                                  </div>
+                                ))}
+                              </div>
+                            )}
+                            
+                            {message.offerDetails && (
+                              <div className="mt-3 pt-3 border-t border-current/20">
+                                <div className="space-y-2">
+                                  <div className="flex items-center justify-between text-xs">
+                                    <span>Service:</span>
+                                    <span className="font-semibold">{message.offerDetails.serviceName}</span>
+                                  </div>
+                                  <div className="flex items-center justify-between text-xs">
+                                    <span>Original Price:</span>
+                                    <span className="line-through opacity-70">
+                                      {message.offerDetails.originalPrice} MNEE
+                                    </span>
+                                  </div>
+                                  <div className="flex items-center justify-between">
+                                    <span className="text-sm font-medium">Offered Price:</span>
+                                    <span className="text-lg font-bold">
+                                      {message.offerDetails.offeredPrice} MNEE
+                                    </span>
+                                  </div>
+                                  {message.offerDetails.customTerms && (
+                                    <div className="pt-2 text-xs">
+                                      <p className="font-medium mb-1">Custom Terms:</p>
+                                      <p className="opacity-90">{message.offerDetails.customTerms}</p>
                                     </div>
-                                  ) : (
-                                    <div className="p-3 flex items-center gap-3">
-                                      <div className={`p-2 rounded ${
-                                        isSentByUser 
-                                          ? 'bg-primary-foreground/20' 
-                                          : 'bg-muted'
-                                      }`}>
-                                        {getFileIcon(attachment.name)}
+                                  )}
+                                  <div className="flex items-center gap-2 pt-2">
+                                    <Badge 
+                                      variant="outline"
+                                      className={
+                                        message.offerDetails.status === 'accepted' 
+                                          ? 'bg-green-500/10 text-green-500'
+                                          : message.offerDetails.status === 'rejected'
+                                          ? 'bg-red-500/10 text-red-500'
+                                          : message.offerDetails.status === 'expired'
+                                          ? 'bg-gray-500/10 text-gray-500'
+                                          : 'bg-yellow-500/10 text-yellow-500'
+                                      }
+                                    >
+                                      {message.offerDetails.status.toUpperCase()}
+                                    </Badge>
+                                    {message.offerDetails.status === 'pending' && !isSentByUser && (
+                                      <div className="flex gap-2 ml-auto">
+                                        <Button
+                                          size="sm"
+                                          onClick={() => handleAcceptOffer(message)}
+                                          className="h-7 text-xs"
+                                        >
+                                          Accept
+                                        </Button>
+                                        <Button
+                                          size="sm"
+                                          variant="outline"
+                                          onClick={() => handleRejectOffer(message)}
+                                          className="h-7 text-xs"
+                                        >
+                                          Decline
+                                        </Button>
                                       </div>
-                                      <div className="flex-1 min-w-0">
-                                        <p className="text-sm font-medium truncate">{attachment.name}</p>
-                                        {attachment.size && (
-                                          <p className="text-xs opacity-70">{formatFileSize(attachment.size)}</p>
-                                        )}
-                                      </div>
+                                    )}
+                                  </div>
+                                  <p className="text-xs opacity-70 pt-1">
+                                    Expires: {new Date(message.offerDetails.expiresAt).toLocaleDateString()}
+                                  </p>
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                          
+                          {!message.deleted && (
+                            <>
+                              {message.reactions && message.reactions.length > 0 && (
+                                <div className="flex flex-wrap gap-1 mt-2">
+                                  {Object.entries(
+                                    message.reactions.reduce((acc, r) => {
+                                      acc[r.emoji] = (acc[r.emoji] || 0) + 1
+                                      return acc
+                                    }, {} as Record<string, number>)
+                                  ).map(([emoji, count]) => (
+                                    <button
+                                      key={emoji}
+                                      onClick={() => handleReaction(message.id, emoji)}
+                                      className={`px-2 py-0.5 rounded-full text-xs flex items-center gap-1 transition-colors ${
+                                        message.reactions?.some(r => r.userId === userAddress && r.emoji === emoji)
+                                          ? 'bg-accent/20 border border-accent'
+                                          : 'bg-muted/50 border border-border hover:bg-muted'
+                                      }`}
+                                    >
+                                      <span>{emoji}</span>
+                                      <span className="text-xs font-medium">{count}</span>
+                                    </button>
+                                  ))}
+                                </div>
+                              )}
+                              
+                              <div className={`flex items-center gap-1 mt-1 opacity-0 group-hover:opacity-100 transition-opacity ${
+                                isSentByUser ? 'justify-end' : 'justify-start'
+                              }`}>
+                                <Popover>
+                                  <PopoverTrigger asChild>
+                                    <Button
+                                      size="sm"
+                                      variant="ghost"
+                                      className="h-6 px-2"
+                                    >
+                                      <Smiley className="w-3 h-3" />
+                                    </Button>
+                                  </PopoverTrigger>
+                                  <PopoverContent className="w-auto p-2">
+                                    <div className="flex gap-1">
+                                      {commonEmojis.map(emoji => (
+                                        <button
+                                          key={emoji}
+                                          onClick={() => {
+                                            handleReaction(message.id, emoji)
+                                          }}
+                                          className="text-lg hover:scale-125 transition-transform"
+                                        >
+                                          {emoji}
+                                        </button>
+                                      ))}
+                                    </div>
+                                  </PopoverContent>
+                                </Popover>
+                                
+                                <Button
+                                  size="sm"
+                                  variant="ghost"
+                                  onClick={() => setReplyingTo(message)}
+                                  className="h-6 px-2"
+                                >
+                                  <ArrowBendUpLeft className="w-3 h-3" />
+                                </Button>
+                                
+                                {isSentByUser && !message.isSystem && (
+                                  <Popover>
+                                    <PopoverTrigger asChild>
                                       <Button
                                         size="sm"
                                         variant="ghost"
-                                        onClick={() => {
-                                          const link = document.createElement('a')
-                                          link.href = attachment.url
-                                          link.download = attachment.name
-                                          link.click()
-                                        }}
-                                        className="h-8 w-8 p-0"
+                                        className="h-6 px-2"
                                       >
-                                        <DownloadSimple className="w-4 h-4" />
+                                        <DotsThree className="w-3 h-3" />
                                       </Button>
-                                    </div>
-                                  )}
-                                </div>
-                              ))}
-                            </div>
-                          )}
-                          
-                          {message.offerDetails && (
-                            <div className="mt-3 pt-3 border-t border-current/20">
-                              <div className="space-y-2">
-                                <div className="flex items-center justify-between text-xs">
-                                  <span>Service:</span>
-                                  <span className="font-semibold">{message.offerDetails.serviceName}</span>
-                                </div>
-                                <div className="flex items-center justify-between text-xs">
-                                  <span>Original Price:</span>
-                                  <span className="line-through opacity-70">
-                                    {message.offerDetails.originalPrice} MNEE
-                                  </span>
-                                </div>
-                                <div className="flex items-center justify-between">
-                                  <span className="text-sm font-medium">Offered Price:</span>
-                                  <span className="text-lg font-bold">
-                                    {message.offerDetails.offeredPrice} MNEE
-                                  </span>
-                                </div>
-                                {message.offerDetails.customTerms && (
-                                  <div className="pt-2 text-xs">
-                                    <p className="font-medium mb-1">Custom Terms:</p>
-                                    <p className="opacity-90">{message.offerDetails.customTerms}</p>
-                                  </div>
+                                    </PopoverTrigger>
+                                    <PopoverContent className="w-32 p-1">
+                                      <div className="flex flex-col">
+                                        <Button
+                                          size="sm"
+                                          variant="ghost"
+                                          onClick={() => handleEditMessage(message)}
+                                          className="justify-start gap-2 h-8"
+                                        >
+                                          <PencilSimple className="w-3 h-3" />
+                                          Edit
+                                        </Button>
+                                        <Button
+                                          size="sm"
+                                          variant="ghost"
+                                          onClick={() => handleDeleteMessage(message.id)}
+                                          className="justify-start gap-2 h-8 text-destructive hover:text-destructive"
+                                        >
+                                          <Trash className="w-3 h-3" />
+                                          Delete
+                                        </Button>
+                                      </div>
+                                    </PopoverContent>
+                                  </Popover>
                                 )}
-                                <div className="flex items-center gap-2 pt-2">
-                                  <Badge 
-                                    variant="outline"
-                                    className={
-                                      message.offerDetails.status === 'accepted' 
-                                        ? 'bg-green-500/10 text-green-500'
-                                        : message.offerDetails.status === 'rejected'
-                                        ? 'bg-red-500/10 text-red-500'
-                                        : message.offerDetails.status === 'expired'
-                                        ? 'bg-gray-500/10 text-gray-500'
-                                        : 'bg-yellow-500/10 text-yellow-500'
-                                    }
-                                  >
-                                    {message.offerDetails.status.toUpperCase()}
-                                  </Badge>
-                                  {message.offerDetails.status === 'pending' && !isSentByUser && (
-                                    <div className="flex gap-2 ml-auto">
-                                      <Button
-                                        size="sm"
-                                        onClick={() => handleAcceptOffer(message)}
-                                        className="h-7 text-xs"
-                                      >
-                                        Accept
-                                      </Button>
-                                      <Button
-                                        size="sm"
-                                        variant="outline"
-                                        onClick={() => handleRejectOffer(message)}
-                                        className="h-7 text-xs"
-                                      >
-                                        Decline
-                                      </Button>
-                                    </div>
-                                  )}
-                                </div>
-                                <p className="text-xs opacity-70 pt-1">
-                                  Expires: {new Date(message.offerDetails.expiresAt).toLocaleDateString()}
-                                </p>
                               </div>
-                            </div>
+                            </>
                           )}
                         </div>
                       </div>
@@ -1075,6 +1462,84 @@ export default function MarketplaceChat({
               )}
 
               <div className="space-y-2">
+                {replyingTo && (
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: 'auto' }}
+                    className="p-2 bg-muted/50 border border-border rounded-lg flex items-start justify-between"
+                  >
+                    <div className="flex-1">
+                      <div className="flex items-center gap-1 text-xs text-muted-foreground mb-1">
+                        <ArrowBendUpLeft className="w-3 h-3" />
+                        <span>Replying to {replyingTo.senderName}</span>
+                      </div>
+                      <p className="text-sm line-clamp-2">{replyingTo.message}</p>
+                    </div>
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      onClick={() => setReplyingTo(null)}
+                      className="h-6 w-6 p-0"
+                    >
+                      <X className="w-3 h-3" />
+                    </Button>
+                  </motion.div>
+                )}
+
+                {editingMessage && (
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: 'auto' }}
+                    className="p-2 bg-accent/10 border border-accent/20 rounded-lg flex items-start justify-between"
+                  >
+                    <div className="flex-1">
+                      <div className="flex items-center gap-1 text-xs text-muted-foreground mb-1">
+                        <PencilSimple className="w-3 h-3" />
+                        <span>Editing message</span>
+                      </div>
+                      <Textarea
+                        value={editText}
+                        onChange={(e) => setEditText(e.target.value)}
+                        className="text-sm min-h-[60px]"
+                        autoFocus
+                      />
+                    </div>
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      onClick={() => {
+                        setEditingMessage(null)
+                        setEditText('')
+                      }}
+                      className="h-6 w-6 p-0"
+                    >
+                      <X className="w-3 h-3" />
+                    </Button>
+                  </motion.div>
+                )}
+
+                {audioBlob && (
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: 'auto' }}
+                    className="p-3 bg-muted/50 border border-border rounded-lg flex items-center gap-3"
+                  >
+                    <Microphone className="w-5 h-5 text-primary" />
+                    <div className="flex-1">
+                      <p className="text-sm font-medium">Voice Recording</p>
+                      <p className="text-xs text-muted-foreground">{formatDuration(recordingDuration)}</p>
+                    </div>
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      onClick={cancelRecording}
+                      className="h-8"
+                    >
+                      <X className="w-4 h-4" />
+                    </Button>
+                  </motion.div>
+                )}
+
                 <div className="flex gap-2">
                   <input
                     ref={fileInputRef}
@@ -1084,7 +1549,7 @@ export default function MarketplaceChat({
                     onChange={handleFileSelect}
                     className="hidden"
                   />
-                  {activeConversationData.participantType === 'provider' && (
+                  {activeConversationData.participantType === 'provider' && !editingMessage && (
                     <Button
                       size="sm"
                       variant="outline"
@@ -1095,33 +1560,80 @@ export default function MarketplaceChat({
                       {negotiationOffer ? 'Cancel' : 'Negotiate'}
                     </Button>
                   )}
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    onClick={() => fileInputRef.current?.click()}
-                    className="gap-2"
-                    title="Attach files or images"
-                  >
-                    <Paperclip className="w-4 h-4" />
-                    <span className="hidden sm:inline">Attach</span>
-                  </Button>
+                  {!editingMessage && (
+                    <>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => fileInputRef.current?.click()}
+                        className="gap-2"
+                      >
+                        <Paperclip className="w-4 h-4" />
+                        <span className="hidden sm:inline">Attach</span>
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={isRecording ? stopRecording : startRecording}
+                        className={`gap-2 ${isRecording ? 'bg-destructive text-destructive-foreground' : ''}`}
+                      >
+                        {isRecording ? (
+                          <>
+                            <Stop className="w-4 h-4" />
+                            <span className="hidden sm:inline">{formatDuration(recordingDuration)}</span>
+                          </>
+                        ) : (
+                          <>
+                            <Microphone className="w-4 h-4" />
+                            <span className="hidden sm:inline">Voice</span>
+                          </>
+                        )}
+                      </Button>
+                    </>
+                  )}
                   <div className="flex-1 flex gap-2">
-                    <Input
-                      placeholder="Type your message..."
-                      value={newMessage}
-                      onChange={(e) => setNewMessage(e.target.value)}
-                      onKeyDown={(e) => e.key === 'Enter' && !e.shiftKey && handleSendMessage()}
-                    />
-                    <Button onClick={handleSendMessage} className="gap-2">
-                      <PaperPlaneRight className="w-4 h-4" />
-                      Send
-                    </Button>
+                    {editingMessage ? (
+                      <>
+                        <Button
+                          onClick={saveEditMessage}
+                          className="flex-1"
+                          disabled={!editText.trim()}
+                        >
+                          Save Changes
+                        </Button>
+                        <Button
+                          variant="outline"
+                          onClick={() => {
+                            setEditingMessage(null)
+                            setEditText('')
+                          }}
+                        >
+                          Cancel
+                        </Button>
+                      </>
+                    ) : (
+                      <>
+                        <Input
+                          placeholder={isRecording ? "Recording voice message..." : "Type your message..."}
+                          value={newMessage}
+                          onChange={(e) => setNewMessage(e.target.value)}
+                          onKeyDown={(e) => e.key === 'Enter' && !e.shiftKey && handleSendMessage()}
+                          disabled={isRecording}
+                        />
+                        <Button onClick={handleSendMessage} className="gap-2" disabled={isRecording}>
+                          <PaperPlaneRight className="w-4 h-4" />
+                          Send
+                        </Button>
+                      </>
+                    )}
                   </div>
                 </div>
-                <p className="text-xs text-muted-foreground flex items-center gap-1.5 px-1">
-                  <Paperclip className="w-3 h-3" />
-                  Drag & drop files anywhere or click Attach to upload
-                </p>
+                {!editingMessage && (
+                  <p className="text-xs text-muted-foreground flex items-center gap-1.5 px-1">
+                    <Paperclip className="w-3 h-3" />
+                    Drag & drop files • Attach images & documents • Record voice messages
+                  </p>
+                )}
               </div>
             </CardContent>
           </>
@@ -1141,6 +1653,40 @@ export default function MarketplaceChat({
           </div>
         )}
       </Card>
+
+      <Dialog open={!!lightboxImage} onOpenChange={() => setLightboxImage(null)}>
+        <DialogContent className="max-w-4xl p-2">
+          {lightboxImage && (
+            <div className="relative">
+              <img
+                src={lightboxImage}
+                alt="Full size"
+                className="w-full h-auto max-h-[80vh] object-contain rounded-lg"
+              />
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => {
+                  const link = document.createElement('a')
+                  link.href = lightboxImage
+                  link.download = 'image.png'
+                  link.click()
+                }}
+                className="absolute bottom-4 right-4 gap-2"
+              >
+                <DownloadSimple className="w-4 h-4" />
+                Download
+              </Button>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
+
+      <audio
+        ref={audioRef}
+        onEnded={() => setPlayingAudio(null)}
+        className="hidden"
+      />
     </div>
   )
 }
