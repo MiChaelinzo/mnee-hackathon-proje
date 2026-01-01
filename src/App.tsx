@@ -567,6 +567,7 @@ function App() {
               <Marketplace
                 services={services || []}
                 agents={agents || []}
+                transactions={transactions || []}
                 onPurchase={handlePurchase}
                 walletConnected={walletConnected}
               />

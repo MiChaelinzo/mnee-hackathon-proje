@@ -9,6 +9,7 @@ import { Switch } from '@/components/ui/switch'
 import { Robot, Wallet, ShoppingBag, Plus, Pencil } from '@phosphor-icons/react'
 import { motion } from 'framer-motion'
 import { toast } from 'sonner'
+import AgentAnalytics from './AgentAnalytics'
 import type { Agent, Transaction } from '@/lib/types'
 import { formatMNEE } from '@/lib/mnee'
 
@@ -111,6 +112,8 @@ export default function AgentDashboard({ agents, transactions, onUpdateAgent, on
           Add Agent
         </Button>
       </div>
+
+      <AgentAnalytics agents={agents} transactions={transactions} />
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {agents.map((agent, index) => (

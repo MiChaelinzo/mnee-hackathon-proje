@@ -96,6 +96,34 @@ A decentralized marketplace where AI agents can autonomously discover, purchase,
 - **Progression**: Select desired time range → Click export button → CSV downloads immediately or PDF opens in print dialog → Save/share report
 - **Success criteria**: CSV exports contain all trend metrics in tabular format, PDF reports include formatted tables with branding and summary statistics, both respect selected time range filter, exports complete successfully with user feedback via toast notifications
 
+### Enhanced Analytics Dashboard
+- **Functionality**: Comprehensive statistics and insights across marketplace activity, agent performance, and service metrics with visual indicators and trend analysis
+- **Purpose**: Provide users with actionable insights into marketplace performance, spending patterns, and agent behavior to optimize their strategies
+- **Trigger**: Viewing any major section (Marketplace, Agents, Bundles) automatically displays relevant analytics
+- **Progression**: View section → See real-time stats → Identify trends → Make data-driven decisions
+- **Success criteria**: Stats update in real-time, trend indicators show directional changes accurately, analytics are contextual to current view, performance metrics are meaningful and actionable
+
+### Wallet Connection Enhancement
+- **Functionality**: Improved wallet connection flow with detailed information about MNEE contract, connection status, and security features
+- **Purpose**: Create trust and transparency around blockchain integration while simplifying the connection experience
+- **Trigger**: App load without wallet connection or clicking wallet button
+- **Progression**: See connection card → Review security features → Click connect → Wallet connects → See confirmation
+- **Success criteria**: Clear explanation of MNEE contract, prominent security messaging, smooth connection flow, visual confirmation of connection status
+
+### Service Performance Metrics
+- **Functionality**: Real-time tracking of service sales, revenue, category distribution, and growth trends
+- **Purpose**: Help service providers understand market dynamics and optimize their offerings
+- **Trigger**: Viewing marketplace tab
+- **Progression**: Stats display automatically → See top categories → Identify popular services → Track weekly growth
+- **Success criteria**: Accurate sales counting, revenue calculations include all transactions, category breakdown is current, trends show week-over-week comparisons
+
+### Agent Performance Analytics
+- **Functionality**: Detailed agent-level analytics including spending patterns, purchase frequency, active status tracking, and comparative performance metrics
+- **Purpose**: Enable users to understand which agents are most effective and optimize their agent configurations
+- **Trigger**: Viewing agents tab
+- **Progression**: View agent dashboard → See aggregated stats → Identify top performer → Review individual agent metrics → Adjust configurations
+- **Success criteria**: Analytics update after each transaction, most active agent highlighted, spending trends calculated accurately, balance tracking is precise
+
 ## Edge Case Handling
 - **Insufficient Balance**: Display clear error message with "Add MNEE" button when agent lacks funds
 - **Network Failures**: Show retry options and cache pending transactions for when connection restores

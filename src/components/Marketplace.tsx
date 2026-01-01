@@ -8,17 +8,19 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { MagnifyingGlass, Tag, ShoppingCart, Star, Lightning } from '@phosphor-icons/react'
 import { motion } from 'framer-motion'
 import { toast } from 'sonner'
+import EnhancedServiceStats from './EnhancedServiceStats'
 import type { Service, Agent, Transaction } from '@/lib/types'
 import { formatMNEE, generateTxHash } from '@/lib/mnee'
 
 interface MarketplaceProps {
   services: Service[]
   agents: Agent[]
+  transactions: Transaction[]
   onPurchase: (transaction: Transaction) => void
   walletConnected: boolean
 }
 
-export default function Marketplace({ services, agents, onPurchase, walletConnected }: MarketplaceProps) {
+export default function Marketplace({ services, agents, transactions, onPurchase, walletConnected }: MarketplaceProps) {
   const [searchQuery, setSearchQuery] = useState('')
   const [categoryFilter, setCategoryFilter] = useState<string>('all')
   const [selectedService, setSelectedService] = useState<Service | null>(null)
@@ -102,6 +104,8 @@ export default function Marketplace({ services, agents, onPurchase, walletConnec
 
   return (
     <div className="space-y-6">
+      <EnhancedServiceStats services={services} transactions={transactions} />
+      
       <div className="flex flex-col md:flex-row gap-4">
         <div className="relative flex-1">
           <MagnifyingGlass className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
