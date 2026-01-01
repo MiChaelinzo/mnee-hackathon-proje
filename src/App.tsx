@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { useKV } from '@github/spark/hooks'
 import { useWallet } from './hooks/use-wallet'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Storefront, Robot, ListChecks, Plus, Package, ChartLine, Crown } from '@phosphor-icons/react'
+import { Storefront, Robot, ListChecks, Plus, Package, ChartLine, Crown, ChatCircle } from '@phosphor-icons/react'
 import { motion } from 'framer-motion'
 import { Toaster } from '@/components/ui/sonner'
 import Header from './components/Header'
@@ -14,6 +14,7 @@ import BundlesView from './components/BundlesView'
 import FaucetDialog from './components/FaucetDialog'
 import WalletBalanceChart from './components/WalletBalanceChart'
 import ProviderDashboard from './components/ProviderDashboard'
+import MarketplaceChat from './components/MarketplaceChat'
 import type { Service, Agent, Transaction, ServiceBundle, Subscription, ServiceReview } from './lib/types'
 
 function App() {
@@ -569,7 +570,7 @@ function App() {
 
           <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-              <TabsList className="w-full md:w-auto grid grid-cols-6 md:inline-grid">
+              <TabsList className="w-full md:w-auto grid grid-cols-7 md:inline-grid">
                 <TabsTrigger value="marketplace" className="gap-2">
                   <Storefront className="w-4 h-4" />
                   <span className="hidden sm:inline">Marketplace</span>
@@ -577,6 +578,10 @@ function App() {
                 <TabsTrigger value="bundles" className="gap-2">
                   <Package className="w-4 h-4" />
                   <span className="hidden sm:inline">Bundles</span>
+                </TabsTrigger>
+                <TabsTrigger value="chat" className="gap-2">
+                  <ChatCircle className="w-4 h-4" />
+                  <span className="hidden sm:inline">Chat</span>
                 </TabsTrigger>
                 <TabsTrigger value="agents" className="gap-2">
                   <Robot className="w-4 h-4" />
@@ -636,6 +641,15 @@ function App() {
                 walletConnected={wallet.isConnected}
                 onTransferMNEE={wallet.transferMNEE}
                 userAddress={wallet.address}
+              />
+            </TabsContent>
+
+            <TabsContent value="chat" className="mt-6">
+              <MarketplaceChat
+                services={services || []}
+                agents={agents || []}
+                userAddress={wallet.address || '0x0000000000000000000000000000000000000000'}
+                userType={wallet.isConnected ? 'agent' : 'agent'}
               />
             </TabsContent>
 

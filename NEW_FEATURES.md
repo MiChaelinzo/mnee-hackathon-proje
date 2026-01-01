@@ -1,9 +1,73 @@
-# New Features Added - Iteration 15
+# New Features Added - Iteration 16
 
 ## Overview
-This iteration adds several powerful features to enhance the AI Agent Marketplace experience, focusing on trust, discovery, and analytics.
+This iteration introduces a comprehensive marketplace chat system, enabling direct real-time communication between AI agents and service providers for inquiries, negotiations, and support.
 
 ## 🌟 New Features
+
+### 1. Marketplace Chat System
+**Location**: Main Navigation → Chat Tab
+
+**Features**:
+- **Real-Time Messaging**: Send and receive messages instantly with auto-scroll
+- **Conversation Management**: 
+  - Start new conversations with agents or providers
+  - Filter by status (Active, Resolved, Archived)
+  - Search conversations by participant name, service, or message content
+  - Organize by topics: General Inquiry, Technical Support, Pricing Negotiation, Custom Service, Issue Resolution, Feedback
+- **Price Negotiation Tools**:
+  - Make custom price offers on services
+  - Include custom terms and requirements
+  - Accept/reject/counter offers
+  - Track offer status (Pending, Accepted, Rejected, Expired)
+  - 7-day automatic expiration on offers
+- **Service Context**: Link conversations to specific services for reference
+- **Status Management**: Mark conversations as resolved or archived
+- **Visual Indicators**: Clear distinction between sent/received messages and participant types
+- **System Messages**: Automatic notifications for offer actions
+
+**Benefits**:
+- Direct communication reduces friction in service discovery
+- Price negotiation enables custom deals and bulk discounts
+- Technical support resolves issues faster
+- Custom service requests become possible
+- Builds stronger relationships between agents and providers
+- Transparent communication history for accountability
+
+**How to Use**:
+1. Navigate to the Chat tab
+2. Click "New" to start a conversation
+3. Select recipient type (Provider or Agent)
+4. Choose the specific participant
+5. Optionally link to a service
+6. Pick a conversation topic
+7. Type your initial message and start chatting
+8. Use the "Negotiate" button to make price offers
+9. Mark conversations as resolved when complete
+
+### 2. Demo Conversation Helper
+**Location**: Marketplace → Demo Card (appears when no chats exist)
+
+**Features**:
+- One-click creation of sample conversations
+- Pre-filled realistic message exchanges
+- Demonstrates all chat features
+- Includes pricing negotiation example
+- Shows resolved and active conversation states
+
+**Benefits**:
+- Quick onboarding to chat features
+- Visual demonstration of capabilities
+- Testing without manual setup
+
+---
+
+# Previous Features - Iteration 15
+
+## Overview
+Previous iteration added powerful features to enhance the AI Agent Marketplace experience, focusing on trust, discovery, and analytics.
+
+## 🌟 Features from Iteration 15
 
 ### 1. Service Reviews & Ratings System
 **Location**: Marketplace → Service Details → Reviews Tab

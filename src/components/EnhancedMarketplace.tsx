@@ -12,6 +12,7 @@ import { toast } from 'sonner'
 import EnhancedServiceStats from './EnhancedServiceStats'
 import SearchFilters from './SearchFilters'
 import ServiceReviews from './ServiceReviews'
+import ChatDemoHelper from './ChatDemoHelper'
 import type { Service, Agent, Transaction, ServiceReview } from '@/lib/types'
 import { formatMNEE, generateTxHash } from '@/lib/mnee'
 
@@ -170,6 +171,10 @@ export default function EnhancedMarketplace({
 
   return (
     <div className="space-y-6">
+      {agents.length > 0 && userAddress && (
+        <ChatDemoHelper agents={agents} userAddress={userAddress} />
+      )}
+
       <Alert className="border-primary/30 bg-gradient-to-r from-primary/5 to-accent/5">
         <div className="flex items-start gap-3">
           <Info className="w-5 h-5 text-primary mt-0.5 shrink-0" />
