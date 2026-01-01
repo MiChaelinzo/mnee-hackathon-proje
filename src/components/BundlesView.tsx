@@ -3,9 +3,11 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Package, Lightning, Tag, Check, CalendarBlank, Percent, TrendUp } from '@phosphor-icons/react'
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
+import { Package, Lightning, Tag, Check, CalendarBlank, Percent, TrendUp, Plus, Wrench } from '@phosphor-icons/react'
 import { motion } from 'framer-motion'
 import { toast } from 'sonner'
+import BundleBuilder from './BundleBuilder'
 import type { ServiceBundle, Subscription, Agent, Transaction, Service } from '@/lib/types'
 
 interface BundlesViewProps {
@@ -14,6 +16,7 @@ interface BundlesViewProps {
   services: Service[]
   agents: Agent[]
   onPurchase: (transaction: Transaction) => void
+  onCreateBundle: (bundle: ServiceBundle) => void
   walletConnected: boolean
 }
 
@@ -23,9 +26,11 @@ export default function BundlesView({
   services,
   agents,
   onPurchase,
+  onCreateBundle,
   walletConnected,
 }: BundlesViewProps) {
   const [selectedAgent, setSelectedAgent] = useState<string>(agents[0]?.id || '')
+  const [isBuilderOpen, setIsBuilderOpen] = useState(false)
 
   const calculateTotalSavings = () => {
     const bundleSavings = bundles.reduce((acc, bundle) => {
@@ -134,11 +139,40 @@ export default function BundlesView({
 
   return (
     <div className="space-y-6">
-      <div>
-        <h2 className="text-2xl font-bold mb-2">Bundles & Subscriptions</h2>
-        <p className="text-muted-foreground">
-          Save on multiple services with bundled packages and recurring subscriptions
-        </p>
+      <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
+        <div>
+          <h2 className="text-2xl font-bold mb-2">Bundles & Subscriptions</h2>
+          <p className="text-muted-foreground">
+            Save on multiple services with bundled packages and recurring subscriptions
+          </p>
+        </div>
+        <Dialog open={isBuilderOpen} onOpenChange={setIsBuilderOpen}>
+          <DialogTrigger asChild>
+            <Button className="gap-2 bg-accent text-accent-foreground hover:brightness-110 shadow-lg shrink-0">
+              <Wrench className="w-5 h-5" />
+              Create Custom Bundle
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="max-w-7xl max-h-[90vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle className="text-2xl flex items-center gap-2">
+                <Wrench className="w-6 h-6 text-accent" />
+                Custom Bundle Builder
+              </DialogTitle>
+              <DialogDescription>
+                Select services and create your own optimized bundle with custom pricing
+              </DialogDescription>
+            </DialogHeader>
+            <BundleBuilder
+              services={services}
+              onCreateBundle={(bundle) => {
+                onCreateBundle(bundle)
+                setIsBuilderOpen(false)
+              }}
+              onClose={() => setIsBuilderOpen(false)}
+            />
+          </DialogContent>
+        </Dialog>
       </div>
 
       <div className="grid gap-4 md:grid-cols-3">

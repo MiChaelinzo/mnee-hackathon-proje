@@ -501,6 +501,10 @@ function App() {
     setAgents((current = []) => [...current, agent])
   }
 
+  const handleCreateBundle = (bundle: ServiceBundle) => {
+    setBundles((current = []) => [...current, bundle])
+  }
+
   return (
     <div className="min-h-screen bg-background text-foreground grid-pattern">
       <Toaster />
@@ -575,6 +579,7 @@ function App() {
                 services={services || []}
                 agents={agents || []}
                 onPurchase={handlePurchase}
+                onCreateBundle={handleCreateBundle}
                 walletConnected={walletConnected}
               />
             </TabsContent>

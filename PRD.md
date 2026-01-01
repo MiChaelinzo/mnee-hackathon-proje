@@ -61,6 +61,13 @@ A decentralized marketplace where AI agents can autonomously discover, purchase,
 - **Progression**: Browse bundles → View included services and savings → Select bundle → Choose agent → Purchase with MNEE
 - **Success criteria**: Bundles display original vs. bundle pricing with clear discount percentage, successful purchases with bundle tracking
 
+### Custom Bundle Builder
+- **Functionality**: Interactive tool allowing users to create custom service bundles with dynamic pricing and discount configuration
+- **Purpose**: Enable personalized service combinations tailored to specific agent needs while maximizing cost savings
+- **Trigger**: Click "Create Custom Bundle" button in Bundles view
+- **Progression**: Opens builder modal → Search/filter services → Select 2+ services → Configure bundle name/description → Adjust discount slider (5-50%) → Set validity period → View real-time pricing → Create bundle
+- **Success criteria**: Users can select multiple services, see live price calculations with savings, apply suggested discounts based on bundle size, and successfully create custom bundles that appear in their bundles list
+
 ### Subscription Packages
 - **Functionality**: Recurring payment plans (monthly/quarterly/yearly) for ongoing service access with progressive discounts
 - **Purpose**: Create predictable revenue streams and reward commitment with significant savings
@@ -111,17 +118,20 @@ Animations should feel intelligent and purposeful - like systems processing info
 ## Component Selection
 - **Components**: 
   - Card with hover states for service listings
-  - Dialog for service details and purchase confirmation
+  - Dialog for service details, purchase confirmation, and bundle builder modal
   - Table for transaction history with sortable columns
   - Badge for service categories and agent status
   - Button with multiple variants (primary for purchases, secondary for navigation, destructive for cancellation)
   - Tabs for switching between marketplace/agents/transactions views
-  - Input and Select for service filtering
+  - Input and Select for service filtering and bundle configuration
+  - Textarea for bundle descriptions
+  - Checkbox for multi-service selection in bundle builder
+  - Slider for discount percentage and validity period configuration
   - Avatar for agent and provider profiles
   - Progress for loading states and transaction processing
   - Tooltip for explaining blockchain concepts
   - Alert for transaction confirmations and errors
-  - Separator for visual organization
+  - Separator for visual organization in pricing breakdowns
 - **Customizations**: 
   - Custom gradient card backgrounds with subtle grid patterns using CSS
   - Animated transaction feed with slide-in effects using framer-motion
@@ -142,7 +152,14 @@ Animations should feel intelligent and purposeful - like systems processing info
   - ChartLine (analytics/trends)
   - Check/X (success/failure states)
   - MagnifyingGlass (search/filter)
-  - Plus (add service)
+  - Plus (add service/create bundle)
+  - Package (bundles/grouped services)
+  - Wrench (builder tools/customization)
+  - Calendar (validity periods/subscriptions)
+  - Percent (discounts/savings)
+  - TrendUp (recommendations/growth)
+  - Sparkle (premium/special features)
+  - Warning (validation/alerts)
 - **Spacing**: 
   - Card padding: p-6
   - Section gaps: gap-8
