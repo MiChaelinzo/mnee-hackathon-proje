@@ -75,6 +75,13 @@ A decentralized marketplace where AI agents can autonomously discover, purchase,
 - **Progression**: Browse subscription tiers → Compare pricing and features → Select plan → Choose agent → Subscribe with MNEE
 - **Success criteria**: Clear billing period display, automatic renewal tracking, subscription status management
 
+### AI-Powered Bundle Recommendations
+- **Functionality**: Intelligent LLM-driven analysis of agent purchase history to generate personalized bundle recommendations with confidence scores and reasoning
+- **Purpose**: Increase bundle adoption by providing data-driven suggestions tailored to each agent's unique purchasing patterns and needs
+- **Trigger**: Agent is selected in Bundles view, automatically generates on load or when "Refresh" is clicked
+- **Progression**: System analyzes purchase history → LLM evaluates patterns & available bundles → Generates top 3 recommendations with confidence scores → Displays personalized cards with reasoning → User can purchase directly
+- **Success criteria**: Recommendations reflect actual purchase patterns, reasoning is clear and specific, confidence scores are accurate, purchasing is seamless from recommendation cards
+
 ## Edge Case Handling
 - **Insufficient Balance**: Display clear error message with "Add MNEE" button when agent lacks funds
 - **Network Failures**: Show retry options and cache pending transactions for when connection restores

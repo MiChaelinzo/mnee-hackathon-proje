@@ -578,6 +578,7 @@ function App() {
                 subscriptions={subscriptions || []}
                 services={services || []}
                 agents={agents || []}
+                transactions={transactions || []}
                 onPurchase={handlePurchase}
                 onCreateBundle={handleCreateBundle}
                 walletConnected={walletConnected}

@@ -8,6 +8,7 @@ import { Package, Lightning, Tag, Check, CalendarBlank, Percent, TrendUp, Plus, 
 import { motion } from 'framer-motion'
 import { toast } from 'sonner'
 import BundleBuilder from './BundleBuilder'
+import AIBundleRecommendations from './AIBundleRecommendations'
 import type { ServiceBundle, Subscription, Agent, Transaction, Service } from '@/lib/types'
 
 interface BundlesViewProps {
@@ -15,6 +16,7 @@ interface BundlesViewProps {
   subscriptions: Subscription[]
   services: Service[]
   agents: Agent[]
+  transactions: Transaction[]
   onPurchase: (transaction: Transaction) => void
   onCreateBundle: (bundle: ServiceBundle) => void
   walletConnected: boolean
@@ -25,6 +27,7 @@ export default function BundlesView({
   subscriptions,
   services,
   agents,
+  transactions,
   onPurchase,
   onCreateBundle,
   walletConnected,
@@ -235,6 +238,18 @@ export default function BundlesView({
             ))}
           </select>
         </div>
+      )}
+
+      {agents.length > 0 && selectedAgent && (
+        <AIBundleRecommendations
+          agents={agents}
+          transactions={transactions}
+          services={services}
+          bundles={bundles}
+          selectedAgent={selectedAgent}
+          onPurchase={onPurchase}
+          walletConnected={walletConnected}
+        />
       )}
 
       <Tabs defaultValue="bundles" className="space-y-6">
