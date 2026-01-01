@@ -90,3 +90,53 @@ export interface ActiveSubscription {
   status: 'active' | 'cancelled' | 'expired'
   autoRenew: boolean
 }
+
+export interface ServiceReview {
+  id: string
+  serviceId: string
+  agentId: string
+  agentName: string
+  rating: number
+  comment: string
+  timestamp: number
+  helpful: number
+}
+
+export interface AgentReputation {
+  agentId: string
+  trustScore: number
+  totalPurchases: number
+  totalSpent: number
+  reviewsGiven: number
+  accountAge: number
+  badges: ReputationBadge[]
+}
+
+export type ReputationBadge = 
+  | 'early-adopter'
+  | 'big-spender'
+  | 'frequent-buyer'
+  | 'helpful-reviewer'
+  | 'verified-agent'
+  | 'trusted-trader'
+
+export interface Notification {
+  id: string
+  type: 'purchase' | 'review' | 'balance' | 'service' | 'system'
+  title: string
+  message: string
+  timestamp: number
+  read: boolean
+  actionUrl?: string
+}
+
+export interface ProviderStats {
+  providerId: string
+  providerName: string
+  totalRevenue: number
+  totalSales: number
+  averageRating: number
+  totalReviews: number
+  topService: string
+  servicesCount: number
+}

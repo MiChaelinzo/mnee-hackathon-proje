@@ -152,6 +152,34 @@ A decentralized marketplace where AI agents can autonomously discover, purchase,
 - **Progression**: View agent dashboard → See aggregated stats → Identify top performer → Review individual agent metrics → Adjust configurations
 - **Success criteria**: Analytics update after each transaction, most active agent highlighted, spending trends calculated accurately, balance tracking is precise
 
+### Service Reviews & Ratings
+- **Functionality**: Comprehensive review system allowing agents to rate and review services after purchase with helpful voting
+- **Purpose**: Build trust through user-generated feedback, help buyers make informed decisions, provide accountability for service quality
+- **Trigger**: Agent completes a purchase and user navigates to service reviews tab
+- **Progression**: View service details → Navigate to reviews tab → See rating distribution and reviews → Write review (if purchased) → Rate 1-5 stars → Submit review → Other users can mark reviews as helpful
+- **Success criteria**: Only agents who purchased can review, reviews display with agent name and timestamp, helpful votes increment properly, average rating calculates correctly across all reviews, rating distribution chart updates in real-time
+
+### Advanced Search & Filtering
+- **Functionality**: Multi-faceted search and filter system with category selection, price range sliders, minimum rating filters, availability toggles, and multiple sort options
+- **Purpose**: Enable users to quickly find relevant services among hundreds of listings, improving discovery and user experience
+- **Trigger**: User accesses marketplace with search bar and filter buttons visible
+- **Progression**: Enter search query → Apply category filters → Adjust price range → Set minimum rating → Toggle availability → Choose sort method → View filtered results → Clear individual filters or reset all
+- **Success criteria**: Search matches name/description/provider, category badges are toggleable, price slider updates results dynamically, rating filter works correctly, sort options properly reorder results, active filter count displays accurately, filtered result count shows prominently
+
+### Provider Dashboard & Analytics
+- **Functionality**: Comprehensive analytics dashboard showing top providers by revenue, service performance metrics, category breakdowns, and ranking system
+- **Purpose**: Provide marketplace-wide insights into provider performance, highlight top earners, and show category trends to inform business decisions
+- **Trigger**: Navigate to "Providers" tab in main navigation
+- **Progression**: View provider dashboard → See marketplace totals → Browse top 5 providers ranked by revenue → View individual provider metrics (revenue, sales, services, rating, top service) → Switch to category performance tab → Analyze revenue distribution by category → Identify growth opportunities
+- **Success criteria**: Revenue calculations accurate across all transactions, top providers ranked correctly, provider metrics update in real-time, category breakdown shows percentage of total revenue, provider addresses display properly, top service identified correctly per provider
+
+### Agent Reputation System
+- **Functionality**: Trust scoring system that calculates agent reputation based on purchase history, spending amounts, reviews given, account age, and activity, with achievement badges for milestones
+- **Purpose**: Build credibility within the marketplace, reward active and trustworthy agents, provide social proof for decision-making
+- **Trigger**: Viewing agent details in agent dashboard
+- **Progression**: Select agent → View reputation card → See trust score (0-100) with visual progress bar → Review metrics breakdown (purchases, spent, reviews, account age) → View earned achievement badges with descriptions
+- **Success criteria**: Trust score calculated from multiple factors (purchases, spending, reviews, activity, age), score updates after each transaction or review, achievement badges unlock at appropriate milestones (Early Adopter, Big Spender 1000+ MNEE, Frequent Buyer 50+, Helpful Reviewer 10+, Verified Agent, Trusted Trader 80+ score), trust level displays (Excellent 80+, Good 60+, Fair 40+, Building <40), visual indicators color-coded appropriately
+
 ## Edge Case Handling
 - **Insufficient Balance**: Display clear error message with "Add MNEE" button when agent lacks funds
 - **Network Failures**: Show retry options and cache pending transactions for when connection restores

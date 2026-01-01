@@ -2,18 +2,19 @@ import { useState, useEffect } from 'react'
 import { useKV } from '@github/spark/hooks'
 import { useWallet } from './hooks/use-wallet'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Storefront, Robot, ListChecks, Plus, Package, ChartLine } from '@phosphor-icons/react'
+import { Storefront, Robot, ListChecks, Plus, Package, ChartLine, Crown } from '@phosphor-icons/react'
 import { motion } from 'framer-motion'
 import { Toaster } from '@/components/ui/sonner'
 import Header from './components/Header'
-import Marketplace from './components/Marketplace'
+import EnhancedMarketplace from './components/EnhancedMarketplace'
 import AgentDashboard from './components/AgentDashboard'
 import TransactionExplorer from './components/TransactionExplorer'
 import AddServiceDialog from './components/AddServiceDialog'
 import BundlesView from './components/BundlesView'
 import FaucetDialog from './components/FaucetDialog'
 import WalletBalanceChart from './components/WalletBalanceChart'
-import type { Service, Agent, Transaction, ServiceBundle, Subscription } from './lib/types'
+import ProviderDashboard from './components/ProviderDashboard'
+import type { Service, Agent, Transaction, ServiceBundle, Subscription, ServiceReview } from './lib/types'
 
 function App() {
   const wallet = useWallet()
@@ -22,6 +23,7 @@ function App() {
   const [transactions, setTransactions] = useKV<Transaction[]>('transactions', [])
   const [bundles, setBundles] = useKV<ServiceBundle[]>('bundles', [])
   const [subscriptions, setSubscriptions] = useKV<Subscription[]>('subscriptions', [])
+  const [reviews, setReviews] = useKV<ServiceReview[]>('reviews', [])
   const [testMneeBalance, setTestMneeBalance] = useKV<number>('test-mnee-balance', 0)
   const [activeTab, setActiveTab] = useState('marketplace')
   const [isAddServiceOpen, setIsAddServiceOpen] = useState(false)
@@ -514,6 +516,20 @@ function App() {
     setTestMneeBalance((current = 0) => current + amount)
   }
 
+  const handleAddReview = (review: ServiceReview) => {
+    setReviews((current = []) => [...current, review])
+  }
+
+  const handleHelpfulClick = (reviewId: string) => {
+    setReviews((current = []) =>
+      current.map(review =>
+        review.id === reviewId
+          ? { ...review, helpful: review.helpful + 1 }
+          : review
+      )
+    )
+  }
+
   const displayMneeBalance = wallet.isConnected 
     ? (parseFloat(wallet.mneeBalance) + (testMneeBalance || 0)).toFixed(2)
     : '0.00'
@@ -553,7 +569,7 @@ function App() {
 
           <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-              <TabsList className="w-full md:w-auto grid grid-cols-5 md:inline-grid">
+              <TabsList className="w-full md:w-auto grid grid-cols-6 md:inline-grid">
                 <TabsTrigger value="marketplace" className="gap-2">
                   <Storefront className="w-4 h-4" />
                   <span className="hidden sm:inline">Marketplace</span>
@@ -565,6 +581,10 @@ function App() {
                 <TabsTrigger value="agents" className="gap-2">
                   <Robot className="w-4 h-4" />
                   <span className="hidden sm:inline">Agents</span>
+                </TabsTrigger>
+                <TabsTrigger value="providers" className="gap-2">
+                  <Crown className="w-4 h-4" />
+                  <span className="hidden sm:inline">Providers</span>
                 </TabsTrigger>
                 <TabsTrigger value="wallet" className="gap-2">
                   <ChartLine className="w-4 h-4" />
@@ -590,11 +610,14 @@ function App() {
             </div>
 
             <TabsContent value="marketplace" className="mt-6">
-              <Marketplace
+              <EnhancedMarketplace
                 services={services || []}
                 agents={agents || []}
                 transactions={transactions || []}
+                reviews={reviews || []}
                 onPurchase={handlePurchase}
+                onAddReview={handleAddReview}
+                onHelpfulClick={handleHelpfulClick}
                 walletConnected={wallet.isConnected}
                 onTransferMNEE={wallet.transferMNEE}
                 userAddress={wallet.address}
@@ -622,6 +645,14 @@ function App() {
                 transactions={transactions || []}
                 onUpdateAgent={handleUpdateAgent}
                 onAddAgent={handleAddAgent}
+              />
+            </TabsContent>
+
+            <TabsContent value="providers" className="mt-6">
+              <ProviderDashboard
+                services={services || []}
+                transactions={transactions || []}
+                reviews={reviews || []}
               />
             </TabsContent>
 
