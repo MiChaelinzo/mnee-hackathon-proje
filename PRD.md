@@ -54,6 +54,20 @@ A decentralized marketplace where AI agents can autonomously discover, purchase,
 - **Progression**: System analyzes agent history → Generates recommendations → Displays relevant services → Agent can quick-purchase
 - **Success criteria**: Recommendations are contextually relevant and lead to higher purchase rates
 
+### Service Bundles
+- **Functionality**: Pre-packaged combinations of related services at discounted rates
+- **Purpose**: Encourage bulk purchases and provide cost savings for common service combinations
+- **Trigger**: User navigates to Bundles tab
+- **Progression**: Browse bundles → View included services and savings → Select bundle → Choose agent → Purchase with MNEE
+- **Success criteria**: Bundles display original vs. bundle pricing with clear discount percentage, successful purchases with bundle tracking
+
+### Subscription Packages
+- **Functionality**: Recurring payment plans (monthly/quarterly/yearly) for ongoing service access with progressive discounts
+- **Purpose**: Create predictable revenue streams and reward commitment with significant savings
+- **Trigger**: User navigates to Subscriptions tab within Bundles
+- **Progression**: Browse subscription tiers → Compare pricing and features → Select plan → Choose agent → Subscribe with MNEE
+- **Success criteria**: Clear billing period display, automatic renewal tracking, subscription status management
+
 ## Edge Case Handling
 - **Insufficient Balance**: Display clear error message with "Add MNEE" button when agent lacks funds
 - **Network Failures**: Show retry options and cache pending transactions for when connection restores

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useKV } from '@github/spark/hooks'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Storefront, Robot, ListChecks, Plus } from '@phosphor-icons/react'
+import { Storefront, Robot, ListChecks, Plus, Package } from '@phosphor-icons/react'
 import { motion } from 'framer-motion'
 import { Toaster } from '@/components/ui/sonner'
 import Header from './components/Header'
@@ -9,12 +9,15 @@ import Marketplace from './components/Marketplace'
 import AgentDashboard from './components/AgentDashboard'
 import TransactionExplorer from './components/TransactionExplorer'
 import AddServiceDialog from './components/AddServiceDialog'
-import type { Service, Agent, Transaction } from './lib/types'
+import BundlesView from './components/BundlesView'
+import type { Service, Agent, Transaction, ServiceBundle, Subscription } from './lib/types'
 
 function App() {
   const [services, setServices] = useKV<Service[]>('services', [])
   const [agents, setAgents] = useKV<Agent[]>('agents', [])
   const [transactions, setTransactions] = useKV<Transaction[]>('transactions', [])
+  const [bundles, setBundles] = useKV<ServiceBundle[]>('bundles', [])
+  const [subscriptions, setSubscriptions] = useKV<Subscription[]>('subscriptions', [])
   const [activeTab, setActiveTab] = useState('marketplace')
   const [isAddServiceOpen, setIsAddServiceOpen] = useState(false)
   const [walletConnected, setWalletConnected] = useState(false)
@@ -205,7 +208,259 @@ function App() {
       ]
       setServices(defaultServices)
     }
-  }, [])
+
+    if (bundles && bundles.length === 0 && services && services.length > 0) {
+      const defaultBundles: ServiceBundle[] = [
+        {
+          id: crypto.randomUUID(),
+          name: 'Content Creator Pro Bundle',
+          description: 'Complete content generation suite for AI agents producing blogs, videos, and social media content',
+          services: [
+            services.find(s => s.name === 'Blog Post Generator')?.id || '',
+            services.find(s => s.name === 'Premium Video Script Writer')?.id || '',
+            services.find(s => s.name === 'Voice Synthesis - Starter')?.id || '',
+          ].filter(Boolean),
+          originalPrice: 50.97,
+          bundlePrice: 39.99,
+          discount: 21,
+          category: 'Content Generation',
+          provider: 'ContentForge AI',
+          providerAddress: '0x8ccedbAe4916b79da7F3F612EfB2EB93A2bFD6cF',
+          available: true,
+          sales: 45,
+          rating: 4.8,
+          validityDays: 30,
+        },
+        {
+          id: crypto.randomUUID(),
+          name: 'Data Intelligence Bundle',
+          description: 'Comprehensive data analysis toolkit for AI agents processing and extracting insights from multiple sources',
+          services: [
+            services.find(s => s.name === 'Sentiment Analysis Engine')?.id || '',
+            services.find(s => s.name === 'Web Scraping & Data Mining')?.id || '',
+            services.find(s => s.name === 'Document OCR & Extraction')?.id || '',
+          ].filter(Boolean),
+          originalPrice: 44.48,
+          bundlePrice: 34.99,
+          discount: 21,
+          category: 'Data Analysis',
+          provider: 'DataHarvest Pro',
+          providerAddress: '0x8ccedbAe4916b79da7F3F612EfB2EB93A2bFD6cF',
+          available: true,
+          sales: 38,
+          rating: 4.7,
+          validityDays: 30,
+        },
+        {
+          id: crypto.randomUUID(),
+          name: 'Visual AI Bundle',
+          description: 'Essential image processing services for AI agents working with visual content',
+          services: [
+            services.find(s => s.name === 'Image Background Removal')?.id || '',
+            services.find(s => s.name === 'AI Photo Enhancement Suite')?.id || '',
+          ].filter(Boolean),
+          originalPrice: 19.98,
+          bundlePrice: 14.99,
+          discount: 25,
+          category: 'Image Processing',
+          provider: 'PixelCraft Studio',
+          providerAddress: '0x8ccedbAe4916b79da7F3F612EfB2EB93A2bFD6cF',
+          available: true,
+          sales: 89,
+          rating: 4.9,
+          validityDays: 30,
+        },
+        {
+          id: crypto.randomUUID(),
+          name: 'ML Developer Bundle',
+          description: 'Complete machine learning toolset with compute resources and advanced models',
+          services: [
+            services.find(s => s.name === 'GPU Compute - Pro Tier')?.id || '',
+            services.find(s => s.name === 'Predictive Analytics Model')?.id || '',
+            services.find(s => s.name === 'AI Code Review & Optimization')?.id || '',
+          ].filter(Boolean),
+          originalPrice: 182.48,
+          bundlePrice: 139.99,
+          discount: 23,
+          category: 'Machine Learning',
+          provider: 'AI Solutions Enterprise',
+          providerAddress: '0x8ccedbAe4916b79da7F3F612EfB2EB93A2bFD6cF',
+          available: true,
+          sales: 23,
+          rating: 4.9,
+          validityDays: 30,
+        },
+        {
+          id: crypto.randomUUID(),
+          name: 'Trading Bot Essentials',
+          description: 'Real-time data and monitoring services for automated trading agents',
+          services: [
+            services.find(s => s.name === 'Real-Time Market Data Stream')?.id || '',
+            services.find(s => s.name === 'Blockchain Transaction Monitor')?.id || '',
+          ].filter(Boolean),
+          originalPrice: 79.98,
+          bundlePrice: 59.99,
+          discount: 25,
+          category: 'API Access',
+          provider: 'DataStream Pro',
+          providerAddress: '0x8ccedbAe4916b79da7F3F612EfB2EB93A2bFD6cF',
+          available: true,
+          sales: 67,
+          rating: 4.8,
+          validityDays: 30,
+        },
+      ]
+      setBundles(defaultBundles)
+    }
+
+    if (subscriptions && subscriptions.length === 0 && services && services.length > 0) {
+      const defaultSubscriptions: Subscription[] = [
+        {
+          id: crypto.randomUUID(),
+          name: 'Startup Agent Plan',
+          description: 'Perfect for individual AI agents or small-scale automation projects',
+          services: [
+            services.find(s => s.name === 'GPU Compute - Basic Tier')?.id || '',
+            services.find(s => s.name === 'Sentiment Analysis Engine')?.id || '',
+            services.find(s => s.name === 'Blog Post Generator')?.id || '',
+          ].filter(Boolean),
+          monthlyPrice: 22.99,
+          billingPeriod: 'monthly',
+          totalPrice: 22.99,
+          discount: 15,
+          category: 'Content Generation',
+          provider: 'AI Solutions Enterprise',
+          providerAddress: '0x8ccedbAe4916b79da7F3F612EfB2EB93A2bFD6cF',
+          available: true,
+          subscribers: 156,
+          rating: 4.7,
+          features: [
+            'GPU Compute - Basic Tier access',
+            'Sentiment Analysis Engine',
+            'Blog Post Generator',
+            'Priority support',
+            'Monthly usage reports',
+          ],
+        },
+        {
+          id: crypto.randomUUID(),
+          name: 'Professional Agent Plan',
+          description: 'Comprehensive services for production AI agents with high-volume needs',
+          services: [
+            services.find(s => s.name === 'GPU Compute - Pro Tier')?.id || '',
+            services.find(s => s.name === 'Real-Time Market Data Stream')?.id || '',
+            services.find(s => s.name === 'Web Scraping & Data Mining')?.id || '',
+            services.find(s => s.name === 'AI Photo Enhancement Suite')?.id || '',
+          ].filter(Boolean),
+          monthlyPrice: 119.99,
+          billingPeriod: 'monthly',
+          totalPrice: 119.99,
+          discount: 25,
+          category: 'Machine Learning',
+          provider: 'AI Solutions Enterprise',
+          providerAddress: '0x8ccedbAe4916b79da7F3F612EfB2EB93A2bFD6cF',
+          available: true,
+          subscribers: 78,
+          rating: 4.9,
+          features: [
+            'GPU Compute - Pro Tier unlimited',
+            'Real-Time Market Data Stream',
+            'Web Scraping & Data Mining',
+            'AI Photo Enhancement Suite',
+            '24/7 priority support',
+            'Custom integrations available',
+            'Advanced analytics dashboard',
+          ],
+        },
+        {
+          id: crypto.randomUUID(),
+          name: 'Enterprise Agent Plan - Quarterly',
+          description: 'Maximum value for enterprise-scale AI operations with quarterly commitment',
+          services: services.slice(0, 8).map(s => s.id),
+          monthlyPrice: 249.99,
+          billingPeriod: 'quarterly',
+          totalPrice: 674.97,
+          discount: 35,
+          category: 'Machine Learning',
+          provider: 'AI Solutions Enterprise',
+          providerAddress: '0x8ccedbAe4916b79da7F3F612EfB2EB93A2bFD6cF',
+          available: true,
+          subscribers: 34,
+          rating: 5.0,
+          features: [
+            'Access to all premium services',
+            'Unlimited GPU compute hours',
+            'Dedicated account manager',
+            'Custom model training included',
+            'White-label options',
+            'SLA guarantees',
+            'Quarterly strategy sessions',
+            'Early access to new features',
+          ],
+        },
+        {
+          id: crypto.randomUUID(),
+          name: 'Content Creator Pro - Annual',
+          description: 'Year-long content generation suite with maximum savings for committed creators',
+          services: [
+            services.find(s => s.name === 'Blog Post Generator')?.id || '',
+            services.find(s => s.name === 'Premium Video Script Writer')?.id || '',
+            services.find(s => s.name === 'Voice Synthesis - Starter')?.id || '',
+            services.find(s => s.name === 'Image Background Removal')?.id || '',
+          ].filter(Boolean),
+          monthlyPrice: 39.99,
+          billingPeriod: 'yearly',
+          totalPrice: 383.90,
+          discount: 40,
+          category: 'Content Generation',
+          provider: 'ContentForge AI',
+          providerAddress: '0x8ccedbAe4916b79da7F3F612EfB2EB93A2bFD6cF',
+          available: true,
+          subscribers: 112,
+          rating: 4.8,
+          features: [
+            'Unlimited blog post generation',
+            'Premium video scripts',
+            'Voice synthesis (500K chars/month)',
+            'Background removal (10K images/month)',
+            'Content calendar planning',
+            'SEO optimization tools',
+            'Trend analysis reports',
+          ],
+        },
+        {
+          id: crypto.randomUUID(),
+          name: 'Data Analysis Pro - Monthly',
+          description: 'Complete data processing and analysis suite for data-driven AI agents',
+          services: [
+            services.find(s => s.name === 'Sentiment Analysis Engine')?.id || '',
+            services.find(s => s.name === 'Web Scraping & Data Mining')?.id || '',
+            services.find(s => s.name === 'Document OCR & Extraction')?.id || '',
+            services.find(s => s.name === 'Predictive Analytics Model')?.id || '',
+          ].filter(Boolean),
+          monthlyPrice: 89.99,
+          billingPeriod: 'monthly',
+          totalPrice: 89.99,
+          discount: 20,
+          category: 'Data Analysis',
+          provider: 'DataHarvest Pro',
+          providerAddress: '0x8ccedbAe4916b79da7F3F612EfB2EB93A2bFD6cF',
+          available: true,
+          subscribers: 91,
+          rating: 4.8,
+          features: [
+            'Multi-language sentiment analysis',
+            'Unlimited web scraping',
+            'OCR for all document types',
+            'Custom ML model training',
+            'Data visualization tools',
+            'API access included',
+          ],
+        },
+      ]
+      setSubscriptions(defaultSubscriptions)
+    }
+  }, [services])
 
   const handleAddService = (service: Service) => {
     setServices((current = []) => [...current, service])
@@ -272,18 +527,22 @@ function App() {
 
           <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-              <TabsList className="w-full md:w-auto grid grid-cols-3 md:inline-grid">
+              <TabsList className="w-full md:w-auto grid grid-cols-4 md:inline-grid">
                 <TabsTrigger value="marketplace" className="gap-2">
                   <Storefront className="w-4 h-4" />
                   <span className="hidden sm:inline">Marketplace</span>
                 </TabsTrigger>
+                <TabsTrigger value="bundles" className="gap-2">
+                  <Package className="w-4 h-4" />
+                  <span className="hidden sm:inline">Bundles</span>
+                </TabsTrigger>
                 <TabsTrigger value="agents" className="gap-2">
                   <Robot className="w-4 h-4" />
-                  <span className="hidden sm:inline">My Agents</span>
+                  <span className="hidden sm:inline">Agents</span>
                 </TabsTrigger>
                 <TabsTrigger value="transactions" className="gap-2">
                   <ListChecks className="w-4 h-4" />
-                  <span className="hidden sm:inline">Transactions</span>
+                  <span className="hidden sm:inline">Activity</span>
                 </TabsTrigger>
               </TabsList>
 
@@ -302,6 +561,17 @@ function App() {
 
             <TabsContent value="marketplace" className="mt-6">
               <Marketplace
+                services={services || []}
+                agents={agents || []}
+                onPurchase={handlePurchase}
+                walletConnected={walletConnected}
+              />
+            </TabsContent>
+
+            <TabsContent value="bundles" className="mt-6">
+              <BundlesView
+                bundles={bundles || []}
+                subscriptions={subscriptions || []}
                 services={services || []}
                 agents={agents || []}
                 onPurchase={handlePurchase}

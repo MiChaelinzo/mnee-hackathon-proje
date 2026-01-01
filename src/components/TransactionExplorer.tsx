@@ -2,7 +2,7 @@ import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
-import { ArrowSquareOut, Check, X, Clock } from '@phosphor-icons/react'
+import { ArrowSquareOut, Check, X, Clock, Package, CalendarBlank, ShoppingCart } from '@phosphor-icons/react'
 import { motion } from 'framer-motion'
 import type { Transaction, Agent } from '@/lib/types'
 import { formatMNEE, getEtherscanUrl } from '@/lib/mnee'
@@ -48,6 +48,28 @@ export default function TransactionExplorer({ transactions, agents }: Transactio
     }
   }
 
+  const getTypeIcon = (type?: Transaction['type']) => {
+    switch (type) {
+      case 'bundle':
+        return <Package className="w-3 h-3" />
+      case 'subscription':
+        return <CalendarBlank className="w-3 h-3" />
+      default:
+        return <ShoppingCart className="w-3 h-3" />
+    }
+  }
+
+  const getTypeLabel = (type?: Transaction['type']) => {
+    switch (type) {
+      case 'bundle':
+        return 'Bundle'
+      case 'subscription':
+        return 'Subscription'
+      default:
+        return 'Service'
+    }
+  }
+
   if (transactions.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-20 text-center">
@@ -76,7 +98,8 @@ export default function TransactionExplorer({ transactions, agents }: Transactio
               <TableRow>
                 <TableHead>Time</TableHead>
                 <TableHead>Agent</TableHead>
-                <TableHead>Service</TableHead>
+                <TableHead>Item</TableHead>
+                <TableHead>Type</TableHead>
                 <TableHead>Amount</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead>Transaction</TableHead>
@@ -96,6 +119,12 @@ export default function TransactionExplorer({ transactions, agents }: Transactio
                   </TableCell>
                   <TableCell className="font-medium">{tx.agentName}</TableCell>
                   <TableCell>{tx.serviceName}</TableCell>
+                  <TableCell>
+                    <Badge variant="outline" className="gap-1">
+                      {getTypeIcon(tx.type)}
+                      {getTypeLabel(tx.type)}
+                    </Badge>
+                  </TableCell>
                   <TableCell className="font-mono font-bold text-accent">
                     {formatMNEE(tx.amount)}
                   </TableCell>
@@ -141,8 +170,14 @@ export default function TransactionExplorer({ transactions, agents }: Transactio
           >
             <Card className="p-4">
               <div className="flex items-start justify-between mb-3">
-                <div>
-                  <div className="font-semibold mb-1">{tx.serviceName}</div>
+                <div className="flex-1">
+                  <div className="flex items-center gap-2 mb-1">
+                    <div className="font-semibold">{tx.serviceName}</div>
+                    <Badge variant="outline" className="gap-1 text-xs">
+                      {getTypeIcon(tx.type)}
+                      {getTypeLabel(tx.type)}
+                    </Badge>
+                  </div>
                   <div className="text-sm text-muted-foreground">{tx.agentName}</div>
                 </div>
                 <Badge variant={getStatusVariant(tx.status)} className="gap-1">
