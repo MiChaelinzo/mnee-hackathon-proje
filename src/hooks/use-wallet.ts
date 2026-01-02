@@ -1,7 +1,9 @@
 import { useState, useEffect, useCallback } from 'react'
-import { BrowserProvider, Contract, formatUnits, parseUnits } from 'ethers'
+import { ethers } from 'ethers'
 import { MNEE_CONTRACT_ADDRESS, ETHEREUM_CHAIN_ID } from '@/lib/mnee'
 import { toast } from 'sonner'
+
+const { BrowserProvider, Contract, formatUnits, parseUnits } = ethers
 
 const MNEE_ABI = [
   'function balanceOf(address owner) view returns (uint256)',
@@ -62,7 +64,7 @@ export function useWallet() {
     }
   }, [])
 
-  const updateBalances = async (address: string, provider: BrowserProvider) => {
+  const updateBalances = async (address: string, provider: ethers.BrowserProvider) => {
     try {
       const ethBalanceWei = await provider.getBalance(address)
       const ethBalance = formatUnits(ethBalanceWei, 18)
