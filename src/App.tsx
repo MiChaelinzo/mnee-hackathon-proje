@@ -2,10 +2,11 @@ import { useState, useEffect } from 'react'
 import { useKV } from '@github/spark/hooks'
 import { useWallet } from './hooks/use-wallet'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Storefront, Robot, ListChecks, Plus, Package, ChartLine, Crown, ChatCircle, Lightning, Scales, Sparkle, Target, FlowArrow, GraphicsCard, UserCircle, EnvelopeSimple } from '@phosphor-icons/react'
+import { Storefront, Robot, ListChecks, Plus, Package, ChartLine, Crown, ChatCircle, Lightning, Scales, Sparkle, Target, FlowArrow, GraphicsCard, UserCircle, EnvelopeSimple, Trophy } from '@phosphor-icons/react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Toaster } from '@/components/ui/sonner'
 import Header from './components/Header'
+import AchievementLeaderboard from './components/AchievementLeaderboard'
 import EnhancedMarketplace from './components/EnhancedMarketplace'
 import AgentDashboard from './components/AgentDashboard'
 import TransactionExplorer from './components/TransactionExplorer'
@@ -654,6 +655,9 @@ function App() {
       case 'chat':
         setActiveTab('chat')
         break
+      case 'leaderboard':
+        setActiveTab('leaderboard')
+        break
       default:
         break
     }
@@ -715,6 +719,7 @@ function App() {
             onViewAgents={() => setActiveTab('agents')}
             onViewBundles={() => setActiveTab('bundles')}
             onViewAnalytics={() => setActiveTab('analytics')}
+            onViewLeaderboard={() => setActiveTab('leaderboard')}
           />
 
           <PersonalizedWelcomeBanner
@@ -809,6 +814,10 @@ function App() {
                   <TabsTrigger value="predictions" className="gap-2">
                     <Sparkle className="w-4 h-4" />
                     <span className="hidden sm:inline">Predictions</span>
+                  </TabsTrigger>
+                  <TabsTrigger value="leaderboard" className="gap-2">
+                    <Trophy className="w-4 h-4" />
+                    <span className="hidden sm:inline">Leaderboard</span>
                   </TabsTrigger>
                   {wallet.isConnected && (
                     <>
@@ -991,6 +1000,15 @@ function App() {
                   </div>
                 )}
               </div>
+            </TabsContent>
+
+            <TabsContent value="leaderboard" className="mt-6">
+              <AchievementLeaderboard
+                agents={agents || []}
+                transactions={transactions || []}
+                reviews={reviews || []}
+                currentUserAddress={wallet.address}
+              />
             </TabsContent>
 
             {wallet.isConnected && wallet.address && (

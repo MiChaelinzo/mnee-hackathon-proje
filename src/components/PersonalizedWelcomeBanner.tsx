@@ -63,6 +63,7 @@ const iconMap: Record<string, any> = {
   sparkle: Sparkle,
   crown: Crown,
   chat: ChatCircle,
+  trophy: Trophy,
 }
 
 export default function PersonalizedWelcomeBanner({

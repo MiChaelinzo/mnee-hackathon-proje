@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion'
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { Plus, Robot, Package, ChartLine, X } from '@phosphor-icons/react'
+import { Plus, Robot, Package, ChartLine, X, Trophy } from '@phosphor-icons/react'
 import { useKV } from '@github/spark/hooks'
 
 interface QuickStartGuideProps {
@@ -9,13 +9,15 @@ interface QuickStartGuideProps {
   onViewAgents: () => void
   onViewBundles: () => void
   onViewAnalytics: () => void
+  onViewLeaderboard?: () => void
 }
 
 export default function QuickStartGuide({ 
   onListService, 
   onViewAgents, 
   onViewBundles, 
-  onViewAnalytics 
+  onViewAnalytics,
+  onViewLeaderboard
 }: QuickStartGuideProps) {
   const [showQuickStart, setShowQuickStart] = useKV<boolean>('show-quick-start', true)
 
@@ -42,6 +44,13 @@ export default function QuickStartGuide({
       description: 'Save with service package deals',
       action: onViewBundles,
       color: 'from-purple-500/20 to-purple-500/5',
+    },
+    {
+      icon: <Trophy className="w-6 h-6" />,
+      title: 'View Leaderboard',
+      description: 'See top users and earn achievements',
+      action: onViewLeaderboard,
+      color: 'from-yellow-500/20 to-yellow-500/5',
     },
     {
       icon: <ChartLine className="w-6 h-6" />,
@@ -74,7 +83,7 @@ export default function QuickStartGuide({
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
           {quickActions.map((action, index) => (
             <motion.div
               key={action.title}
