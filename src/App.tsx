@@ -3,7 +3,7 @@ import { useKV } from '@github/spark/hooks'
 import { useWallet } from './hooks/use-wallet'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Storefront, Robot, ListChecks, Plus, Package, ChartLine, Crown, ChatCircle, Lightning, Scales, Sparkle, Target, FlowArrow, GraphicsCard } from '@phosphor-icons/react'
-import { motion } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
 import { Toaster } from '@/components/ui/sonner'
 import Header from './components/Header'
 import EnhancedMarketplace from './components/EnhancedMarketplace'
@@ -23,6 +23,9 @@ import AISearchBar from './components/AISearchBar'
 import PredictiveAnalytics from './components/PredictiveAnalytics'
 import NetworkVisualization from './components/NetworkVisualization'
 import WorkflowBuilder from './components/WorkflowBuilder'
+import WelcomeIntro from './components/WelcomeIntro'
+import QuickStartGuide from './components/QuickStartGuide'
+import MarketplaceStats from './components/MarketplaceStats'
 import type { Service, Agent, Transaction, ServiceBundle, Subscription, ServiceReview } from './lib/types'
 
 function App() {
@@ -34,10 +37,18 @@ function App() {
   const [subscriptions, setSubscriptions] = useKV<Subscription[]>('subscriptions', [])
   const [reviews, setReviews] = useKV<ServiceReview[]>('reviews', [])
   const [testMneeBalance, setTestMneeBalance] = useKV<number>('test-mnee-balance', 0)
+  const [hasSeenIntro, setHasSeenIntro] = useKV<boolean>('has-seen-intro', false)
   const [activeTab, setActiveTab] = useState('marketplace')
   const [isAddServiceOpen, setIsAddServiceOpen] = useState(false)
   const [isFaucetOpen, setIsFaucetOpen] = useState(false)
   const [selectedAgent, setSelectedAgent] = useState<Agent | null>(null)
+  const [showWelcome, setShowWelcome] = useState(false)
+
+  useEffect(() => {
+    if (!hasSeenIntro) {
+      setShowWelcome(true)
+    }
+  }, [hasSeenIntro])
 
   useEffect(() => {
     if (services && services.length === 0) {
@@ -544,9 +555,24 @@ function App() {
     ? (parseFloat(wallet.mneeBalance) + (testMneeBalance || 0)).toFixed(2)
     : '0.00'
 
+  const handleDismissWelcome = () => {
+    setShowWelcome(false)
+    setHasSeenIntro(true)
+  }
+
   return (
     <div className="min-h-screen bg-background text-foreground grid-pattern">
       <Toaster />
+      
+      <AnimatePresence>
+        {showWelcome && (
+          <WelcomeIntro
+            onDismiss={handleDismissWelcome}
+            onConnectWallet={wallet.connectWallet}
+            isWalletConnected={wallet.isConnected}
+          />
+        )}
+      </AnimatePresence>
       
       <Header 
         address={wallet.address}
@@ -560,6 +586,7 @@ function App() {
         onDisconnect={wallet.disconnectWallet}
         onSwitchNetwork={wallet.switchToEthereumMainnet}
         onOpenFaucet={() => setIsFaucetOpen(true)}
+        onShowWelcome={() => setShowWelcome(true)}
       />
 
       <main className="container mx-auto px-4 md:px-8 py-8">
@@ -576,6 +603,19 @@ function App() {
               Autonomous commerce powered by MNEE stablecoin
             </p>
           </div>
+
+          <QuickStartGuide
+            onListService={() => setIsAddServiceOpen(true)}
+            onViewAgents={() => setActiveTab('agents')}
+            onViewBundles={() => setActiveTab('bundles')}
+            onViewAnalytics={() => setActiveTab('analytics')}
+          />
+
+          <MarketplaceStats
+            services={services || []}
+            transactions={transactions || []}
+            agents={agents || []}
+          />
 
           {activeTab === 'marketplace' && (
             <motion.div

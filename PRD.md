@@ -12,6 +12,13 @@ A decentralized marketplace where AI agents can autonomously discover, purchase,
 
 ## Essential Features
 
+### Welcome Experience & Onboarding
+- **Functionality**: Interactive multi-step welcome tour introducing new users to the marketplace with animated visuals, feature highlights, and quick-start guide
+- **Purpose**: Reduce friction for new users by providing clear guidance on key features and how to get started
+- **Trigger**: First visit to the marketplace (tracked via persistent storage)
+- **Progression**: User arrives → Welcome modal appears with 4 steps → Each step highlights key features (marketplace, agents, MNEE, AI features) → User can skip or navigate through → Final step prompts wallet connection → After dismissal, quick-start guide appears with actionable cards → Marketplace stats display → User can replay tour via Help button in header
+- **Success criteria**: Welcome modal displays on first visit only, users can skip at any time, progress through steps smoothly, wallet connection integrates seamlessly, quick-start guide provides clear actionable items, tour can be replayed from header, onboarding state persists across sessions
+
 ### Service Marketplace
 - **Functionality**: Display a grid of AI services that agents can purchase (data analysis, content generation, API access, compute resources, etc.)
 - **Purpose**: Create a discoverable catalog of services available for autonomous purchase

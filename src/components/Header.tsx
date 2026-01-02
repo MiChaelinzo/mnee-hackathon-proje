@@ -1,8 +1,9 @@
 import { Button } from '@/components/ui/button'
-import { Wallet, Warning, Drop, Flask } from '@phosphor-icons/react'
+import { Wallet, Warning, Drop, Flask, Question } from '@phosphor-icons/react'
 import { MNEE_CONTRACT_ADDRESS, formatAddress } from '@/lib/mnee'
 import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 
 interface HeaderProps {
   address: string | null
@@ -16,6 +17,7 @@ interface HeaderProps {
   onDisconnect: () => void
   onSwitchNetwork: () => void
   onOpenFaucet: () => void
+  onShowWelcome?: () => void
 }
 
 export default function Header({ 
@@ -29,7 +31,8 @@ export default function Header({
   onConnect, 
   onDisconnect,
   onSwitchNetwork,
-  onOpenFaucet
+  onOpenFaucet,
+  onShowWelcome
 }: HeaderProps) {
   const isWrongNetwork = isConnected && chainId !== 1
   const hasTestMnee = testMneeBalance > 0
@@ -51,6 +54,27 @@ export default function Header({
         </div>
 
         <div className="flex items-center gap-3">
+          {onShowWelcome && (
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    onClick={onShowWelcome}
+                    variant="ghost"
+                    size="sm"
+                    className="gap-2 text-muted-foreground hover:text-foreground"
+                  >
+                    <Question className="w-4 h-4" weight="bold" />
+                    <span className="hidden lg:inline text-xs">Help</span>
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>View Welcome Tour</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          )}
+          
           {isConnected && (
             <>
               <div className="hidden lg:flex flex-col items-end gap-1">
