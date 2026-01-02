@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { useKV } from '@github/spark/hooks'
 import { useWallet } from './hooks/use-wallet'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Storefront, Robot, ListChecks, Plus, Package, ChartLine, Crown, ChatCircle, Lightning, Scales, Sparkle, Target, FlowArrow, GraphicsCard, UserCircle } from '@phosphor-icons/react'
+import { Storefront, Robot, ListChecks, Plus, Package, ChartLine, Crown, ChatCircle, Lightning, Scales, Sparkle, Target, FlowArrow, GraphicsCard, UserCircle, EnvelopeSimple } from '@phosphor-icons/react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Toaster } from '@/components/ui/sonner'
 import Header from './components/Header'
@@ -29,6 +29,8 @@ import MarketplaceStats from './components/MarketplaceStats'
 import PersonalizedWelcomeBanner from './components/PersonalizedWelcomeBanner'
 import AchievementToast from './components/AchievementToast'
 import UserProfileView from './components/UserProfileView'
+import PersonalizedWelcomeViewer from './components/PersonalizedWelcomeViewer'
+import WelcomeMessageHistory from './components/WelcomeMessageHistory'
 import type { Service, Agent, Transaction, ServiceBundle, Subscription, ServiceReview } from './lib/types'
 import type { Achievement, UserProfile } from './lib/personalization'
 import { detectAchievements } from './lib/personalization'
@@ -809,10 +811,16 @@ function App() {
                     <span className="hidden sm:inline">Predictions</span>
                   </TabsTrigger>
                   {wallet.isConnected && (
-                    <TabsTrigger value="profile" className="gap-2">
-                      <UserCircle className="w-4 h-4" />
-                      <span className="hidden sm:inline">Profile</span>
-                    </TabsTrigger>
+                    <>
+                      <TabsTrigger value="messages" className="gap-2">
+                        <EnvelopeSimple className="w-4 h-4" />
+                        <span className="hidden sm:inline">Messages</span>
+                      </TabsTrigger>
+                      <TabsTrigger value="profile" className="gap-2">
+                        <UserCircle className="w-4 h-4" />
+                        <span className="hidden sm:inline">Profile</span>
+                      </TabsTrigger>
+                    </>
                   )}
                 </TabsList>
               </div>
@@ -986,13 +994,34 @@ function App() {
             </TabsContent>
 
             {wallet.isConnected && wallet.address && (
-              <TabsContent value="profile" className="mt-6">
-                <UserProfileView
-                  walletAddress={wallet.address}
-                  agents={agents || []}
-                  transactions={transactions || []}
-                />
-              </TabsContent>
+              <>
+                <TabsContent value="messages" className="mt-6">
+                  <WelcomeMessageHistory
+                    walletAddress={wallet.address}
+                    agents={agents || []}
+                    transactions={transactions || []}
+                    services={services || []}
+                    reviews={reviews || []}
+                  />
+                </TabsContent>
+
+                <TabsContent value="profile" className="mt-6">
+                  <div className="space-y-6">
+                    <PersonalizedWelcomeViewer
+                      walletAddress={wallet.address}
+                      agents={agents || []}
+                      transactions={transactions || []}
+                      services={services || []}
+                      reviews={reviews || []}
+                    />
+                    <UserProfileView
+                      walletAddress={wallet.address}
+                      agents={agents || []}
+                      transactions={transactions || []}
+                    />
+                  </div>
+                </TabsContent>
+              </>
             )}
           </Tabs>
         </motion.div>
