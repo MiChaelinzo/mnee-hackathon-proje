@@ -42,6 +42,7 @@ interface SocialHubProps {
   onCommentPost: (postId: string, comment: string) => void
   onFollowUser: (userAddress: string) => void
   onUnfollowUser: (userAddress: string) => void
+  onMessageUser?: (userAddress: string) => void
 }
 
 export default function SocialHub({
@@ -57,6 +58,7 @@ export default function SocialHub({
   onCommentPost,
   onFollowUser,
   onUnfollowUser,
+  onMessageUser,
 }: SocialHubProps) {
   const [activeTab, setActiveTab] = useState('feed')
   const [newPostContent, setNewPostContent] = useState('')
@@ -506,22 +508,36 @@ export default function SocialHub({
                               </div>
                               
                               {user.walletAddress !== currentUserAddress && (
-                                <Button
-                                  size="sm"
-                                  variant={isFollowing(user.walletAddress) ? "outline" : "default"}
-                                  onClick={(e) => {
-                                    e.stopPropagation()
-                                    isFollowing(user.walletAddress) 
-                                      ? handleUnfollow(user.walletAddress)
-                                      : handleFollow(user.walletAddress)
-                                  }}
-                                >
-                                  {isFollowing(user.walletAddress) ? (
-                                    <UserMinus className="w-4 h-4" />
-                                  ) : (
-                                    <UserPlus className="w-4 h-4" />
+                                <div className="flex gap-1">
+                                  {onMessageUser && (
+                                    <Button
+                                      size="sm"
+                                      variant="outline"
+                                      onClick={(e) => {
+                                        e.stopPropagation()
+                                        onMessageUser(user.walletAddress)
+                                      }}
+                                    >
+                                      <ChatCircle className="w-4 h-4" />
+                                    </Button>
                                   )}
-                                </Button>
+                                  <Button
+                                    size="sm"
+                                    variant={isFollowing(user.walletAddress) ? "outline" : "default"}
+                                    onClick={(e) => {
+                                      e.stopPropagation()
+                                      isFollowing(user.walletAddress) 
+                                        ? handleUnfollow(user.walletAddress)
+                                        : handleFollow(user.walletAddress)
+                                    }}
+                                  >
+                                    {isFollowing(user.walletAddress) ? (
+                                      <UserMinus className="w-4 h-4" />
+                                    ) : (
+                                      <UserPlus className="w-4 h-4" />
+                                    )}
+                                  </Button>
+                                </div>
                               )}
                             </div>
                           </CardContent>

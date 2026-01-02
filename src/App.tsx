@@ -34,6 +34,8 @@ import PersonalizedWelcomeViewer from './components/PersonalizedWelcomeViewer'
 import WelcomeMessageHistory from './components/WelcomeMessageHistory'
 import SocialHub from './components/SocialHub'
 import SocialStatsWidget from './components/SocialStatsWidget'
+import DirectMessaging from './components/DirectMessaging'
+import DirectMessageBadge from './components/DirectMessageBadge'
 import type { Service, Agent, Transaction, ServiceBundle, Subscription, ServiceReview, UserProfile as SocialUserProfile, SocialPost, SocialComment } from './lib/types'
 import type { Achievement, UserProfile } from './lib/personalization'
 import { detectAchievements } from './lib/personalization'
@@ -725,6 +727,14 @@ function App() {
     )
   }
 
+  const handleMessageUser = (userAddress: string) => {
+    setActiveTab('messages')
+    setTimeout(() => {
+      const event = new CustomEvent('start-dm-conversation', { detail: { userAddress } })
+      window.dispatchEvent(event)
+    }, 100)
+  }
+
   const displayMneeBalance = wallet.isConnected 
     ? (parseFloat(wallet.mneeBalance) + (testMneeBalance || 0)).toFixed(2)
     : '0.00'
@@ -837,6 +847,7 @@ function App() {
         onSwitchNetwork={wallet.switchToEthereumMainnet}
         onOpenFaucet={() => setIsFaucetOpen(true)}
         onShowWelcome={() => setShowWelcome(true)}
+        onViewMessages={() => setActiveTab('messages')}
         agents={agents || []}
       />
 
@@ -974,9 +985,10 @@ function App() {
                   </TabsTrigger>
                   {wallet.isConnected && (
                     <>
-                      <TabsTrigger value="messages" className="gap-2">
+                      <TabsTrigger value="messages" className="gap-2 relative">
                         <EnvelopeSimple className="w-4 h-4" />
                         <span className="hidden sm:inline">Messages</span>
+                        <DirectMessageBadge currentUserAddress={wallet.address} />
                       </TabsTrigger>
                       <TabsTrigger value="profile" className="gap-2">
                         <UserCircle className="w-4 h-4" />
@@ -1178,18 +1190,17 @@ function App() {
                 onCommentPost={handleCommentPost}
                 onFollowUser={handleFollowUser}
                 onUnfollowUser={handleUnfollowUser}
+                onMessageUser={handleMessageUser}
               />
             </TabsContent>
 
             {wallet.isConnected && wallet.address && (
               <>
                 <TabsContent value="messages" className="mt-6">
-                  <WelcomeMessageHistory
-                    walletAddress={wallet.address}
+                  <DirectMessaging
+                    currentUserAddress={wallet.address}
+                    socialProfiles={socialProfiles || []}
                     agents={agents || []}
-                    transactions={transactions || []}
-                    services={services || []}
-                    reviews={reviews || []}
                   />
                 </TabsContent>
 
@@ -1206,6 +1217,13 @@ function App() {
                       walletAddress={wallet.address}
                       agents={agents || []}
                       transactions={transactions || []}
+                    />
+                    <WelcomeMessageHistory
+                      walletAddress={wallet.address}
+                      agents={agents || []}
+                      transactions={transactions || []}
+                      services={services || []}
+                      reviews={reviews || []}
                     />
                   </div>
                 </TabsContent>

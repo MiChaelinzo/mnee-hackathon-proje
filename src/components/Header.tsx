@@ -5,6 +5,7 @@ import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import MiniPersonalizedGreeting from './MiniPersonalizedGreeting'
+import DirectMessageNotification from './DirectMessageNotification'
 import type { Agent } from '@/lib/types'
 
 interface HeaderProps {
@@ -20,6 +21,7 @@ interface HeaderProps {
   onSwitchNetwork: () => void
   onOpenFaucet: () => void
   onShowWelcome?: () => void
+  onViewMessages?: () => void
   agents?: Agent[]
 }
 
@@ -36,6 +38,7 @@ export default function Header({
   onSwitchNetwork,
   onOpenFaucet,
   onShowWelcome,
+  onViewMessages,
   agents = []
 }: HeaderProps) {
   const isWrongNetwork = isConnected && chainId !== 1
@@ -58,6 +61,13 @@ export default function Header({
         </div>
 
         <div className="flex items-center gap-3">
+          {isConnected && onViewMessages && (
+            <DirectMessageNotification 
+              currentUserAddress={address}
+              onViewMessages={onViewMessages}
+            />
+          )}
+          
           {onShowWelcome && (
             <TooltipProvider>
               <Tooltip>

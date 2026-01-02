@@ -283,3 +283,43 @@ export interface UserActivity {
   timestamp: number
   metadata?: Record<string, unknown>
 }
+
+export interface DirectConversation {
+  id: string
+  participants: string[]
+  participantNames: Map<string, string>
+  lastMessage: DirectMessage | null
+  lastMessageTime: number
+  unreadCount: Map<string, number>
+  createdAt: number
+  status: 'active' | 'archived' | 'blocked'
+}
+
+export interface DirectMessage {
+  id: string
+  conversationId: string
+  senderId: string
+  senderName: string
+  recipientId: string
+  content: string
+  timestamp: number
+  readAt?: number
+  attachments?: DirectMessageAttachment[]
+  replyTo?: string
+  reactions?: MessageReaction[]
+  edited?: boolean
+  editedAt?: number
+  deleted?: boolean
+  deliveredAt?: number
+}
+
+export interface DirectMessageAttachment {
+  id: string
+  type: 'image' | 'file' | 'voice' | 'link'
+  name: string
+  url: string
+  size?: number
+  duration?: number
+  mimeType?: string
+  thumbnail?: string
+}
