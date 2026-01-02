@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { useKV } from '@github/spark/hooks'
 import { useWallet } from './hooks/use-wallet'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Storefront, Robot, ListChecks, Plus, Package, ChartLine, Crown, ChatCircle, Lightning, Scales, Sparkle, Target, FlowArrow, GraphicsCard, UserCircle, EnvelopeSimple, Trophy } from '@phosphor-icons/react'
+import { Storefront, Robot, ListChecks, Plus, Package, ChartLine, Crown, ChatCircle, Lightning, Scales, Sparkle, Target, FlowArrow, GraphicsCard, UserCircle, EnvelopeSimple, Trophy, Users } from '@phosphor-icons/react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Toaster } from '@/components/ui/sonner'
 import Header from './components/Header'
@@ -32,9 +32,12 @@ import AchievementToast from './components/AchievementToast'
 import UserProfileView from './components/UserProfileView'
 import PersonalizedWelcomeViewer from './components/PersonalizedWelcomeViewer'
 import WelcomeMessageHistory from './components/WelcomeMessageHistory'
-import type { Service, Agent, Transaction, ServiceBundle, Subscription, ServiceReview } from './lib/types'
+import SocialHub from './components/SocialHub'
+import SocialStatsWidget from './components/SocialStatsWidget'
+import type { Service, Agent, Transaction, ServiceBundle, Subscription, ServiceReview, UserProfile as SocialUserProfile, SocialPost, SocialComment } from './lib/types'
 import type { Achievement, UserProfile } from './lib/personalization'
 import { detectAchievements } from './lib/personalization'
+import { generateDefaultProfiles, generateDefaultPosts, initializeUserProfile, calculateReputationScore, updateSocialStats } from './lib/social-utils'
 
 function App() {
   const wallet = useWallet()
@@ -53,12 +56,60 @@ function App() {
   const [showWelcome, setShowWelcome] = useState(false)
   const [currentAchievement, setCurrentAchievement] = useState<Achievement | null>(null)
   const [userProfile, setUserProfile] = useKV<UserProfile | null>('user-profile', null)
+  const [socialProfiles, setSocialProfiles] = useKV<SocialUserProfile[]>('social-profiles', [])
+  const [socialPosts, setSocialPosts] = useKV<SocialPost[]>('social-posts', [])
 
   useEffect(() => {
     if (!hasSeenIntro) {
       setShowWelcome(true)
     }
   }, [hasSeenIntro])
+
+  useEffect(() => {
+    if ((socialProfiles?.length || 0) === 0 && agents && agents.length > 0) {
+      const defaultProfiles = generateDefaultProfiles(agents)
+      setSocialProfiles(defaultProfiles)
+    }
+  }, [agents])
+
+  useEffect(() => {
+    if ((socialPosts?.length || 0) === 0 && (socialProfiles?.length || 0) > 0 && agents && transactions) {
+      const defaultPosts = generateDefaultPosts(
+        socialProfiles || [],
+        agents,
+        transactions || [],
+        reviews || []
+      )
+      setSocialPosts(defaultPosts)
+    }
+  }, [socialProfiles, agents, transactions, reviews])
+
+  useEffect(() => {
+    if (wallet.address && (socialProfiles?.length || 0) > 0) {
+      const existingProfile = socialProfiles?.find(p => p.walletAddress === wallet.address)
+      if (!existingProfile) {
+        const newProfile = initializeUserProfile(wallet.address, agents || [])
+        setSocialProfiles((current = []) => [...current, newProfile])
+      } else {
+        const updatedReputation = calculateReputationScore(
+          wallet.address,
+          agents || [],
+          transactions || [],
+          reviews || [],
+          socialPosts || []
+        )
+        if (existingProfile.reputation !== updatedReputation) {
+          setSocialProfiles((current = []) =>
+            current.map(p =>
+              p.walletAddress === wallet.address
+                ? { ...p, reputation: updatedReputation }
+                : p
+            )
+          )
+        }
+      }
+    }
+  }, [wallet.address, agents, transactions?.length, reviews?.length, socialPosts?.length])
 
   useEffect(() => {
     if (userProfile && wallet.address) {
@@ -584,6 +635,96 @@ function App() {
     )
   }
 
+  const handleUpdateSocialProfile = (profile: SocialUserProfile) => {
+    setSocialProfiles((current = []) =>
+      current.map(p => (p.walletAddress === profile.walletAddress ? profile : p))
+    )
+  }
+
+  const handleCreatePost = (post: SocialPost) => {
+    setSocialPosts((current = []) => [post, ...current])
+    
+    setSocialProfiles((current = []) =>
+      current.map(p => {
+        if (p.walletAddress === post.authorAddress) {
+          return updateSocialStats(p, [post, ...(socialPosts || [])])
+        }
+        return p
+      })
+    )
+  }
+
+  const handleLikePost = (postId: string, userAddress: string) => {
+    setSocialPosts((current = []) =>
+      current.map(post => {
+        if (post.id === postId) {
+          const likes = post.likes.includes(userAddress)
+            ? post.likes.filter(addr => addr !== userAddress)
+            : [...post.likes, userAddress]
+          return { ...post, likes }
+        }
+        return post
+      })
+    )
+  }
+
+  const handleCommentPost = (postId: string, commentText: string) => {
+    const currentAgent = agents?.find(a => a.address === wallet.address)
+    const currentProfile = socialProfiles?.find(p => p.walletAddress === wallet.address)
+    
+    const newComment: SocialComment = {
+      id: crypto.randomUUID(),
+      postId,
+      authorAddress: wallet.address || '',
+      authorName: currentAgent?.name || currentProfile?.username || 'Anonymous',
+      content: commentText,
+      timestamp: Date.now(),
+      likes: [],
+    }
+
+    setSocialPosts((current = []) =>
+      current.map(post =>
+        post.id === postId
+          ? { ...post, comments: [...post.comments, newComment] }
+          : post
+      )
+    )
+  }
+
+  const handleFollowUser = (userAddress: string) => {
+    if (!wallet.address) return
+    const walletAddr = wallet.address
+
+    setSocialProfiles((current = []) =>
+      current.map(p => {
+        if (p.walletAddress === walletAddr) {
+          return { ...p, following: [...p.following, userAddress] }
+        }
+        if (p.walletAddress === userAddress) {
+          return { ...p, followers: [...p.followers, walletAddr] }
+        }
+        return p
+      })
+    )
+  }
+
+  const handleUnfollowUser = (userAddress: string) => {
+    if (!wallet.address) return
+    const walletAddr = wallet.address
+
+    setSocialProfiles((current = []) =>
+      current.map(p => {
+        if (p.walletAddress === walletAddr) {
+          return { ...p, following: p.following.filter(addr => addr !== userAddress) }
+        }
+        if (p.walletAddress === userAddress) {
+          return { ...p, followers: p.followers.filter(addr => addr !== walletAddr) }
+        }
+        return p
+      })
+    )
+  }
+
   const displayMneeBalance = wallet.isConnected 
     ? (parseFloat(wallet.mneeBalance) + (testMneeBalance || 0)).toFixed(2)
     : '0.00'
@@ -737,6 +878,14 @@ function App() {
             agents={agents || []}
           />
 
+          {wallet.isConnected && (
+            <SocialStatsWidget
+              currentUserAddress={wallet.address || undefined}
+              socialProfiles={socialProfiles || []}
+              onNavigateToSocial={() => setActiveTab('social')}
+            />
+          )}
+
           {activeTab === 'marketplace' && (
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -818,6 +967,10 @@ function App() {
                   <TabsTrigger value="leaderboard" className="gap-2">
                     <Trophy className="w-4 h-4" />
                     <span className="hidden sm:inline">Leaderboard</span>
+                  </TabsTrigger>
+                  <TabsTrigger value="social" className="gap-2">
+                    <Users className="w-4 h-4" />
+                    <span className="hidden sm:inline">Social</span>
                   </TabsTrigger>
                   {wallet.isConnected && (
                     <>
@@ -1008,6 +1161,23 @@ function App() {
                 transactions={transactions || []}
                 reviews={reviews || []}
                 currentUserAddress={wallet.address}
+              />
+            </TabsContent>
+
+            <TabsContent value="social" className="mt-6">
+              <SocialHub
+                currentUserAddress={wallet.address || ''}
+                userProfiles={socialProfiles || []}
+                onUpdateProfile={handleUpdateSocialProfile}
+                agents={agents || []}
+                transactions={transactions || []}
+                reviews={reviews || []}
+                socialPosts={socialPosts || []}
+                onCreatePost={handleCreatePost}
+                onLikePost={handleLikePost}
+                onCommentPost={handleCommentPost}
+                onFollowUser={handleFollowUser}
+                onUnfollowUser={handleUnfollowUser}
               />
             </TabsContent>
 

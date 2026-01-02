@@ -210,3 +210,76 @@ export interface NegotiationOffer {
   expiresAt: number
   status: 'pending' | 'accepted' | 'rejected' | 'countered' | 'expired'
 }
+
+export interface UserProfile {
+  walletAddress: string
+  username?: string
+  bio?: string
+  avatarUrl?: string
+  joinedAt: number
+  isVerified: boolean
+  reputation: number
+  followers: string[]
+  following: string[]
+  badges: string[]
+  socialStats: {
+    totalPosts: number
+    totalLikes: number
+    totalComments: number
+  }
+}
+
+export interface SocialPost {
+  id: string
+  authorAddress: string
+  authorName: string
+  authorAvatar?: string
+  content: string
+  timestamp: number
+  likes: string[]
+  comments: SocialComment[]
+  shares: number
+  attachments?: SocialAttachment[]
+  serviceId?: string
+  serviceName?: string
+  type: 'status' | 'review' | 'recommendation' | 'achievement' | 'announcement'
+  tags?: string[]
+  edited?: boolean
+  editedAt?: number
+}
+
+export interface SocialComment {
+  id: string
+  postId: string
+  authorAddress: string
+  authorName: string
+  content: string
+  timestamp: number
+  likes: string[]
+  replyTo?: string
+}
+
+export interface SocialAttachment {
+  id: string
+  type: 'image' | 'video' | 'link'
+  url: string
+  thumbnail?: string
+  title?: string
+  description?: string
+}
+
+export interface FollowActivity {
+  id: string
+  followerAddress: string
+  followingAddress: string
+  timestamp: number
+}
+
+export interface UserActivity {
+  id: string
+  userAddress: string
+  activityType: 'purchase' | 'review' | 'post' | 'follow' | 'achievement' | 'join'
+  description: string
+  timestamp: number
+  metadata?: Record<string, unknown>
+}
