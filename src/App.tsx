@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { useKV } from '@github/spark/hooks'
 import { useWallet } from './hooks/use-wallet'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Storefront, Robot, ListChecks, Plus, Package, ChartLine, Crown, ChatCircle, Lightning, Scales, Sparkle, Target, FlowArrow, GraphicsCard } from '@phosphor-icons/react'
+import { Storefront, Robot, ListChecks, Plus, Package, ChartLine, Crown, ChatCircle, Lightning, Scales, Sparkle, Target, FlowArrow, GraphicsCard, UserCircle } from '@phosphor-icons/react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Toaster } from '@/components/ui/sonner'
 import Header from './components/Header'
@@ -26,7 +26,12 @@ import WorkflowBuilder from './components/WorkflowBuilder'
 import WelcomeIntro from './components/WelcomeIntro'
 import QuickStartGuide from './components/QuickStartGuide'
 import MarketplaceStats from './components/MarketplaceStats'
+import PersonalizedWelcomeBanner from './components/PersonalizedWelcomeBanner'
+import AchievementToast from './components/AchievementToast'
+import UserProfileView from './components/UserProfileView'
 import type { Service, Agent, Transaction, ServiceBundle, Subscription, ServiceReview } from './lib/types'
+import type { Achievement, UserProfile } from './lib/personalization'
+import { detectAchievements } from './lib/personalization'
 
 function App() {
   const wallet = useWallet()
@@ -43,12 +48,37 @@ function App() {
   const [isFaucetOpen, setIsFaucetOpen] = useState(false)
   const [selectedAgent, setSelectedAgent] = useState<Agent | null>(null)
   const [showWelcome, setShowWelcome] = useState(false)
+  const [currentAchievement, setCurrentAchievement] = useState<Achievement | null>(null)
+  const [userProfile, setUserProfile] = useKV<UserProfile | null>('user-profile', null)
 
   useEffect(() => {
     if (!hasSeenIntro) {
       setShowWelcome(true)
     }
   }, [hasSeenIntro])
+
+  useEffect(() => {
+    if (userProfile && wallet.address) {
+      const newAchievements = detectAchievements(
+        userProfile,
+        agents || [],
+        transactions || [],
+        reviews || []
+      )
+      
+      if (newAchievements.length > 0) {
+        setCurrentAchievement(newAchievements[0])
+        
+        setUserProfile((current) => {
+          if (!current) return null
+          return {
+            ...current,
+            achievements: [...current.achievements, ...newAchievements],
+          }
+        })
+      }
+    }
+  }, [agents?.length, transactions?.length, reviews?.length, userProfile?.walletAddress])
 
   useEffect(() => {
     if (services && services.length === 0) {
@@ -560,9 +590,81 @@ function App() {
     setHasSeenIntro(true)
   }
 
+  const handleWelcomeBannerAction = (action: string) => {
+    switch (action) {
+      case 'connect':
+        wallet.connectWallet()
+        break
+      case 'explore':
+        setActiveTab('marketplace')
+        break
+      case 'learn':
+        setShowWelcome(true)
+        break
+      case 'create-agent':
+        setActiveTab('agents')
+        break
+      case 'view-trending':
+        setActiveTab('marketplace')
+        break
+      case 'faucet':
+        setIsFaucetOpen(true)
+        break
+      case 'view-bundles':
+        setActiveTab('bundles')
+        break
+      case 'compare':
+        setActiveTab('marketplace')
+        break
+      case 'analytics':
+        setActiveTab('analytics')
+        break
+      case 'workflows':
+        setActiveTab('workflows')
+        break
+      case 'agent-settings':
+        setActiveTab('agents')
+        break
+      case 'list-service':
+        setIsAddServiceOpen(true)
+        break
+      case 'predictions':
+        setActiveTab('predictions')
+        break
+      case 'pricing':
+        setActiveTab('pricing')
+        break
+      case 'portfolio':
+        setActiveTab('wallet')
+        break
+      case 'network':
+        setActiveTab('network')
+        break
+      case 'reviews':
+        setActiveTab('marketplace')
+        break
+      case 'advanced':
+        setActiveTab('analytics')
+        break
+      case 'providers':
+        setActiveTab('providers')
+        break
+      case 'chat':
+        setActiveTab('chat')
+        break
+      default:
+        break
+    }
+  }
+
   return (
     <div className="min-h-screen bg-background text-foreground grid-pattern">
       <Toaster />
+      
+      <AchievementToast
+        achievement={currentAchievement}
+        onDismiss={() => setCurrentAchievement(null)}
+      />
       
       <AnimatePresence>
         {showWelcome && (
@@ -570,6 +672,7 @@ function App() {
             onDismiss={handleDismissWelcome}
             onConnectWallet={wallet.connectWallet}
             isWalletConnected={wallet.isConnected}
+            walletAddress={wallet.address}
           />
         )}
       </AnimatePresence>
@@ -587,6 +690,7 @@ function App() {
         onSwitchNetwork={wallet.switchToEthereumMainnet}
         onOpenFaucet={() => setIsFaucetOpen(true)}
         onShowWelcome={() => setShowWelcome(true)}
+        agents={agents || []}
       />
 
       <main className="container mx-auto px-4 md:px-8 py-8">
@@ -609,6 +713,15 @@ function App() {
             onViewAgents={() => setActiveTab('agents')}
             onViewBundles={() => setActiveTab('bundles')}
             onViewAnalytics={() => setActiveTab('analytics')}
+          />
+
+          <PersonalizedWelcomeBanner
+            walletAddress={wallet.address}
+            agents={agents || []}
+            transactions={transactions || []}
+            services={services || []}
+            reviews={reviews || []}
+            onAction={handleWelcomeBannerAction}
           />
 
           <MarketplaceStats
@@ -695,6 +808,12 @@ function App() {
                     <Sparkle className="w-4 h-4" />
                     <span className="hidden sm:inline">Predictions</span>
                   </TabsTrigger>
+                  {wallet.isConnected && (
+                    <TabsTrigger value="profile" className="gap-2">
+                      <UserCircle className="w-4 h-4" />
+                      <span className="hidden sm:inline">Profile</span>
+                    </TabsTrigger>
+                  )}
                 </TabsList>
               </div>
 
@@ -865,6 +984,16 @@ function App() {
                 )}
               </div>
             </TabsContent>
+
+            {wallet.isConnected && wallet.address && (
+              <TabsContent value="profile" className="mt-6">
+                <UserProfileView
+                  walletAddress={wallet.address}
+                  agents={agents || []}
+                  transactions={transactions || []}
+                />
+              </TabsContent>
+            )}
           </Tabs>
         </motion.div>
       </main>

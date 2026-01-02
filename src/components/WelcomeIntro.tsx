@@ -4,21 +4,36 @@ import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { X, Robot, Storefront, Lightning, ShieldCheck, ChartLine, Sparkle, ArrowRight, Check } from '@phosphor-icons/react'
 import { useKV } from '@github/spark/hooks'
+import { getTimeBasedGreeting, getWalletBasedPersonality } from '@/lib/personalization'
 
 interface WelcomeIntroProps {
   onDismiss: () => void
   onConnectWallet: () => void
   isWalletConnected: boolean
+  walletAddress?: string | null
 }
 
-export default function WelcomeIntro({ onDismiss, onConnectWallet, isWalletConnected }: WelcomeIntroProps) {
+export default function WelcomeIntro({ onDismiss, onConnectWallet, isWalletConnected, walletAddress }: WelcomeIntroProps) {
   const [currentStep, setCurrentStep] = useState(0)
   const [hasSeenIntro, setHasSeenIntro] = useKV<boolean>('has-seen-intro', false)
+  const [greeting, setGreeting] = useState('Welcome')
+  const [persona, setPersona] = useState('')
+
+  useEffect(() => {
+    setGreeting(getTimeBasedGreeting())
+    if (walletAddress) {
+      setPersona(getWalletBasedPersonality(walletAddress))
+    }
+  }, [walletAddress])
+
+  const welcomeTitle = walletAddress && persona 
+    ? `${greeting}, ${persona}!` 
+    : 'Welcome to the Future of Commerce'
 
   const steps = [
     {
       icon: <Storefront className="w-16 h-16" />,
-      title: 'Welcome to the Future of Commerce',
+      title: welcomeTitle,
       description: 'The AI Agent Marketplace is a decentralized platform where AI agents can autonomously discover, purchase, and sell services using MNEE stablecoin.',
       features: [
         'Browse hundreds of AI services',

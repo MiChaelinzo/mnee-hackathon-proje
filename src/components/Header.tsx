@@ -4,6 +4,8 @@ import { MNEE_CONTRACT_ADDRESS, formatAddress } from '@/lib/mnee'
 import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
+import MiniPersonalizedGreeting from './MiniPersonalizedGreeting'
+import type { Agent } from '@/lib/types'
 
 interface HeaderProps {
   address: string | null
@@ -18,6 +20,7 @@ interface HeaderProps {
   onSwitchNetwork: () => void
   onOpenFaucet: () => void
   onShowWelcome?: () => void
+  agents?: Agent[]
 }
 
 export default function Header({ 
@@ -32,7 +35,8 @@ export default function Header({
   onDisconnect,
   onSwitchNetwork,
   onOpenFaucet,
-  onShowWelcome
+  onShowWelcome,
+  agents = []
 }: HeaderProps) {
   const isWrongNetwork = isConnected && chainId !== 1
   const hasTestMnee = testMneeBalance > 0
@@ -140,7 +144,7 @@ export default function Header({
       {isConnected && (
         <div className="border-t border-border bg-muted/30 px-4 md:px-8 py-2">
           <div className="container mx-auto flex items-center justify-between">
-            <div className="flex items-center gap-2 text-xs flex-wrap">
+            <div className="flex items-center gap-3 text-xs flex-wrap">
               <Badge 
                 variant="outline" 
                 className={`gap-1 ${isWrongNetwork ? 'border-destructive text-destructive' : ''}`}
@@ -152,6 +156,15 @@ export default function Header({
               <span className="text-muted-foreground hidden md:inline">
                 ETH Balance: {ethBalance} ETH
               </span>
+              {address && (
+                <>
+                  <span className="text-muted-foreground hidden md:inline">•</span>
+                  <MiniPersonalizedGreeting 
+                    walletAddress={address}
+                    agents={agents}
+                  />
+                </>
+              )}
             </div>
 
             {isWrongNetwork && (
