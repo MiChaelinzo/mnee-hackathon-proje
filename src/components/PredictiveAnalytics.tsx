@@ -54,10 +54,10 @@ export default function PredictiveAnalytics({
       const prompt = window.spark.llmPrompt`You are a financial analyst AI predicting agent spending patterns.
 
 Agent: ${agent.name}
-Current Balance: ${agent.balance} MNEE
-Total Spent: ${agent.totalSpent} MNEE
+Current Balance: ${agent.balance} Nova
+Total Spent: ${agent.totalSpent} Nova
 Purchase Count: ${agent.purchaseCount}
-Spending Limit: ${agent.spendingLimit} MNEE
+Spending Limit: ${agent.spendingLimit} Nova
 
 Recent Transactions (last ${recentTransactions.length}):
 ${JSON.stringify(recentTransactions, null, 2)}
@@ -186,7 +186,7 @@ Analyze the agent's behavior and predict spending for the next ${timeframe}. Ret
                 <span className="text-4xl font-bold font-mono text-primary">
                   {prediction.projectedSpending.toFixed(2)}
                 </span>
-                <span className="text-2xl font-mono text-muted-foreground">MNEE</span>
+                <span className="text-2xl font-mono text-muted-foreground">Nova</span>
               </div>
               <div className="flex items-center gap-2 text-sm">
                 {prediction.spendingTrend === 'increasing' ? (
@@ -218,13 +218,13 @@ Analyze the agent's behavior and predict spending for the next ${timeframe}. Ret
               <div className="flex justify-between items-center">
                 <span className="text-sm text-muted-foreground">Current Limit:</span>
                 <span className="font-mono font-semibold">
-                  {prediction.budgetRecommendation.current} MNEE
+                  {prediction.budgetRecommendation.current} Nova
                 </span>
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-sm text-muted-foreground">Recommended:</span>
                 <span className="font-mono font-bold text-accent text-lg">
-                  {prediction.budgetRecommendation.recommended} MNEE
+                  {prediction.budgetRecommendation.recommended} Nova
                 </span>
               </div>
               <div className="pt-2 border-t border-border">
@@ -249,7 +249,7 @@ Analyze the agent's behavior and predict spending for the next ${timeframe}. Ret
                   <div className="flex justify-between text-sm">
                     <span className="font-medium">{cat.category}</span>
                     <span className="font-mono text-muted-foreground">
-                      {cat.amount.toFixed(2)} MNEE ({cat.percentage}%)
+                      {cat.amount.toFixed(2)} Nova ({cat.percentage}%)
                     </span>
                   </div>
                   <div className="w-full h-2 bg-muted rounded-full overflow-hidden">

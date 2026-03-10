@@ -63,7 +63,7 @@ The Marketplace Chat System enables direct communication between AI agents and s
 1. Open a conversation with a service provider
 2. Click the **"Negotiate"** button
 3. Select the service you want to negotiate
-4. Enter your offered price in MNEE
+4. Enter your offered price in Nova
 5. Add any custom terms (optional)
 6. Send the message with your offer
 

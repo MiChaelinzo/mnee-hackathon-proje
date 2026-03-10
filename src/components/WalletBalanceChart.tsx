@@ -94,7 +94,7 @@ export default function WalletBalanceChart({
     dataPoints: chartData.length,
   }
 
-  const formatTooltipValue = (value: number) => `${value.toFixed(2)} MNEE`
+  const formatTooltipValue = (value: number) => `${value.toFixed(2)} Nova`
 
   const CustomTooltip = ({ active, payload, label }: any) => {
     if (active && payload && payload.length) {
@@ -127,7 +127,7 @@ export default function WalletBalanceChart({
               Wallet Balance History
             </CardTitle>
             <CardDescription className="mt-2">
-              Track your on-chain and test MNEE balances over time
+              Track your on-chain and test Nova balances over time
             </CardDescription>
           </div>
           <div className="flex gap-2">
@@ -177,7 +177,7 @@ export default function WalletBalanceChart({
               <span className="text-xs font-medium text-muted-foreground">Total Balance</span>
             </div>
             <p className="text-2xl font-bold font-mono">{stats.totalCurrent.toFixed(2)}</p>
-            <p className="text-xs text-muted-foreground mt-1">MNEE</p>
+            <p className="text-xs text-muted-foreground mt-1">Nova</p>
           </motion.div>
 
           <motion.div
@@ -188,7 +188,7 @@ export default function WalletBalanceChart({
           >
             <div className="flex items-center gap-2 mb-2">
               <div className="w-3 h-3 rounded-full bg-[oklch(0.6_0.18_245)]" />
-              <span className="text-xs font-medium text-muted-foreground">On-Chain MNEE</span>
+              <span className="text-xs font-medium text-muted-foreground">On-Chain Nova</span>
             </div>
             <p className="text-2xl font-bold font-mono">{currentOnChainBalance.toFixed(2)}</p>
             <p className="text-xs text-muted-foreground mt-1">{stats.onChainPercentage}% of total</p>
@@ -202,7 +202,7 @@ export default function WalletBalanceChart({
           >
             <div className="flex items-center gap-2 mb-2">
               <div className="w-3 h-3 rounded-full bg-[oklch(0.85_0.2_140)]" />
-              <span className="text-xs font-medium text-muted-foreground">Test MNEE</span>
+              <span className="text-xs font-medium text-muted-foreground">Test Nova</span>
             </div>
             <p className="text-2xl font-bold font-mono">{currentTestBalance.toFixed(2)}</p>
             <p className="text-xs text-muted-foreground mt-1">{stats.testPercentage}% of total</p>
@@ -242,7 +242,7 @@ export default function WalletBalanceChart({
                   <YAxis 
                     className="text-xs"
                     tick={{ fill: 'currentColor' }}
-                    label={{ value: 'MNEE', angle: -90, position: 'insideLeft' }}
+                    label={{ value: 'Nova', angle: -90, position: 'insideLeft' }}
                   />
                   <Tooltip content={<CustomTooltip />} />
                   <Legend />
@@ -253,7 +253,7 @@ export default function WalletBalanceChart({
                     stroke="oklch(0.6 0.18 245)"
                     fill="oklch(0.6 0.18 245)"
                     fillOpacity={0.6}
-                    name="On-Chain MNEE"
+                    name="On-Chain Nova"
                   />
                   <Area
                     type="monotone"
@@ -262,7 +262,7 @@ export default function WalletBalanceChart({
                     stroke="oklch(0.85 0.2 140)"
                     fill="oklch(0.85 0.2 140)"
                     fillOpacity={0.6}
-                    name="Test MNEE"
+                    name="Test Nova"
                   />
                 </AreaChart>
               </ResponsiveContainer>
@@ -292,7 +292,7 @@ export default function WalletBalanceChart({
                   <YAxis 
                     className="text-xs"
                     tick={{ fill: 'currentColor' }}
-                    label={{ value: 'MNEE', angle: -90, position: 'insideLeft' }}
+                    label={{ value: 'Nova', angle: -90, position: 'insideLeft' }}
                   />
                   <Tooltip content={<CustomTooltip />} />
                   <Legend />
@@ -311,7 +311,7 @@ export default function WalletBalanceChart({
                     strokeWidth={2}
                     strokeDasharray="5 5"
                     dot={{ fill: 'oklch(0.6 0.18 245)', r: 3 }}
-                    name="On-Chain MNEE"
+                    name="On-Chain Nova"
                   />
                   <Line
                     type="monotone"
@@ -320,7 +320,7 @@ export default function WalletBalanceChart({
                     strokeWidth={2}
                     strokeDasharray="5 5"
                     dot={{ fill: 'oklch(0.85 0.2 140)', r: 3 }}
-                    name="Test MNEE"
+                    name="Test Nova"
                   />
                 </LineChart>
               </ResponsiveContainer>
@@ -346,7 +346,7 @@ export default function WalletBalanceChart({
                 <h4 className="font-semibold mb-1">Balance Tracking</h4>
                 <p className="text-sm text-muted-foreground">
                   Your wallet balance is automatically tracked every 5 minutes and whenever significant changes occur. 
-                  The chart shows the breakdown between real on-chain MNEE tokens and test MNEE for demo purposes.
+                  The chart shows the breakdown between real on-chain Nova tokens and test Nova for demo purposes.
                 </p>
               </div>
             </div>

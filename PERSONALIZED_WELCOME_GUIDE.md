@@ -43,7 +43,7 @@ A detailed profile view showing comprehensive personalization insights.
   - First Purchase
   - Early Adopter
   - Power User (50+ transactions)
-  - Whale (1,000+ MNEE spent)
+  - Whale (1,000+ Nova spent)
   - Explorer (15+ unique services)
   - Reviewer (10+ reviews)
   - Loyal Customer (20+ visits)
@@ -84,7 +84,7 @@ The system analyzes user behavior to assign one of 6 personality types:
 
 1. **Newcomer**
    - No transactions or agents yet
-   - Suggestions: Create first agent, explore services, get test MNEE
+   - Suggestions: Create first agent, explore services, get test Nova
 
 2. **Explorer**
    - Active but selective user
@@ -97,7 +97,7 @@ The system analyzes user behavior to assign one of 6 personality types:
    - Suggestions: Build workflows, optimize agents, list services
 
 4. **Trader**
-   - 500+ MNEE spent, 15+ transactions
+   - 500+ Nova spent, 15+ transactions
    - High-value transactions
    - Suggestions: AI predictions, pricing intelligence, portfolio review
 

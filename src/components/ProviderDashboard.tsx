@@ -131,7 +131,7 @@ export default function ProviderDashboard({
             <div className="flex items-center gap-2">
               <CurrencyDollar className="w-5 h-5 text-accent" />
               <span className="text-2xl font-bold">
-                {totalMarketplaceRevenue.toFixed(2)} MNEE
+                {totalMarketplaceRevenue.toFixed(2)} Nova
               </span>
             </div>
             <p className="text-xs text-muted-foreground mt-2">
@@ -250,7 +250,7 @@ export default function ProviderDashboard({
                       <div>
                         <p className="text-muted-foreground mb-1">Revenue</p>
                         <p className="font-bold text-accent">
-                          {provider.totalRevenue.toFixed(2)} MNEE
+                          {provider.totalRevenue.toFixed(2)} Nova
                         </p>
                       </div>
                       <div>
@@ -316,7 +316,7 @@ export default function ProviderDashboard({
                         </div>
                         <div className="text-right">
                           <p className="font-bold text-accent">
-                            {category.revenue.toFixed(2)} MNEE
+                            {category.revenue.toFixed(2)} Nova
                           </p>
                           <p className="text-xs text-muted-foreground">
                             {revenuePercent.toFixed(1)}% of total

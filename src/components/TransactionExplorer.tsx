@@ -5,7 +5,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { ArrowSquareOut, Check, X, Clock, Package, CalendarBlank, ShoppingCart } from '@phosphor-icons/react'
 import { motion } from 'framer-motion'
 import type { Transaction, Agent } from '@/lib/types'
-import { formatMNEE, getEtherscanUrl } from '@/lib/mnee'
+import { formatNova, getEtherscanUrl } from '@/lib/nova'
 
 interface TransactionExplorerProps {
   transactions: Transaction[]
@@ -126,7 +126,7 @@ export default function TransactionExplorer({ transactions, agents }: Transactio
                     </Badge>
                   </TableCell>
                   <TableCell className="font-mono font-bold text-accent">
-                    {formatMNEE(tx.amount)}
+                    {formatNova(tx.amount)}
                   </TableCell>
                   <TableCell>
                     <Badge variant={getStatusVariant(tx.status)} className="gap-1">
@@ -190,7 +190,7 @@ export default function TransactionExplorer({ transactions, agents }: Transactio
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Amount</span>
                   <span className="font-mono font-bold text-accent">
-                    {formatMNEE(tx.amount)}
+                    {formatNova(tx.amount)}
                   </span>
                 </div>
                 <div className="flex justify-between">
@@ -230,7 +230,7 @@ export default function TransactionExplorer({ transactions, agents }: Transactio
             <h3 className="font-semibold mb-1">Blockchain Verification</h3>
             <p className="text-sm text-muted-foreground">
               All transactions are recorded on Ethereum and can be verified on Etherscan. 
-              MNEE contract: {' '}
+              Nova contract: {' '}
               <code className="bg-background px-1 py-0.5 rounded text-xs font-mono">
                 0x8ccedbAe4916b79da7F3F612EfB2EB93A2bFD6cF
               </code>

@@ -1,6 +1,6 @@
 # AI Agent Marketplace - Autonomous Commerce Platform
 
-A decentralized marketplace where AI agents can autonomously discover, purchase, and sell services using MNEE stablecoin, demonstrating the future of programmable money for automated finance and agent-to-agent commerce.
+A decentralized marketplace where AI agents can autonomously discover, purchase, and sell services using Nova tokens, demonstrating the future of programmable money for automated finance and agent-to-agent commerce.
 
 **Experience Qualities**: 
 1. **Futuristic** - The interface should feel like a glimpse into tomorrow's autonomous economy, where AI agents transact seamlessly
@@ -8,7 +8,7 @@ A decentralized marketplace where AI agents can autonomously discover, purchase,
 3. **Intelligent** - The platform learns from agent behaviors and optimizes service discovery through smart matching
 
 **Complexity Level**: Complex Application (advanced functionality, likely with multiple views)
-- This is a full-featured marketplace with service listings, autonomous agent interactions, on-chain transactions via MNEE stablecoin, transaction history, and intelligent service matching. It requires multiple views, wallet integration, smart contract interaction, and sophisticated state management.
+- This is a full-featured marketplace with service listings, autonomous agent interactions, on-chain transactions via Nova tokens, transaction history, and intelligent service matching. It requires multiple views, wallet integration, smart contract interaction, and sophisticated state management.
 
 ## Essential Features
 
@@ -16,36 +16,36 @@ A decentralized marketplace where AI agents can autonomously discover, purchase,
 - **Functionality**: Interactive multi-step welcome tour introducing new users to the marketplace with animated visuals, feature highlights, and quick-start guide
 - **Purpose**: Reduce friction for new users by providing clear guidance on key features and how to get started
 - **Trigger**: First visit to the marketplace (tracked via persistent storage)
-- **Progression**: User arrives → Welcome modal appears with 4 steps → Each step highlights key features (marketplace, agents, MNEE, AI features) → User can skip or navigate through → Final step prompts wallet connection → After dismissal, quick-start guide appears with actionable cards → Marketplace stats display → User can replay tour via Help button in header
+- **Progression**: User arrives → Welcome modal appears with 4 steps → Each step highlights key features (marketplace, agents, Nova, AI features) → User can skip or navigate through → Final step prompts wallet connection → After dismissal, quick-start guide appears with actionable cards → Marketplace stats display → User can replay tour via Help button in header
 - **Success criteria**: Welcome modal displays on first visit only, users can skip at any time, progress through steps smoothly, wallet connection integrates seamlessly, quick-start guide provides clear actionable items, tour can be replayed from header, onboarding state persists across sessions
 
 ### Service Marketplace
 - **Functionality**: Display a grid of AI services that agents can purchase (data analysis, content generation, API access, compute resources, etc.)
 - **Purpose**: Create a discoverable catalog of services available for autonomous purchase
 - **Trigger**: User lands on the marketplace or agent queries available services
-- **Progression**: View services grid → Filter by category/price → Click service card → View details modal → Purchase with MNEE
+- **Progression**: View services grid → Filter by category/price → Click service card → View details modal → Purchase with Nova
 - **Success criteria**: Services display correctly with pricing, description, provider info, and purchase options
 
 ### Agent Dashboard
-- **Functionality**: Shows the user's registered AI agents, their MNEE balances, transaction history, and service usage
+- **Functionality**: Shows the user's registered AI agents, their Nova balances, transaction history, and service usage
 - **Purpose**: Manage multiple AI agents and monitor their autonomous spending
 - **Trigger**: Click "My Agents" navigation
 - **Progression**: View agent list → Select agent → View balance & history → Configure spending limits → Enable/disable autonomous purchasing
 - **Success criteria**: Real-time balance updates, transaction history syncs with blockchain, spending limits enforce correctly
 
 ### Autonomous Purchase Flow
-- **Functionality**: AI agents can autonomously purchase services using MNEE with real on-chain transactions
+- **Functionality**: AI agents can autonomously purchase services using Nova with real on-chain transactions
 - **Purpose**: Demonstrate programmable money enabling agent autonomy with actual blockchain settlement
 - **Trigger**: Agent identifies a need (simulated) or user initiates test purchase
-- **Progression**: Agent evaluates need → Queries available services → Checks MNEE balance → User approves MetaMask transaction → MNEE transfers on-chain from user to service provider → Transaction confirmed on Ethereum → Service access granted
-- **Success criteria**: Transaction completes on Ethereum mainnet, MNEE transfers from user wallet to service provider address, transaction hash is recorded and viewable on Etherscan, balances update in real-time
+- **Progression**: Agent evaluates need → Queries available services → Checks Nova balance → User approves MetaMask transaction → Nova transfers on-chain from user to service provider → Transaction confirmed on Ethereum → Service access granted
+- **Success criteria**: Transaction completes on Ethereum mainnet, Nova transfers from user wallet to service provider address, transaction hash is recorded and viewable on Etherscan, balances update in real-time
 
 ### Service Provider Portal
-- **Functionality**: Users can list their own AI services for sale, set pricing in MNEE, and track earnings
+- **Functionality**: Users can list their own AI services for sale, set pricing in Nova, and track earnings
 - **Purpose**: Enable a two-sided marketplace where anyone can become a service provider
 - **Trigger**: Click "List Service" button
-- **Progression**: Fill service form → Set MNEE price → Add description/category → Submit → Service appears in marketplace
-- **Success criteria**: New services are instantly available, providers receive MNEE payments automatically
+- **Progression**: Fill service form → Set Nova price → Add description/category → Submit → Service appears in marketplace
+- **Success criteria**: New services are instantly available, providers receive Nova payments automatically
 
 ### Transaction Explorer
 - **Functionality**: Real-time feed of all marketplace transactions with blockchain verification
@@ -65,7 +65,7 @@ A decentralized marketplace where AI agents can autonomously discover, purchase,
 - **Functionality**: Pre-packaged combinations of related services at discounted rates
 - **Purpose**: Encourage bulk purchases and provide cost savings for common service combinations
 - **Trigger**: User navigates to Bundles tab
-- **Progression**: Browse bundles → View included services and savings → Select bundle → Choose agent → Purchase with MNEE
+- **Progression**: Browse bundles → View included services and savings → Select bundle → Choose agent → Purchase with Nova
 - **Success criteria**: Bundles display original vs. bundle pricing with clear discount percentage, successful purchases with bundle tracking
 
 ### Custom Bundle Builder
@@ -79,7 +79,7 @@ A decentralized marketplace where AI agents can autonomously discover, purchase,
 - **Functionality**: Recurring payment plans (monthly/quarterly/yearly) for ongoing service access with progressive discounts
 - **Purpose**: Create predictable revenue streams and reward commitment with significant savings
 - **Trigger**: User navigates to Subscriptions tab within Bundles
-- **Progression**: Browse subscription tiers → Compare pricing and features → Select plan → Choose agent → Subscribe with MNEE
+- **Progression**: Browse subscription tiers → Compare pricing and features → Select plan → Choose agent → Subscribe with Nova
 - **Success criteria**: Clear billing period display, automatic renewal tracking, subscription status management
 
 ### AI-Powered Bundle Recommendations
@@ -185,39 +185,39 @@ A decentralized marketplace where AI agents can autonomously discover, purchase,
 - **Success criteria**: Smooth 3D rendering, real-time updates, visually engaging, performance remains good with many transactions
 
 ### Wallet Connection Enhancement
-- **Functionality**: Real MetaMask wallet integration with actual blockchain connectivity, balance fetching, network verification, and MNEE token transfer capability
-- **Purpose**: Enable genuine Web3 transactions using the MNEE stablecoin contract (0x8ccedbAe4916b79da7F3F612EfB2EB93A2bFD6cF) on Ethereum Mainnet
+- **Functionality**: Real MetaMask wallet integration with actual blockchain connectivity, balance fetching, network verification, and Nova token transfer capability
+- **Purpose**: Enable genuine Web3 transactions using the Nova tokens contract (0x8ccedbAe4916b79da7F3F612EfB2EB93A2bFD6cF) on Ethereum Mainnet
 - **Trigger**: App load without wallet connection or clicking wallet button
-- **Progression**: Detect MetaMask → Click connect → User approves in MetaMask → Fetch real MNEE and ETH balances from blockchain → Verify network → Display connection status → Enable purchase transactions
-- **Success criteria**: Real wallet addresses displayed, actual MNEE and ETH balances shown from blockchain queries, network switching functionality works, proper error handling for rejected connections, real ERC-20 token transfers execute successfully with gas estimation and confirmation
+- **Progression**: Detect MetaMask → Click connect → User approves in MetaMask → Fetch real Nova and ETH balances from blockchain → Verify network → Display connection status → Enable purchase transactions
+- **Success criteria**: Real wallet addresses displayed, actual Nova and ETH balances shown from blockchain queries, network switching functionality works, proper error handling for rejected connections, real ERC-20 token transfers execute successfully with gas estimation and confirmation
 
-### Real MNEE Token Transfers
-- **Functionality**: Actual ERC-20 token transfers using the MNEE contract on Ethereum Mainnet with MetaMask transaction signing
+### Real Nova Token Transfers
+- **Functionality**: Actual ERC-20 token transfers using the Nova contract on Ethereum Mainnet with MetaMask transaction signing
 - **Purpose**: Enable real programmable money transactions instead of simulated payments, demonstrating true blockchain-based commerce
 - **Trigger**: User initiates any purchase (service, bundle, or subscription) while wallet is connected
 - **Progression**: Select service/bundle → Choose agent → Click purchase → MetaMask popup appears → User reviews transaction details and gas → User confirms → Transaction submitted to Ethereum → Wait for blockchain confirmation → Balance updates → Transaction recorded with real tx hash
-- **Success criteria**: MNEE tokens transfer on-chain from user wallet to provider address, transaction appears on Etherscan with valid hash, gas fees are paid from user's ETH balance, proper error handling for insufficient balance or rejected transactions, real-time balance updates after confirmation, transaction status tracking (pending/completed/failed)
+- **Success criteria**: Nova tokens transfer on-chain from user wallet to provider address, transaction appears on Etherscan with valid hash, gas fees are paid from user's ETH balance, proper error handling for insufficient balance or rejected transactions, real-time balance updates after confirmation, transaction status tracking (pending/completed/failed)
 
-### Test MNEE Token Faucet
-- **Functionality**: Demo faucet allowing users to claim test MNEE tokens with configurable amounts and cooldown periods for demonstration purposes
-- **Purpose**: Enable testing and demonstration of the marketplace without requiring real MNEE tokens, lowering barrier to entry for demos
+### Test Nova Token Faucet
+- **Functionality**: Demo faucet allowing users to claim test Nova tokens with configurable amounts and cooldown periods for demonstration purposes
+- **Purpose**: Enable testing and demonstration of the marketplace without requiring real Nova tokens, lowering barrier to entry for demos
 - **Trigger**: Click "Test Faucet" button in header after connecting wallet
-- **Progression**: Connect wallet → Click faucet button → Modal opens → Select preset amount (100/500/1000) or enter custom amount → Review claim stats → Click claim → Processing animation → Test MNEE added to balance → Success notification
-- **Success criteria**: Test tokens are tracked separately and added to displayed balance, 1-hour cooldown enforced per wallet address, claiming is limited to 10,000 MNEE max per request, user sees their total claims and claim count, cooldown timer displays time remaining, test tokens persist across sessions
+- **Progression**: Connect wallet → Click faucet button → Modal opens → Select preset amount (100/500/1000) or enter custom amount → Review claim stats → Click claim → Processing animation → Test Nova added to balance → Success notification
+- **Success criteria**: Test tokens are tracked separately and added to displayed balance, 1-hour cooldown enforced per wallet address, claiming is limited to 10,000 Nova max per request, user sees their total claims and claim count, cooldown timer displays time remaining, test tokens persist across sessions
 
 ### Visual Balance Type Indicators
-- **Functionality**: Clear visual distinction between real on-chain MNEE and test demo MNEE throughout the entire application using color-coding, badges, and icons
+- **Functionality**: Clear visual distinction between real on-chain Nova and test demo Nova throughout the entire application using color-coding, badges, and icons
 - **Purpose**: Prevent confusion between real and test funds, ensure users understand which balance type they're using, maintain transparency about currency types
 - **Trigger**: Wallet connection displays both balance types automatically across all views
-- **Progression**: Connect wallet → See real MNEE with green "ON-CHAIN" badge → Claim test MNEE → See test balance with purple "TEST" badge and flask icon → Navigate app → Visual indicators persist in header, cards, and dialogs
-- **Success criteria**: Real MNEE displays with green/accent color and "ON-CHAIN" badge, test MNEE displays with purple/primary color and "TEST" badge plus flask icon (🧪), both balances shown separately in header and wallet info card, informational alerts explain the difference in marketplace view, faucet dialog clearly labeled as demo-only with prominent disclaimers, total balance calculations combine both types but maintain visual separation, consistent color scheme throughout (green = real, purple = test)
+- **Progression**: Connect wallet → See real Nova with green "ON-CHAIN" badge → Claim test Nova → See test balance with purple "TEST" badge and flask icon → Navigate app → Visual indicators persist in header, cards, and dialogs
+- **Success criteria**: Real Nova displays with green/accent color and "ON-CHAIN" badge, test Nova displays with purple/primary color and "TEST" badge plus flask icon (🧪), both balances shown separately in header and wallet info card, informational alerts explain the difference in marketplace view, faucet dialog clearly labeled as demo-only with prominent disclaimers, total balance calculations combine both types but maintain visual separation, consistent color scheme throughout (green = real, purple = test)
 
 ### Wallet Balance History Chart
-- **Functionality**: Interactive time-series visualization showing on-chain MNEE and test MNEE balances over time with multiple chart types (area/line) and time range filters
+- **Functionality**: Interactive time-series visualization showing on-chain Nova and test Nova balances over time with multiple chart types (area/line) and time range filters
 - **Purpose**: Enable users to track balance changes, understand spending patterns, and visualize the breakdown between real and test funds historically
 - **Trigger**: Navigate to "Wallet" tab in main navigation
 - **Progression**: View wallet tab → See current balance breakdown stats → Choose time range (24h/7d/30d/all) → Switch between area/line charts → Analyze balance trends → Review data point snapshots
-- **Success criteria**: Balance snapshots automatically recorded every 5 minutes and on significant changes, historical data persists across sessions, charts display on-chain vs test MNEE breakdown with distinct colors, time range filters work correctly, tooltips show exact values on hover, stats cards display current totals and percentages, empty state shows when no history exists, responsive design adapts to mobile screens
+- **Success criteria**: Balance snapshots automatically recorded every 5 minutes and on significant changes, historical data persists across sessions, charts display on-chain vs test Nova breakdown with distinct colors, time range filters work correctly, tooltips show exact values on hover, stats cards display current totals and percentages, empty state shows when no history exists, responsive design adapts to mobile screens
 
 ### Service Performance Metrics
 - **Functionality**: Real-time tracking of service sales, revenue, category distribution, and growth trends
@@ -259,7 +259,7 @@ A decentralized marketplace where AI agents can autonomously discover, purchase,
 - **Purpose**: Build credibility within the marketplace, reward active and trustworthy agents, provide social proof for decision-making
 - **Trigger**: Viewing agent details in agent dashboard
 - **Progression**: Select agent → View reputation card → See trust score (0-100) with visual progress bar → Review metrics breakdown (purchases, spent, reviews, account age) → View earned achievement badges with descriptions
-- **Success criteria**: Trust score calculated from multiple factors (purchases, spending, reviews, activity, age), score updates after each transaction or review, achievement badges unlock at appropriate milestones (Early Adopter, Big Spender 1000+ MNEE, Frequent Buyer 50+, Helpful Reviewer 10+, Verified Agent, Trusted Trader 80+ score), trust level displays (Excellent 80+, Good 60+, Fair 40+, Building <40), visual indicators color-coded appropriately
+- **Success criteria**: Trust score calculated from multiple factors (purchases, spending, reviews, activity, age), score updates after each transaction or review, achievement badges unlock at appropriate milestones (Early Adopter, Big Spender 1000+ Nova, Frequent Buyer 50+, Helpful Reviewer 10+, Verified Agent, Trusted Trader 80+ score), trust level displays (Excellent 80+, Good 60+, Fair 40+, Building <40), visual indicators color-coded appropriately
 
 ### Marketplace Chat System
 - **Functionality**: Real-time messaging system enabling direct communication between AI agents and service providers with conversation management, topic categorization, price negotiation tools, file attachments, drag-and-drop uploads, comprehensive emoji picker with categories and search, message reactions, and status tracking
@@ -269,7 +269,7 @@ A decentralized marketplace where AI agents can autonomously discover, purchase,
 - **Success criteria**: Messages persist across sessions, conversations organized by topics (General Inquiry, Technical Support, Pricing Negotiation, Custom Service, Issue Resolution, Feedback), comprehensive emoji picker with 500+ emojis organized into 10 categories, emoji search functionality works across all categories, emoji picker accessible both for message input and message reactions, emojis insert at cursor position in message input, reaction counts display under messages, users can add/remove reactions by clicking, price offers include service details with original vs offered pricing and custom terms, offer status tracked (pending/accepted/rejected/expired with 7-day expiration), conversation filtering by status (active/resolved/archived), search functionality across participant names and message content, clear visual distinction between sent/received messages, system messages for offer actions, conversation metadata (last message, timestamp, unread count), mobile-responsive chat interface, file attachments support images and documents up to 10MB each, drag-and-drop works across entire chat area with visual feedback, attachment previews show before sending, inline image display in messages, document attachments downloadable
 
 ## Edge Case Handling
-- **Insufficient Balance**: Display clear error message with "Add MNEE" button when agent lacks funds
+- **Insufficient Balance**: Display clear error message with "Add Nova" button when agent lacks funds
 - **Network Failures**: Show retry options and cache pending transactions for when connection restores
 - **Failed Transactions**: Automatically refund and log with explanation, notify agent owner
 - **Duplicate Purchases**: Prevent agents from buying the same service multiple times in short succession
@@ -328,7 +328,7 @@ Animations should feel intelligent and purposeful - like systems processing info
 - **Customizations**: 
   - Custom gradient card backgrounds with subtle grid patterns using CSS
   - Animated transaction feed with slide-in effects using framer-motion
-  - Custom MNEE balance display with currency formatting
+  - Custom Nova balance display with currency formatting
   - Glowing border effects on active/hover states using box-shadow
   - Custom agent status indicators (active/inactive/processing) with pulsing animations
 - **States**: 
@@ -338,7 +338,7 @@ Animations should feel intelligent and purposeful - like systems processing info
 - **Icon Selection**: 
   - Robot (ai/agent representations)
   - ShoppingCart (purchases/marketplace)
-  - Wallet (MNEE balance)
+  - Wallet (Nova balance)
   - ArrowsClockwise (transactions/refresh)
   - Lightning (quick actions/autonomous)
   - Tag (service categories)

@@ -34,7 +34,7 @@ export default function MarketplaceStats({ services, transactions, agents }: Mar
     {
       icon: <TrendUp className="w-6 h-6" />,
       label: 'Total Revenue',
-      value: `${totalRevenue.toFixed(0)} MNEE`,
+      value: `${totalRevenue.toFixed(0)} Nova`,
       color: 'text-green-400',
       bgColor: 'bg-green-400/10',
     },

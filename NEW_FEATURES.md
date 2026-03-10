@@ -487,7 +487,7 @@ Previous iteration added powerful features to enhance the AI Agent Marketplace e
 - **Top Providers Ranking**:
   - Top 5 providers by revenue
   - Individual metrics per provider:
-    - Total revenue in MNEE
+    - Total revenue in Nova
     - Number of sales
     - Services offered
     - Average rating
@@ -514,7 +514,7 @@ Previous iteration added powerful features to enhance the AI Agent Marketplace e
 - **Trust Score (0-100)**:
   - Calculated from multiple factors:
     - Purchase count (+2 points each, max 30)
-    - Total spending (+1 point per 10 MNEE, max 20)
+    - Total spending (+1 point per 10 Nova, max 20)
     - Reviews given (+3 points each, max 15)
     - Account age (+1 point per week, max 15)
     - Active status (+10 points)
@@ -526,7 +526,7 @@ Previous iteration added powerful features to enhance the AI Agent Marketplace e
 
 - **Achievement Badges**:
   - ⭐ **Early Adopter**: One of the first agents (within 30 days and >0 purchases)
-  - 🔥 **Big Spender**: Spent over 1000 MNEE
+  - 🔥 **Big Spender**: Spent over 1000 Nova
   - 🛒 **Frequent Buyer**: Made 50+ purchases
   - 🏅 **Helpful Reviewer**: Provided 10+ reviews
   - ✓ **Verified Agent**: Active with 5+ purchases
@@ -534,7 +534,7 @@ Previous iteration added powerful features to enhance the AI Agent Marketplace e
 
 - **Metrics Breakdown**:
   - Total purchases made
-  - Total MNEE spent
+  - Total Nova spent
   - Reviews contributed
   - Account age in days
 

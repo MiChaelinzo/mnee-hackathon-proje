@@ -187,7 +187,7 @@ Consider factors like:
           </div>
 
           <div className="space-y-2">
-            <Label>Current/Target Price (MNEE)</Label>
+            <Label>Current/Target Price (Nova)</Label>
             <Input
               type="number"
               step="0.01"
@@ -248,7 +248,7 @@ Consider factors like:
                       <span className="text-3xl font-bold text-accent">
                         ${analysis.suggestedPrice.toFixed(2)}
                       </span>
-                      <span className="text-sm text-muted-foreground">MNEE</span>
+                      <span className="text-sm text-muted-foreground">Nova</span>
                     </div>
                   </div>
                   <Badge className="gap-1 bg-accent text-accent-foreground">

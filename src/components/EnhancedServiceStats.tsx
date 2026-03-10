@@ -61,7 +61,7 @@ export default function EnhancedServiceStats({ services, transactions }: Enhance
     {
       title: 'Revenue',
       value: `${stats.totalRevenue.toFixed(0)}`,
-      subtitle: 'MNEE earned',
+      subtitle: 'Nova earned',
       icon: CurrencyCircleDollar,
       color: 'secondary',
       gradient: 'from-secondary/10 to-secondary/5',

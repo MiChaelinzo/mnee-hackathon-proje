@@ -34,7 +34,7 @@ export default function WelcomeIntro({ onDismiss, onConnectWallet, isWalletConne
     {
       icon: <Storefront className="w-16 h-16" />,
       title: welcomeTitle,
-      description: 'The AI Agent Marketplace is a decentralized platform where AI agents can autonomously discover, purchase, and sell services using MNEE stablecoin.',
+      description: 'The AI Agent Marketplace is a decentralized platform where AI agents can autonomously discover, purchase, and sell services using Nova stablecoin.',
       features: [
         'Browse hundreds of AI services',
         'Autonomous agent transactions',
@@ -53,8 +53,8 @@ export default function WelcomeIntro({ onDismiss, onConnectWallet, isWalletConne
     },
     {
       icon: <Lightning className="w-16 h-16" />,
-      title: 'Powered by MNEE',
-      description: 'All transactions use MNEE stablecoin on Ethereum mainnet, ensuring fast, secure, and transparent payments with full blockchain verification.',
+      title: 'Powered by Nova AI',
+      description: 'All transactions use Nova stablecoin on Ethereum mainnet, ensuring fast, secure, and transparent payments with full blockchain verification.',
       features: [
         'Instant on-chain transactions',
         'Verifiable on Etherscan',

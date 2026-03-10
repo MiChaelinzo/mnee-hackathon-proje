@@ -49,7 +49,7 @@ function App() {
   const [bundles, setBundles] = useKV<ServiceBundle[]>('bundles', [])
   const [subscriptions, setSubscriptions] = useKV<Subscription[]>('subscriptions', [])
   const [reviews, setReviews] = useKV<ServiceReview[]>('reviews', [])
-  const [testMneeBalance, setTestMneeBalance] = useKV<number>('test-mnee-balance', 0)
+  const [testNovaBalance, setTestNovaBalance] = useKV<number>('test-nova-balance', 0)
   const [hasSeenIntro, setHasSeenIntro] = useKV<boolean>('has-seen-intro', false)
   const [activeTab, setActiveTab] = useState('marketplace')
   const [isAddServiceOpen, setIsAddServiceOpen] = useState(false)
@@ -620,7 +620,7 @@ function App() {
   }
 
   const handleFaucetClaim = (amount: number) => {
-    setTestMneeBalance((current = 0) => current + amount)
+    setTestNovaBalance((current = 0) => current + amount)
   }
 
   const handleAddReview = (review: ServiceReview) => {
@@ -735,8 +735,8 @@ function App() {
     }, 100)
   }
 
-  const displayMneeBalance = wallet.isConnected 
-    ? (parseFloat(wallet.mneeBalance) + (testMneeBalance || 0)).toFixed(2)
+  const displayNovaBalance = wallet.isConnected 
+    ? (parseFloat(wallet.novaBalance) + (testNovaBalance || 0)).toFixed(2)
     : '0.00'
 
   const handleDismissWelcome = () => {
@@ -839,8 +839,8 @@ function App() {
         chainId={wallet.chainId}
         isConnected={wallet.isConnected}
         isConnecting={wallet.isConnecting}
-        mneeBalance={wallet.mneeBalance}
-        testMneeBalance={testMneeBalance || 0}
+        novaBalance={wallet.novaBalance}
+        testNovaBalance={testNovaBalance || 0}
         ethBalance={wallet.ethBalance}
         onConnect={wallet.connectWallet}
         onDisconnect={wallet.disconnectWallet}
@@ -862,7 +862,7 @@ function App() {
               AI Agent Marketplace
             </h1>
             <p className="text-lg text-muted-foreground">
-              Autonomous commerce powered by MNEE stablecoin
+              Autonomous commerce powered by Nova stablecoin
             </p>
           </div>
 
@@ -1031,7 +1031,7 @@ function App() {
                 onAddReview={handleAddReview}
                 onHelpfulClick={handleHelpfulClick}
                 walletConnected={wallet.isConnected}
-                onTransferMNEE={wallet.transferMNEE}
+                onTransferNova={wallet.transferNova}
                 userAddress={wallet.address}
               />
             </TabsContent>
@@ -1046,7 +1046,7 @@ function App() {
                 onPurchase={handlePurchase}
                 onCreateBundle={handleCreateBundle}
                 walletConnected={wallet.isConnected}
-                onTransferMNEE={wallet.transferMNEE}
+                onTransferNova={wallet.transferNova}
                 userAddress={wallet.address}
               />
             </TabsContent>
@@ -1102,8 +1102,8 @@ function App() {
 
             <TabsContent value="wallet" className="mt-6">
               <WalletBalanceChart
-                currentOnChainBalance={parseFloat(wallet.mneeBalance)}
-                currentTestBalance={testMneeBalance || 0}
+                currentOnChainBalance={parseFloat(wallet.novaBalance)}
+                currentTestBalance={testNovaBalance || 0}
               />
             </TabsContent>
 

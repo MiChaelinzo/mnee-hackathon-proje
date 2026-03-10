@@ -89,7 +89,7 @@ export default function ChatDemoHelper({ agents, userAddress }: ChatDemoHelperPr
         senderId: '0x8ccedbAe4916b79da7F3F612EfB2EB93A2bFD6cF',
         senderName: 'SparkAI Labs',
         senderType: 'provider',
-        message: 'Thanks for reaching out! Our standard pricing is 24.99 MNEE per analysis. For bulk usage, we can definitely offer a discount. How many repositories are you planning to analyze per month?',
+        message: 'Thanks for reaching out! Our standard pricing is 24.99 Nova per analysis. For bulk usage, we can definitely offer a discount. How many repositories are you planning to analyze per month?',
         timestamp: now - 1000 * 60 * 25
       },
       {

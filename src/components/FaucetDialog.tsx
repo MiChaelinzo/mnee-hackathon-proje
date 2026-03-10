@@ -24,9 +24,9 @@ interface FaucetClaim {
 }
 
 const FAUCET_AMOUNTS = [
-  { label: '100 MNEE', value: 100, popular: false },
-  { label: '500 MNEE', value: 500, popular: true },
-  { label: '1,000 MNEE', value: 1000, popular: false },
+  { label: '100 Nova', value: 100, popular: false },
+  { label: '500 Nova', value: 500, popular: true },
+  { label: '1,000 Nova', value: 1000, popular: false },
 ]
 
 const COOLDOWN_PERIOD = 60 * 60 * 1000
@@ -91,7 +91,7 @@ export default function FaucetDialog({ open, onOpenChange, userAddress, onFaucet
 
     if (amount > 10000) {
       toast.error('Amount Too High', {
-        description: 'Maximum faucet amount is 10,000 MNEE.',
+        description: 'Maximum faucet amount is 10,000 Nova.',
       })
       return
     }
@@ -111,8 +111,8 @@ export default function FaucetDialog({ open, onOpenChange, userAddress, onFaucet
       
       onFaucetClaim(amount)
 
-      toast.success('Test MNEE Claimed!', {
-        description: `${amount} test MNEE added to your demo balance (not real currency).`,
+      toast.success('Test Nova Claimed!', {
+        description: `${amount} test Nova added to your demo balance (not real currency).`,
         icon: <Flask className="text-primary" weight="fill" />,
       })
 
@@ -146,7 +146,7 @@ export default function FaucetDialog({ open, onOpenChange, userAddress, onFaucet
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <DialogTitle className="text-2xl">Test MNEE Faucet</DialogTitle>
+                <DialogTitle className="text-2xl">Test Nova Faucet</DialogTitle>
                 <Badge variant="outline" className="border-primary/50 bg-primary/10 text-primary px-2 py-0.5">
                   <span className="text-xs font-medium">DEMO</span>
                 </Badge>
@@ -163,7 +163,7 @@ export default function FaucetDialog({ open, onOpenChange, userAddress, onFaucet
             <div className="flex flex-col items-center justify-center py-8 text-center">
               <Wallet className="w-16 h-16 text-muted-foreground mb-4" />
               <p className="text-muted-foreground">
-                Please connect your wallet to claim test MNEE
+                Please connect your wallet to claim test Nova
               </p>
             </div>
           ) : (
@@ -231,9 +231,9 @@ export default function FaucetDialog({ open, onOpenChange, userAddress, onFaucet
                 <div className="flex items-start gap-2">
                   <Flask className="w-5 h-5 text-primary mt-0.5 shrink-0" weight="fill" />
                   <div className="space-y-1">
-                    <p className="text-sm font-medium text-primary">About Test MNEE</p>
+                    <p className="text-sm font-medium text-primary">About Test Nova</p>
                     <p className="text-xs text-muted-foreground">
-                      Test MNEE is a demo currency for exploring the marketplace. It has no real value and cannot be withdrawn or converted to real MNEE. Use the faucet to experiment with AI agent purchases.
+                      Test Nova is a demo currency for exploring the marketplace. It has no real value and cannot be withdrawn or converted to real Nova. Use the faucet to experiment with AI agent purchases.
                     </p>
                   </div>
                 </div>
@@ -246,7 +246,7 @@ export default function FaucetDialog({ open, onOpenChange, userAddress, onFaucet
                     <p className="text-sm font-medium">Your Faucet Stats</p>
                     <div className="flex gap-4 text-xs text-muted-foreground">
                       <span>Claims: {claimCount}</span>
-                      <span>Total: {totalClaimed.toLocaleString()} test MNEE</span>
+                      <span>Total: {totalClaimed.toLocaleString()} test Nova</span>
                     </div>
                   </div>
                 </div>
@@ -279,7 +279,7 @@ export default function FaucetDialog({ open, onOpenChange, userAddress, onFaucet
                   ) : (
                     <>
                       <Flask className="w-4 h-4" weight="fill" />
-                      Claim {customAmount || selectedAmount} Test MNEE
+                      Claim {customAmount || selectedAmount} Test Nova
                     </>
                   )}
                 </Button>

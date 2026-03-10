@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/button'
 import { Wallet, Warning, Drop, Flask, Question } from '@phosphor-icons/react'
-import { MNEE_CONTRACT_ADDRESS, formatAddress } from '@/lib/mnee'
+import { NOVA_CONTRACT_ADDRESS, formatAddress } from '@/lib/nova'
 import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
@@ -13,8 +13,8 @@ interface HeaderProps {
   chainId: number | null
   isConnected: boolean
   isConnecting: boolean
-  mneeBalance: string
-  testMneeBalance: number
+  novaBalance: string
+  testNovaBalance: number
   ethBalance: string
   onConnect: () => void
   onDisconnect: () => void
@@ -30,8 +30,8 @@ export default function Header({
   chainId, 
   isConnected, 
   isConnecting,
-  mneeBalance,
-  testMneeBalance,
+  novaBalance,
+  testNovaBalance,
   ethBalance,
   onConnect, 
   onDisconnect,
@@ -42,8 +42,8 @@ export default function Header({
   agents = []
 }: HeaderProps) {
   const isWrongNetwork = isConnected && chainId !== 1
-  const hasTestMnee = testMneeBalance > 0
-  const hasOnChainMnee = parseFloat(mneeBalance) > 0
+  const hasTestNova = testNovaBalance > 0
+  const hasOnChainNova = parseFloat(novaBalance) > 0
 
   return (
     <header className="border-b border-border bg-card/50 backdrop-blur-sm sticky top-0 z-50">
@@ -53,9 +53,9 @@ export default function Header({
             <span className="text-xl font-bold text-primary-foreground">M</span>
           </div>
           <div>
-            <h2 className="font-bold text-lg">MNEE Marketplace</h2>
+            <h2 className="font-bold text-lg">Nova AI Marketplace</h2>
             <p className="text-xs text-muted-foreground font-mono">
-              {formatAddress(MNEE_CONTRACT_ADDRESS)}
+              {formatAddress(NOVA_CONTRACT_ADDRESS)}
             </p>
           </div>
         </div>
@@ -92,29 +92,29 @@ export default function Header({
           {isConnected && (
             <>
               <div className="hidden lg:flex flex-col items-end gap-1">
-                {hasOnChainMnee && (
+                {hasOnChainNova && (
                   <div className="flex items-center gap-2">
                     <Badge variant="outline" className="border-accent/50 bg-accent/10 text-accent px-1.5 py-0">
                       <span className="text-[10px] font-medium">ON-CHAIN</span>
                     </Badge>
                     <div className="text-sm font-mono font-semibold text-accent">
-                      {mneeBalance} MNEE
+                      {novaBalance} Nova
                     </div>
                   </div>
                 )}
-                {hasTestMnee && (
+                {hasTestNova && (
                   <div className="flex items-center gap-2">
                     <Badge variant="outline" className="border-primary/50 bg-primary/10 text-primary px-1.5 py-0">
                       <Flask className="w-2.5 h-2.5 mr-0.5" weight="fill" />
                       <span className="text-[10px] font-medium">TEST</span>
                     </Badge>
                     <div className="text-sm font-mono font-semibold text-primary">
-                      {testMneeBalance.toFixed(2)} MNEE
+                      {testNovaBalance.toFixed(2)} Nova
                     </div>
                   </div>
                 )}
-                {!hasOnChainMnee && !hasTestMnee && (
-                  <div className="text-xs text-muted-foreground">No MNEE Balance</div>
+                {!hasOnChainNova && !hasTestNova && (
+                  <div className="text-xs text-muted-foreground">No Nova Balance</div>
                 )}
               </div>
               

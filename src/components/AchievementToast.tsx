@@ -48,7 +48,7 @@ const achievementData: Record<Achievement, { title: string; description: string;
   },
   'whale': {
     title: 'Whale Status',
-    description: 'Spent over 1,000 MNEE',
+    description: 'Spent over 1,000 Nova',
     emoji: '🐋',
   },
   'explorer': {

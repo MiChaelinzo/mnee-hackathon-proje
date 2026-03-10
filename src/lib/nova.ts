@@ -1,7 +1,7 @@
-export const MNEE_CONTRACT_ADDRESS = '0x8ccedbAe4916b79da7F3F612EfB2EB93A2bFD6cF'
+export const NOVA_CONTRACT_ADDRESS = '0x8ccedbAe4916b79da7F3F612EfB2EB93A2bFD6cF'
 export const ETHEREUM_CHAIN_ID = 1
 
-export const formatMNEE = (amount: number): string => {
+export const formatNova = (amount: number): string => {
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',

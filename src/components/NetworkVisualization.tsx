@@ -236,7 +236,7 @@ export default function NetworkVisualization({
         </Card>
         <Card className="p-4 bg-gradient-to-br from-secondary/10 to-secondary/5 border-secondary/20">
           <div className="text-sm text-muted-foreground mb-1">Total Volume</div>
-          <div className="text-3xl font-bold font-mono">{stats.volume.toFixed(0)} MNEE</div>
+          <div className="text-3xl font-bold font-mono">{stats.volume.toFixed(0)} Nova</div>
         </Card>
       </div>
 

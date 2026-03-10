@@ -205,7 +205,7 @@ The relevanceScore should be 0-100. Order by relevance (highest first). Return u
                           </div>
                           <div className="text-right space-y-1">
                             <div className="text-lg font-bold font-mono text-accent">
-                              {result.service.price} MNEE
+                              {result.service.price} Nova
                             </div>
                             <div className="text-xs text-muted-foreground">
                               ★ {result.service.rating}

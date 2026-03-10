@@ -1,53 +1,53 @@
-# MNEE AI Agent Marketplace
+# Nova AI Marketplace
 
-> **Autonomous Commerce Platform with Real Web3 Integration**  
-> Built for the MNEE Hackathon: Programmable Money for Agents, Commerce, and Automated Finance
+> **Generative AI-Powered Autonomous Commerce Platform**  
+> Built for the [Amazon Nova AI Hackathon](https://amazon-nova.devpost.com/) — Powered by Amazon Nova Foundation Models on AWS
 
-A decentralized marketplace where AI agents can autonomously discover, purchase, and sell services using MNEE stablecoin (USD-backed on Ethereum). Features real MetaMask integration, live balance tracking, and on-chain transaction support.
+A generative AI marketplace where AI agents — powered by Amazon Nova foundation models — can autonomously discover, purchase, and sell services. Features AI-driven recommendations, predictive analytics, and smart bundle optimization.
 
 ## 🌟 Key Features
 
-- 🤖 **AI Agent Management** - Create and configure autonomous agents with spending limits
-- 🛒 **Service Marketplace** - 15+ AI services across 6 categories
-- 📦 **Smart Bundles** - Pre-built and custom service bundles with discounts
-- 🤖💡 **AI Recommendations** - LLM-powered bundle suggestions
-- 📊 **Trend Analytics** - Historical recommendation tracking with export
-- 💰 **Real Web3 Integration** - MetaMask wallet connection with live MNEE balances
-- 🔗 **Blockchain Connectivity** - Actual Ethereum Mainnet integration
-- 📱 **Transaction Explorer** - Real-time transaction feed
+- 🤖 **AI Agent Management** — Create and configure autonomous agents with spending limits
+- 🛒 **Service Marketplace** — 15+ AI services across 6 categories
+- 📦 **Smart Bundles** — Pre-built and custom service bundles with AI-optimized discounts
+- 🧠 **Nova AI Recommendations** — Foundation model-powered bundle suggestions
+- 📊 **Trend Analytics** — Historical recommendation tracking with export
+- 💰 **Web3 Integration** — Wallet connection with live Nova token balances
+- 🔗 **Blockchain Connectivity** — On-chain transaction support
+- 📱 **Transaction Explorer** — Real-time transaction feed
 
 ## 🚀 Quick Start
 
 ### Prerequisites
-- [MetaMask Browser Extension](https://metamask.io/download/)
-- Ethereum wallet with ETH for gas
-- MNEE tokens (Contract: `0x8ccedbAe4916b79da7F3F612EfB2EB93A2bFD6cF`)
+- Node.js 18+
+- [MetaMask Browser Extension](https://metamask.io/download/) (for Web3 features)
+- AWS account with Amazon Nova access (for AI features)
 
 ### Getting Started
-1. Click "Connect Wallet" and approve MetaMask
-2. Verify you're on Ethereum Mainnet
-3. View your MNEE and ETH balances
-4. Create AI agents and start purchasing services
+1. Clone the repository and install dependencies
+2. Configure your AWS credentials for Amazon Nova access
+3. Run `npm run dev` to start the development server
+4. Connect your wallet and explore AI-powered services
 
 ## 📚 Documentation
 
-- [MNEE_README.md](./MNEE_README.md) - Complete feature documentation
-- [WEB3_WALLET_GUIDE.md](./WEB3_WALLET_GUIDE.md) - Web3 wallet integration guide
-- [PRD.md](./PRD.md) - Product requirements and design specs
+- [NOVA_README.md](./NOVA_README.md) — Complete feature documentation
+- [WEB3_WALLET_GUIDE.md](./WEB3_WALLET_GUIDE.md) — Web3 wallet integration guide
+- [PRD.md](./PRD.md) — Product requirements and design specs
 
 ## 🛠️ Technology Stack
 
-- React 19 + TypeScript
-- Tailwind CSS v4
-- Ethers.js v6 (Web3 integration)
-- Shadcn v4 Components
-- Framer Motion
-- GPT-4o AI Integration
+- **AI/ML**: Amazon Nova Foundation Models (Nova 2 Lite, Nova 2 Sonic) on AWS
+- **Frontend**: React 19 + TypeScript
+- **Styling**: Tailwind CSS v4 + Shadcn v4 Components
+- **Web3**: Ethers.js v6 (blockchain integration)
+- **Animation**: Framer Motion
+- **Build**: Vite
 
 ## 📄 License
 
-MIT License - Built for MNEE Hackathon 2024
+MIT License — Built for the [Amazon Nova AI Hackathon](https://amazon-nova.devpost.com/)
 
 ---
 
-**Built with ❤️ for the future of autonomous commerce**
+**Built with ❤️ using Amazon Nova AI for the future of autonomous commerce**
