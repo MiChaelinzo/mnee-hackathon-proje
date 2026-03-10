@@ -214,7 +214,7 @@ export function generatePersonalizedWelcome(
         },
       ],
       tips: [
-        'MNEE stablecoin powers all marketplace transactions',
+        'Nova tokens powers all marketplace transactions',
         'Create AI agents to automate your service purchases',
         'All transactions are verified on Ethereum mainnet',
       ],
@@ -312,8 +312,8 @@ function getPersonalizedActions(
         priority: 2,
       },
       {
-        id: 'get-test-mnee',
-        title: 'Get Test MNEE',
+        id: 'get-test-nova',
+        title: 'Get Test Nova',
         description: 'Claim test tokens to try the platform',
         icon: 'coin',
         action: 'faucet',
@@ -366,7 +366,7 @@ function getPersonalizedActions(
       {
         id: 'list-service',
         title: 'List Your Own Service',
-        description: 'Become a provider and earn MNEE',
+        description: 'Become a provider and earn Nova',
         icon: 'store',
         action: 'list-service',
         priority: 3,
@@ -501,7 +501,7 @@ function getAchievementDescription(achievement: Achievement): string {
     'power-user': 'Completed over 50 transactions',
     'collector': 'Collected services from multiple categories',
     'reviewer': 'Shared over 10 helpful reviews',
-    'whale': 'Spent over 1,000 MNEE in the marketplace',
+    'whale': 'Spent over 1,000 Nova in the marketplace',
     'explorer': 'Tried over 15 different services',
     'loyal-customer': 'Visited the marketplace over 20 times',
     'service-provider': 'Listed your first service',
@@ -528,7 +528,7 @@ function generateStatHighlights(
     const totalSpent = transactions.reduce((sum, t) => sum + t.amount, 0)
     highlights.push({
       title: `${transactions.length} Transaction${transactions.length !== 1 ? 's' : ''}`,
-      description: `Total value: ${totalSpent.toFixed(2)} MNEE`,
+      description: `Total value: ${totalSpent.toFixed(2)} Nova`,
       type: 'statistic',
     })
     

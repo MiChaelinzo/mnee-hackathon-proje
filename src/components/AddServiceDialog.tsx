@@ -63,7 +63,7 @@ export default function AddServiceDialog({ open, onOpenChange, onAddService }: A
         <DialogHeader>
           <DialogTitle>List New Service</DialogTitle>
           <DialogDescription>
-            Add your AI service to the marketplace and start earning MNEE
+            Add your AI service to the marketplace and start earning Nova
           </DialogDescription>
         </DialogHeader>
 
@@ -100,7 +100,7 @@ export default function AddServiceDialog({ open, onOpenChange, onAddService }: A
             </div>
 
             <div>
-              <Label htmlFor="price">Price (MNEE)</Label>
+              <Label htmlFor="price">Price (Nova)</Label>
               <Input
                 id="price"
                 type="number"

@@ -11,7 +11,7 @@ import { motion } from 'framer-motion'
 import { toast } from 'sonner'
 import AgentAnalytics from './AgentAnalytics'
 import type { Agent, Transaction } from '@/lib/types'
-import { formatMNEE } from '@/lib/mnee'
+import { formatNova } from '@/lib/nova'
 
 interface AgentDashboardProps {
   agents: Agent[]
@@ -166,7 +166,7 @@ export default function AgentDashboard({ agents, transactions, onUpdateAgent, on
                       Balance
                     </div>
                     <div className="text-2xl font-bold font-mono text-accent">
-                      {formatMNEE(agent.balance)}
+                      {formatNova(agent.balance)}
                     </div>
                   </div>
                   <div className="bg-muted/50 p-4 rounded-lg">
@@ -183,16 +183,16 @@ export default function AgentDashboard({ agents, transactions, onUpdateAgent, on
                 <div className="space-y-2 text-sm">
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Total Spent</span>
-                    <span className="font-mono font-medium">{formatMNEE(agent.totalSpent)}</span>
+                    <span className="font-mono font-medium">{formatNova(agent.totalSpent)}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Spending Limit</span>
-                    <span className="font-mono font-medium">{formatMNEE(agent.spendingLimit)}</span>
+                    <span className="font-mono font-medium">{formatNova(agent.spendingLimit)}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Remaining</span>
                     <span className="font-mono font-medium text-accent">
-                      {formatMNEE(agent.spendingLimit - agent.totalSpent)}
+                      {formatNova(agent.spendingLimit - agent.totalSpent)}
                     </span>
                   </div>
                 </div>
@@ -225,7 +225,7 @@ export default function AgentDashboard({ agents, transactions, onUpdateAgent, on
                             {tx.serviceName}
                           </span>
                           <span className="font-mono font-medium ml-2">
-                            {formatMNEE(tx.amount)}
+                            {formatNova(tx.amount)}
                           </span>
                         </div>
                       ))}
@@ -269,7 +269,7 @@ export default function AgentDashboard({ agents, transactions, onUpdateAgent, on
               />
             </div>
             <div>
-              <Label htmlFor="balance">Initial Balance (MNEE)</Label>
+              <Label htmlFor="balance">Initial Balance (Nova)</Label>
               <Input
                 id="balance"
                 type="number"
@@ -279,7 +279,7 @@ export default function AgentDashboard({ agents, transactions, onUpdateAgent, on
               />
             </div>
             <div>
-              <Label htmlFor="limit">Spending Limit (MNEE)</Label>
+              <Label htmlFor="limit">Spending Limit (Nova)</Label>
               <Input
                 id="limit"
                 type="number"

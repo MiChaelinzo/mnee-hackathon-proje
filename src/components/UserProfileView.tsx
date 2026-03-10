@@ -33,7 +33,7 @@ const achievementInfo: Record<Achievement, { icon: any; color: string; descripti
   'power-user': { icon: Crown, color: 'text-orange-500', description: '50+ transactions completed' },
   'collector': { icon: Trophy, color: 'text-pink-500', description: 'Multi-category purchaser' },
   'reviewer': { icon: ChartLine, color: 'text-cyan-500', description: '10+ reviews shared' },
-  'whale': { icon: Crown, color: 'text-amber-500', description: '1,000+ MNEE spent' },
+  'whale': { icon: Crown, color: 'text-amber-500', description: '1,000+ Nova spent' },
   'explorer': { icon: Target, color: 'text-indigo-500', description: '15+ services tried' },
   'loyal-customer': { icon: CheckCircle, color: 'text-emerald-500', description: '20+ visits' },
   'service-provider': { icon: Trophy, color: 'text-violet-500', description: 'Listed a service' },
@@ -116,7 +116,7 @@ export default function UserProfileView({
           <div className="text-center p-4 rounded-lg bg-secondary/30">
             <Crown className="w-6 h-6 mx-auto mb-2 text-accent" />
             <div className="text-2xl font-bold">{totalSpent.toFixed(0)}</div>
-            <div className="text-xs text-muted-foreground">MNEE Spent</div>
+            <div className="text-xs text-muted-foreground">Nova Spent</div>
           </div>
         </div>
       </Card>

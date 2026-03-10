@@ -643,7 +643,7 @@ export default function MarketplaceChat({
           ? { 
               ...conv, 
               lastMessage: negotiationOffer 
-                ? `💰 Price offer: ${negotiationOffer.offeredPrice} MNEE` 
+                ? `💰 Price offer: ${negotiationOffer.offeredPrice} Nova` 
                 : audioBlob
                   ? '🎤 Voice message'
                   : attachments.length > 0 
@@ -674,7 +674,7 @@ export default function MarketplaceChat({
       senderId: userAddress,
       senderName: 'You',
       senderType: userType,
-      message: `✅ Offer accepted! Proceeding with ${message.offerDetails.offeredPrice} MNEE for ${message.offerDetails.serviceName}`,
+      message: `✅ Offer accepted! Proceeding with ${message.offerDetails.offeredPrice} Nova for ${message.offerDetails.serviceName}`,
       timestamp: Date.now(),
       isSystem: true
     }
@@ -1269,13 +1269,13 @@ export default function MarketplaceChat({
                                   <div className="flex items-center justify-between text-xs">
                                     <span>Original Price:</span>
                                     <span className="line-through opacity-70">
-                                      {message.offerDetails.originalPrice} MNEE
+                                      {message.offerDetails.originalPrice} Nova
                                     </span>
                                   </div>
                                   <div className="flex items-center justify-between">
                                     <span className="text-sm font-medium">Offered Price:</span>
                                     <span className="text-lg font-bold">
-                                      {message.offerDetails.offeredPrice} MNEE
+                                      {message.offerDetails.offeredPrice} Nova
                                     </span>
                                   </div>
                                   {message.offerDetails.customTerms && (
@@ -1608,7 +1608,7 @@ export default function MarketplaceChat({
                       </Select>
                     </div>
                     <div className="space-y-1">
-                      <Label className="text-xs">Your Offer (MNEE)</Label>
+                      <Label className="text-xs">Your Offer (Nova)</Label>
                       <Input
                         type="number"
                         placeholder="0.00"

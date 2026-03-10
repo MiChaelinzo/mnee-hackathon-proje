@@ -216,7 +216,7 @@ export default function BundleBuilder({ services, onCreateBundle, onClose }: Bun
                         <div className="flex items-start justify-between gap-2 mb-1">
                           <h4 className="font-semibold text-sm">{service.name}</h4>
                           <Badge variant="secondary" className="shrink-0 font-mono">
-                            {service.price.toFixed(2)} MNEE
+                            {service.price.toFixed(2)} Nova
                           </Badge>
                         </div>
                         <p className="text-xs text-muted-foreground line-clamp-2 mb-2">
@@ -329,23 +329,23 @@ export default function BundleBuilder({ services, onCreateBundle, onClose }: Bun
             <div className="space-y-3 p-4 rounded-lg bg-muted/50">
               <div className="flex items-center justify-between text-sm">
                 <span className="text-muted-foreground">Original Price:</span>
-                <span className="font-mono">{originalPrice.toFixed(2)} MNEE</span>
+                <span className="font-mono">{originalPrice.toFixed(2)} Nova</span>
               </div>
               <div className="flex items-center justify-between text-sm">
                 <span className="text-muted-foreground">Discount:</span>
-                <span className="font-mono text-destructive">-{savings.toFixed(2)} MNEE</span>
+                <span className="font-mono text-destructive">-{savings.toFixed(2)} Nova</span>
               </div>
               <Separator />
               <div className="flex items-center justify-between">
                 <span className="font-semibold">Bundle Price:</span>
                 <span className="text-xl font-bold font-mono text-primary">
-                  {bundlePrice.toFixed(2)} MNEE
+                  {bundlePrice.toFixed(2)} Nova
                 </span>
               </div>
               {savings > 0 && (
                 <div className="flex items-center gap-2 text-xs text-accent">
                   <Check className="w-4 h-4" />
-                  Save {savings.toFixed(2)} MNEE ({discountPercentage}% off)
+                  Save {savings.toFixed(2)} Nova ({discountPercentage}% off)
                 </div>
               )}
             </div>

@@ -1,11 +1,11 @@
 import { useState, useEffect, useCallback } from 'react'
 import { ethers } from 'ethers'
-import { MNEE_CONTRACT_ADDRESS, ETHEREUM_CHAIN_ID } from '@/lib/mnee'
+import { NOVA_CONTRACT_ADDRESS, ETHEREUM_CHAIN_ID } from '@/lib/nova'
 import { toast } from 'sonner'
 
 const { BrowserProvider, Contract, formatUnits, parseUnits } = ethers
 
-const MNEE_ABI = [
+const NOVA_ABI = [
   'function balanceOf(address owner) view returns (uint256)',
   'function transfer(address to, uint256 amount) returns (bool)',
   'function approve(address spender, uint256 amount) returns (bool)',
@@ -20,7 +20,7 @@ interface WalletState {
   chainId: number | null
   isConnected: boolean
   isConnecting: boolean
-  mneeBalance: string
+  novaBalance: string
   ethBalance: string
 }
 
@@ -34,7 +34,7 @@ export function useWallet() {
     chainId: null,
     isConnected: false,
     isConnecting: false,
-    mneeBalance: '0',
+    novaBalance: '0',
     ethBalance: '0',
   })
 
@@ -69,15 +69,15 @@ export function useWallet() {
       const ethBalanceWei = await provider.getBalance(address)
       const ethBalance = formatUnits(ethBalanceWei, 18)
 
-      const mneeContract = new Contract(MNEE_CONTRACT_ADDRESS, MNEE_ABI, provider)
-      const mneeBalanceWei = await mneeContract.balanceOf(address)
-      const decimals = await mneeContract.decimals()
-      const mneeBalance = formatUnits(mneeBalanceWei, decimals)
+      const novaContract = new Contract(NOVA_CONTRACT_ADDRESS, NOVA_ABI, provider)
+      const novaBalanceWei = await novaContract.balanceOf(address)
+      const decimals = await novaContract.decimals()
+      const novaBalance = formatUnits(novaBalanceWei, decimals)
 
       setWalletState(prev => ({
         ...prev,
         ethBalance: parseFloat(ethBalance).toFixed(4),
-        mneeBalance: parseFloat(mneeBalance).toFixed(2),
+        novaBalance: parseFloat(novaBalance).toFixed(2),
       }))
     } catch (error) {
       console.error('Error updating balances:', error)
@@ -155,7 +155,7 @@ export function useWallet() {
       chainId: null,
       isConnected: false,
       isConnecting: false,
-      mneeBalance: '0',
+      novaBalance: '0',
       ethBalance: '0',
     })
 
@@ -184,7 +184,7 @@ export function useWallet() {
     }
   }
 
-  const transferMNEE = async (
+  const transferNova = async (
     toAddress: string,
     amount: string,
     onTxSubmit?: (txHash: string) => void
@@ -202,20 +202,20 @@ export function useWallet() {
     try {
       const provider = new BrowserProvider(window.ethereum as never)
       const signer = await provider.getSigner()
-      const mneeContract = new Contract(MNEE_CONTRACT_ADDRESS, MNEE_ABI, signer)
+      const novaContract = new Contract(NOVA_CONTRACT_ADDRESS, NOVA_ABI, signer)
       
-      const decimals = await mneeContract.decimals()
-      const balance = await mneeContract.balanceOf(walletState.address)
+      const decimals = await novaContract.decimals()
+      const balance = await novaContract.balanceOf(walletState.address)
       const amountWei = parseUnits(amount, decimals)
 
       if (balance < amountWei) {
-        toast.error('Insufficient MNEE Balance', {
-          description: `You need ${amount} MNEE but only have ${formatUnits(balance, decimals)}`,
+        toast.error('Insufficient Nova Balance', {
+          description: `You need ${amount} Nova but only have ${formatUnits(balance, decimals)}`,
         })
         return null
       }
 
-      const tx = await mneeContract.transfer(toAddress, amountWei)
+      const tx = await novaContract.transfer(toAddress, amountWei)
       
       if (onTxSubmit) {
         onTxSubmit(tx.hash)
@@ -230,13 +230,13 @@ export function useWallet() {
       await updateBalances(walletState.address, provider)
 
       toast.success('Payment Confirmed', {
-        description: `Successfully transferred ${amount} MNEE`,
+        description: `Successfully transferred ${amount} Nova`,
       })
 
       return receipt.hash
     } catch (error) {
       const web3Error = error as Web3Error
-      console.error('Error transferring MNEE:', web3Error)
+      console.error('Error transferring Nova:', web3Error)
       
       let errorMessage = 'Transaction failed'
       
@@ -258,18 +258,18 @@ export function useWallet() {
     }
   }
 
-  const checkMNEEBalance = async (address: string): Promise<string | null> => {
+  const checkNovaBalance = async (address: string): Promise<string | null> => {
     try {
       if (!window.ethereum) return null
       
       const provider = new BrowserProvider(window.ethereum as never)
-      const mneeContract = new Contract(MNEE_CONTRACT_ADDRESS, MNEE_ABI, provider)
-      const balance = await mneeContract.balanceOf(address)
-      const decimals = await mneeContract.decimals()
+      const novaContract = new Contract(NOVA_CONTRACT_ADDRESS, NOVA_ABI, provider)
+      const balance = await novaContract.balanceOf(address)
+      const decimals = await novaContract.decimals()
       
       return formatUnits(balance, decimals)
     } catch (error) {
-      console.error('Error checking MNEE balance:', error)
+      console.error('Error checking Nova balance:', error)
       return null
     }
   }
@@ -312,8 +312,8 @@ export function useWallet() {
     connectWallet,
     disconnectWallet,
     switchToEthereumMainnet,
-    transferMNEE,
-    checkMNEEBalance,
+    transferNova,
+    checkNovaBalance,
     refreshBalances,
   }
 }

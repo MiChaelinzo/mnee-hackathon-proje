@@ -197,7 +197,7 @@ export default function WorkflowBuilder({ services, agents }: WorkflowBuilderPro
                   <SelectContent>
                     {services.map(service => (
                       <SelectItem key={service.id} value={service.id}>
-                        {service.name} - {service.price} MNEE
+                        {service.name} - {service.price} Nova
                       </SelectItem>
                     ))}
                   </SelectContent>

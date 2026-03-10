@@ -11,7 +11,7 @@ import { motion } from 'framer-motion'
 import { toast } from 'sonner'
 import EnhancedServiceStats from './EnhancedServiceStats'
 import type { Service, Agent, Transaction } from '@/lib/types'
-import { formatMNEE, generateTxHash } from '@/lib/mnee'
+import { formatNova, generateTxHash } from '@/lib/nova'
 
 interface MarketplaceProps {
   services: Service[]
@@ -19,7 +19,7 @@ interface MarketplaceProps {
   transactions: Transaction[]
   onPurchase: (transaction: Transaction) => void
   walletConnected: boolean
-  onTransferMNEE?: (toAddress: string, amount: string, onTxSubmit?: (txHash: string) => void) => Promise<string | null>
+  onTransferNova?: (toAddress: string, amount: string, onTxSubmit?: (txHash: string) => void) => Promise<string | null>
   userAddress?: string | null
 }
 
@@ -29,7 +29,7 @@ export default function Marketplace({
   transactions, 
   onPurchase, 
   walletConnected,
-  onTransferMNEE,
+  onTransferNova,
   userAddress,
 }: MarketplaceProps) {
   const [searchQuery, setSearchQuery] = useState('')
@@ -52,8 +52,8 @@ export default function Marketplace({
     if (!agent) return
 
     if (agent.balance < selectedService.price) {
-      toast.error('Insufficient MNEE balance', {
-        description: `Agent needs ${formatMNEE(selectedService.price - agent.balance)} more MNEE`,
+      toast.error('Insufficient Nova balance', {
+        description: `Agent needs ${formatNova(selectedService.price - agent.balance)} more Nova`,
       })
       return
     }
@@ -79,9 +79,9 @@ export default function Marketplace({
       type: 'service',
     }
 
-    if (onTransferMNEE && userAddress) {
+    if (onTransferNova && userAddress) {
       try {
-        const txHash = await onTransferMNEE(
+        const txHash = await onTransferNova(
           selectedService.providerAddress,
           selectedService.price.toString(),
           (submittedTxHash) => {
@@ -99,7 +99,7 @@ export default function Marketplace({
           setSelectedAgent('')
 
           toast.success('Purchase successful!', {
-            description: `${agent.name} purchased ${selectedService.name} for ${formatMNEE(selectedService.price)}`,
+            description: `${agent.name} purchased ${selectedService.name} for ${formatNova(selectedService.price)}`,
             action: {
               label: 'View on Etherscan',
               onClick: () => window.open(`https://etherscan.io/tx/${txHash}`, '_blank'),
@@ -124,7 +124,7 @@ export default function Marketplace({
       setSelectedAgent('')
 
       toast.success('Purchase successful!', {
-        description: `${agent.name} purchased ${selectedService.name} for ${formatMNEE(selectedService.price)}`,
+        description: `${agent.name} purchased ${selectedService.name} for ${formatNova(selectedService.price)}`,
       })
     }
 
@@ -170,12 +170,12 @@ export default function Marketplace({
               <Badge variant="outline" className="border-accent/50 bg-accent/10 text-accent px-1.5 py-0 mx-1">
                 <span className="text-xs">ON-CHAIN</span>
               </Badge>
-              real MNEE from your connected wallet and{' '}
+              real Nova from your connected wallet and{' '}
               <Badge variant="outline" className="border-primary/50 bg-primary/10 text-primary px-1.5 py-0 mx-1">
                 <Flask className="w-2.5 h-2.5 inline mr-0.5" weight="fill" />
                 <span className="text-xs">TEST</span>
               </Badge>
-              demo MNEE from the faucet. Agents use their internal balance for purchases.
+              demo Nova from the faucet. Agents use their internal balance for purchases.
             </AlertDescription>
           </div>
         </div>
@@ -251,7 +251,7 @@ export default function Marketplace({
                 <div>
                   <div className="text-xs text-muted-foreground">Price</div>
                   <div className="text-2xl font-bold font-mono text-accent">
-                    {formatMNEE(service.price)}
+                    {formatNova(service.price)}
                   </div>
                 </div>
                 <Button
@@ -293,7 +293,7 @@ export default function Marketplace({
               <div>
                 <span className="text-muted-foreground">Price</span>
                 <p className="font-mono text-xl font-bold text-accent mt-1">
-                  {selectedService && formatMNEE(selectedService.price)}
+                  {selectedService && formatNova(selectedService.price)}
                 </p>
               </div>
               <div>
@@ -314,7 +314,7 @@ export default function Marketplace({
                 <SelectContent>
                   {agents.filter(a => a.isActive).map((agent) => (
                     <SelectItem key={agent.id} value={agent.id}>
-                      {agent.name} ({formatMNEE(agent.balance)} available)
+                      {agent.name} ({formatNova(agent.balance)} available)
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -340,7 +340,7 @@ export default function Marketplace({
               ) : (
                 <>
                   <Lightning className="w-4 h-4" />
-                  Purchase with MNEE
+                  Purchase with Nova
                 </>
               )}
             </Button>

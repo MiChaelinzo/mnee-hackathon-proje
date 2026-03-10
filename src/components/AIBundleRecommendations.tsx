@@ -97,9 +97,9 @@ export default function AIBundleRecommendations({
 
 Agent Profile:
 - Name: ${agent.name}
-- Total Spent: ${agent.totalSpent.toFixed(2)} MNEE
+- Total Spent: ${agent.totalSpent.toFixed(2)} Nova
 - Purchase Count: ${agent.purchaseCount}
-- Current Balance: ${agent.balance.toFixed(2)} MNEE
+- Current Balance: ${agent.balance.toFixed(2)} Nova
 
 Purchase History:
 ${purchasedServices.length > 0 ? `Services purchased: ${JSON.stringify(purchasedServices, null, 2)}` : 'No services purchased yet'}
@@ -181,7 +181,7 @@ If there's insufficient purchase history, recommend bundles that offer the best 
     if (!agent || !bundle) return
 
     if (agent.balance < bundle.bundlePrice) {
-      toast.error('Insufficient MNEE balance')
+      toast.error('Insufficient Nova balance')
       return
     }
 
@@ -352,10 +352,10 @@ If there's insufficient purchase history, recommend bundles that offer the best 
                         <span className="text-2xl font-bold font-mono text-accent">
                           {bundle.bundlePrice.toFixed(2)}
                         </span>
-                        <span className="text-sm text-accent-foreground">MNEE</span>
+                        <span className="text-sm text-accent-foreground">Nova</span>
                       </div>
                       <div className="text-sm text-muted-foreground line-through">
-                        {bundle.originalPrice.toFixed(2)} MNEE
+                        {bundle.originalPrice.toFixed(2)} Nova
                       </div>
                     </div>
                   </CardContent>

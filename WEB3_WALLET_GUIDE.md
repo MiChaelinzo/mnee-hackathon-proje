@@ -1,7 +1,7 @@
 # Web3 Wallet Integration Guide
 
 ## Overview
-The MNEE Marketplace now features full MetaMask integration for real Ethereum wallet connectivity and MNEE stablecoin interactions.
+The Nova AI Marketplace now features full MetaMask integration for real Ethereum wallet connectivity and Nova tokens interactions.
 
 ## Features
 
@@ -12,7 +12,7 @@ The MNEE Marketplace now features full MetaMask integration for real Ethereum wa
 - Automatic disconnection handling
 
 ### Live Balance Tracking
-- Real-time MNEE token balance display
+- Real-time Nova token balance display
 - ETH balance monitoring
 - Automatic balance updates after transactions
 - Manual refresh capability
@@ -24,7 +24,7 @@ The MNEE Marketplace now features full MetaMask integration for real Ethereum wa
 - Chain ID validation
 
 ### Transaction Support
-- MNEE token transfer functionality
+- Nova token transfer functionality
 - Transaction status monitoring
 - Etherscan integration for transaction verification
 - Proper error handling and user feedback
@@ -52,19 +52,19 @@ The application requires Ethereum Mainnet (Chain ID: 1)
 
 ### 4. View Balances
 Once connected:
-- MNEE balance is displayed in the header and wallet card
+- Nova balance is displayed in the header and wallet card
 - ETH balance is shown in the network status bar
 - Balances update automatically after transactions
 
 ### 5. Make Transactions
 To purchase services:
-1. Ensure you have sufficient MNEE balance
+1. Ensure you have sufficient Nova balance
 2. Select a service in the marketplace
 3. Choose an agent to make the purchase
 4. Confirm the transaction
 5. Approve in MetaMask when prompted
 
-## MNEE Token Contract
+## Nova Token Contract
 - **Address**: `0x8ccedbAe4916b79da7F3F612EfB2EB93A2bFD6cF`
 - **Network**: Ethereum Mainnet
 - **Type**: ERC-20 USD-backed stablecoin
@@ -102,7 +102,7 @@ To purchase services:
 
 ### What the App Can Do
 - Read your wallet address
-- Read your MNEE and ETH balances
+- Read your Nova and ETH balances
 - Request transaction signatures (requires your approval)
 
 ### What the App Cannot Do
@@ -118,7 +118,7 @@ To purchase services:
 - Any wallet that implements the EIP-1193 provider standard
 
 ### Contract Interactions
-The application uses the following MNEE contract functions:
+The application uses the following Nova contract functions:
 - `balanceOf(address)` - Check token balance
 - `transfer(address, uint256)` - Transfer tokens
 - `approve(address, uint256)` - Approve spending
@@ -140,12 +140,12 @@ const {
   chainId,          // Current chain ID
   isConnected,      // Connection status
   isConnecting,     // Loading state
-  mneeBalance,      // MNEE token balance
+  novaBalance,      // Nova token balance
   ethBalance,       // ETH balance
   connectWallet,    // Connect function
   disconnectWallet, // Disconnect function
   switchToEthereumMainnet, // Network switch
-  transferMNEE,     // Transfer function
+  transferNova,     // Transfer function
   refreshBalances,  // Manual refresh
 } = useWallet()
 ```

@@ -224,7 +224,7 @@ export default function RealTimeActivityFeed({
                     {activity.amount && (
                       <Badge variant="outline" className="mt-2 gap-1">
                         <CurrencyDollar className="w-3 h-3" />
-                        {activity.amount} MNEE
+                        {activity.amount} Nova
                       </Badge>
                     )}
                     {activity.rating && (

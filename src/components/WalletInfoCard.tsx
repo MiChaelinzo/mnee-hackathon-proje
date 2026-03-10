@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Wallet, CheckCircle, Warning, Info, Flask } from '@phosphor-icons/react'
 import { motion } from 'framer-motion'
-import { MNEE_CONTRACT_ADDRESS, formatAddress } from '@/lib/mnee'
+import { NOVA_CONTRACT_ADDRESS, formatAddress } from '@/lib/nova'
 import { Separator } from '@/components/ui/separator'
 
 interface WalletInfoCardProps {
@@ -11,8 +11,8 @@ interface WalletInfoCardProps {
   chainId: number | null
   isConnected: boolean
   isConnecting: boolean
-  mneeBalance: string
-  testMneeBalance: number
+  novaBalance: string
+  testNovaBalance: number
   ethBalance: string
   onConnect: () => void
   onDisconnect: () => void
@@ -24,17 +24,17 @@ export default function WalletInfoCard({
   chainId,
   isConnected, 
   isConnecting,
-  mneeBalance,
-  testMneeBalance,
+  novaBalance,
+  testNovaBalance,
   ethBalance,
   onConnect, 
   onDisconnect,
   onSwitchNetwork
 }: WalletInfoCardProps) {
   const isWrongNetwork = isConnected && chainId !== 1
-  const hasTestMnee = testMneeBalance > 0
-  const hasOnChainMnee = parseFloat(mneeBalance) > 0
-  const totalMnee = parseFloat(mneeBalance) + testMneeBalance
+  const hasTestNova = testNovaBalance > 0
+  const hasOnChainNova = parseFloat(novaBalance) > 0
+  const totalNova = parseFloat(novaBalance) + testNovaBalance
 
   if (!isConnected) {
     return (
@@ -59,7 +59,7 @@ export default function WalletInfoCard({
             <div className="flex items-start gap-2 p-3 bg-muted/50 rounded-lg">
               <Info className="w-5 h-5 text-primary mt-0.5 shrink-0" />
               <p className="text-sm text-muted-foreground">
-                Connect your MetaMask wallet to access the marketplace and enable autonomous AI agent purchases using MNEE stablecoin on Ethereum Mainnet.
+                Connect your MetaMask wallet to access the marketplace and enable autonomous AI agent purchases using Nova stablecoin on Ethereum Mainnet.
               </p>
             </div>
             
@@ -70,7 +70,7 @@ export default function WalletInfoCard({
               </div>
               <div className="flex items-center gap-2">
                 <CheckCircle className="w-4 h-4 text-accent" weight="fill" />
-                <span>USD-backed MNEE stablecoin</span>
+                <span>USD-backed Nova stablecoin</span>
               </div>
               <div className="flex items-center gap-2">
                 <CheckCircle className="w-4 h-4 text-accent" weight="fill" />
@@ -188,8 +188,8 @@ export default function WalletInfoCard({
 
           <div className="space-y-2">
             <div className="flex items-center justify-between">
-              <span className="text-sm font-medium">MNEE Balances</span>
-              <span className="text-xs text-muted-foreground">Total: {totalMnee.toFixed(2)} MNEE</span>
+              <span className="text-sm font-medium">Nova Balances</span>
+              <span className="text-xs text-muted-foreground">Total: {totalNova.toFixed(2)} Nova</span>
             </div>
             
             <div className="grid grid-cols-1 gap-2">
@@ -199,13 +199,13 @@ export default function WalletInfoCard({
                     <Badge variant="outline" className="border-accent/50 bg-accent/10 text-accent px-2 py-0.5">
                       <span className="text-xs font-medium">ON-CHAIN</span>
                     </Badge>
-                    <span className="text-xs text-muted-foreground">Real MNEE</span>
+                    <span className="text-xs text-muted-foreground">Real Nova</span>
                   </div>
-                  {hasOnChainMnee && (
+                  {hasOnChainNova && (
                     <CheckCircle className="w-4 h-4 text-accent" weight="fill" />
                   )}
                 </div>
-                <div className="text-2xl font-mono font-bold text-accent">{mneeBalance}</div>
+                <div className="text-2xl font-mono font-bold text-accent">{novaBalance}</div>
                 <div className="text-xs text-muted-foreground mt-1">
                   From Ethereum Mainnet
                 </div>
@@ -220,11 +220,11 @@ export default function WalletInfoCard({
                     </Badge>
                     <span className="text-xs text-muted-foreground">Demo only</span>
                   </div>
-                  {hasTestMnee && (
+                  {hasTestNova && (
                     <CheckCircle className="w-4 h-4 text-primary" weight="fill" />
                   )}
                 </div>
-                <div className="text-2xl font-mono font-bold text-primary">{testMneeBalance.toFixed(2)}</div>
+                <div className="text-2xl font-mono font-bold text-primary">{testNovaBalance.toFixed(2)}</div>
                 <div className="text-xs text-muted-foreground mt-1">
                   From test faucet • Not real currency
                 </div>
@@ -238,9 +238,9 @@ export default function WalletInfoCard({
           </div>
 
           <div className="flex items-center justify-between p-3 bg-muted/30 rounded-lg">
-            <span className="text-sm text-muted-foreground">MNEE Contract</span>
+            <span className="text-sm text-muted-foreground">Nova Contract</span>
             <code className="text-xs font-mono bg-background px-2 py-1 rounded">
-              {formatAddress(MNEE_CONTRACT_ADDRESS)}
+              {formatAddress(NOVA_CONTRACT_ADDRESS)}
             </code>
           </div>
 

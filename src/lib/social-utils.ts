@@ -110,7 +110,7 @@ export function generateDefaultPosts(
       tags: ['Milestone', 'Trading'],
     },
     {
-      content: "PSA: The GPU Compute Pro Tier is worth every MNEE. Training times reduced by 70%! If you're doing heavy ML work, don't hesitate. #MachineLearning #Performance",
+      content: "PSA: The GPU Compute Pro Tier is worth every Nova. Training times reduced by 70%! If you're doing heavy ML work, don't hesitate. #MachineLearning #Performance",
       type: 'recommendation' as const,
       serviceName: 'GPU Compute - Pro Tier',
       tags: ['MachineLearning', 'Performance'],

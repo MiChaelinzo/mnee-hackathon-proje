@@ -21,7 +21,7 @@ interface BundlesViewProps {
   onPurchase: (transaction: Transaction) => void
   onCreateBundle: (bundle: ServiceBundle) => void
   walletConnected: boolean
-  onTransferMNEE?: (toAddress: string, amount: string, onTxSubmit?: (txHash: string) => void) => Promise<string | null>
+  onTransferNova?: (toAddress: string, amount: string, onTxSubmit?: (txHash: string) => void) => Promise<string | null>
   userAddress?: string | null
 }
 
@@ -34,7 +34,7 @@ export default function BundlesView({
   onPurchase,
   onCreateBundle,
   walletConnected,
-  onTransferMNEE,
+  onTransferNova,
   userAddress,
 }: BundlesViewProps) {
   const [selectedAgent, setSelectedAgent] = useState<string>(agents[0]?.id || '')
@@ -73,7 +73,7 @@ export default function BundlesView({
     if (!agent) return
 
     if (agent.balance < bundle.bundlePrice) {
-      toast.error('Insufficient MNEE balance')
+      toast.error('Insufficient Nova balance')
       return
     }
 
@@ -97,9 +97,9 @@ export default function BundlesView({
       bundleId: bundle.id,
     }
 
-    if (onTransferMNEE && userAddress) {
+    if (onTransferNova && userAddress) {
       try {
-        const txHash = await onTransferMNEE(
+        const txHash = await onTransferNova(
           bundle.providerAddress,
           bundle.bundlePrice.toString(),
           (submittedTxHash) => {
@@ -153,7 +153,7 @@ export default function BundlesView({
     if (!agent) return
 
     if (agent.balance < subscription.totalPrice) {
-      toast.error('Insufficient MNEE balance')
+      toast.error('Insufficient Nova balance')
       return
     }
 
@@ -177,9 +177,9 @@ export default function BundlesView({
       subscriptionId: subscription.id,
     }
 
-    if (onTransferMNEE && userAddress) {
+    if (onTransferNova && userAddress) {
       try {
-        const txHash = await onTransferMNEE(
+        const txHash = await onTransferNova(
           subscription.providerAddress,
           subscription.totalPrice.toString(),
           (submittedTxHash) => {
@@ -295,7 +295,7 @@ export default function BundlesView({
               <div>
                 <p className="text-sm text-muted-foreground mb-1">Available Savings</p>
                 <p className="text-3xl font-bold font-mono">{calculateTotalSavings().toFixed(0)}</p>
-                <p className="text-xs text-muted-foreground">MNEE</p>
+                <p className="text-xs text-muted-foreground">Nova</p>
               </div>
               <div className="w-10 h-10 rounded-lg bg-secondary/20 flex items-center justify-center">
                 <TrendUp className="w-5 h-5 text-secondary-foreground" />
@@ -315,7 +315,7 @@ export default function BundlesView({
           >
             {agents.map((agent) => (
               <option key={agent.id} value={agent.id}>
-                {agent.name} ({agent.balance.toFixed(2)} MNEE)
+                {agent.name} ({agent.balance.toFixed(2)} Nova)
               </option>
             ))}
           </select>
@@ -404,10 +404,10 @@ export default function BundlesView({
                             <span className="text-2xl font-bold font-mono text-accent">
                               {bundle.bundlePrice.toFixed(2)}
                             </span>
-                            <span className="text-sm text-accent-foreground">MNEE</span>
+                            <span className="text-sm text-accent-foreground">Nova</span>
                           </div>
                           <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                            <span className="line-through">{bundle.originalPrice.toFixed(2)} MNEE</span>
+                            <span className="line-through">{bundle.originalPrice.toFixed(2)} Nova</span>
                             {bundle.validityDays && (
                               <>
                                 <span>•</span>
@@ -490,11 +490,11 @@ export default function BundlesView({
                             <span className="text-2xl font-bold font-mono text-accent">
                               {subscription.totalPrice.toFixed(2)}
                             </span>
-                            <span className="text-sm text-accent-foreground">MNEE</span>
+                            <span className="text-sm text-accent-foreground">Nova</span>
                           </div>
                           <div className="flex flex-col gap-1 text-sm text-muted-foreground">
                             <span>
-                              {subscription.monthlyPrice.toFixed(2)} MNEE/month
+                              {subscription.monthlyPrice.toFixed(2)} Nova/month
                             </span>
                             <span className="capitalize">
                               Billed {subscription.billingPeriod}

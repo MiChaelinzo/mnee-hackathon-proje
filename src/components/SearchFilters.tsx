@@ -176,7 +176,7 @@ export default function SearchFilters({ services, onFilteredResults }: SearchFil
 
                 <div>
                   <h4 className="font-semibold mb-3">
-                    Price Range: {priceRange[0]} - {priceRange[1]} MNEE
+                    Price Range: {priceRange[0]} - {priceRange[1]} Nova
                   </h4>
                   <Slider
                     value={priceRange}
@@ -290,7 +290,7 @@ export default function SearchFilters({ services, onFilteredResults }: SearchFil
           ))}
           {(priceRange[0] !== 0 || priceRange[1] !== maxPrice) && (
             <Badge variant="secondary" className="gap-1">
-              {priceRange[0]}-{priceRange[1]} MNEE
+              {priceRange[0]}-{priceRange[1]} Nova
               <button onClick={() => setPriceRange([0, maxPrice])}>
                 <X className="w-3 h-3" />
               </button>

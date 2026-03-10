@@ -576,7 +576,7 @@ function getAchievementDescription(achievement: Achievement, progress: number): 
     'first-agent-created': 'Create your first AI agent',
     'first-purchase': 'Complete your first transaction',
     'power-user': 'Complete 50 transactions in total',
-    'whale': 'Spend over 1,000 MNEE in the marketplace',
+    'whale': 'Spend over 1,000 Nova in the marketplace',
     'reviewer': 'Write 10 helpful reviews',
     'explorer': 'Try 15 different services',
     'early-adopter': 'Make 5 purchases within your first week',

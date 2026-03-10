@@ -31,7 +31,7 @@ const BADGE_INFO: Record<ReputationBadge, { label: string; icon: ReactElement; d
   'big-spender': {
     label: 'Big Spender',
     icon: <Fire className="w-4 h-4" />,
-    description: 'Spent over 1000 MNEE',
+    description: 'Spent over 1000 Nova',
   },
   'frequent-buyer': {
     label: 'Frequent Buyer',
@@ -159,7 +159,7 @@ export default function AgentReputation({
           </div>
           <div className="p-3 bg-secondary rounded-lg">
             <p className="text-xs text-muted-foreground mb-1">Total Spent</p>
-            <p className="text-2xl font-bold">{reputation.totalSpent.toFixed(0)} MNEE</p>
+            <p className="text-2xl font-bold">{reputation.totalSpent.toFixed(0)} Nova</p>
           </div>
           <div className="p-3 bg-secondary rounded-lg">
             <p className="text-xs text-muted-foreground mb-1">Reviews Given</p>

@@ -278,7 +278,7 @@ export default function PerformanceAnalytics({
                   dataKey="revenue" 
                   stroke="#60a5fa" 
                   strokeWidth={2}
-                  name="Revenue (MNEE)"
+                  name="Revenue (Nova)"
                 />
                 <Line 
                   type="monotone" 
@@ -433,7 +433,7 @@ export default function PerformanceAnalytics({
                 }} 
               />
               <Legend />
-              <Bar dataKey="revenue" fill="#60a5fa" name="Revenue (MNEE)" />
+              <Bar dataKey="revenue" fill="#60a5fa" name="Revenue (Nova)" />
               <Bar dataKey="sales" fill="#34d399" name="Total Sales" />
             </BarChart>
           </ResponsiveContainer>

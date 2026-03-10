@@ -64,7 +64,7 @@ export default function AgentAnalytics({ agents, transactions }: AgentAnalyticsP
     {
       title: 'Combined Balance',
       value: analytics.totalBalance.toFixed(0),
-      subtitle: 'MNEE available',
+      subtitle: 'Nova available',
       icon: CurrencyCircleDollar,
       color: 'accent',
       isCurrency: true,
@@ -72,7 +72,7 @@ export default function AgentAnalytics({ agents, transactions }: AgentAnalyticsP
     {
       title: 'Total Spent',
       value: analytics.totalSpent.toFixed(0),
-      subtitle: 'MNEE',
+      subtitle: 'Nova',
       icon: ChartLine,
       color: 'secondary',
       isCurrency: true,
@@ -186,11 +186,11 @@ export default function AgentAnalytics({ agents, transactions }: AgentAnalyticsP
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm">
               <div>
                 <p className="text-muted-foreground mb-1">Avg Transaction</p>
-                <p className="font-bold font-mono">{analytics.avgTransactionSize.toFixed(2)} MNEE</p>
+                <p className="font-bold font-mono">{analytics.avgTransactionSize.toFixed(2)} Nova</p>
               </div>
               <div>
                 <p className="text-muted-foreground mb-1">This Week</p>
-                <p className="font-bold font-mono">{analytics.recentSpending.toFixed(2)} MNEE</p>
+                <p className="font-bold font-mono">{analytics.recentSpending.toFixed(2)} Nova</p>
               </div>
               <div>
                 <p className="text-muted-foreground mb-1">Total Transactions</p>

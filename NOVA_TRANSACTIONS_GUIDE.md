@@ -1,10 +1,10 @@
-# MNEE Real On-Chain Transaction Guide
+# Nova Real On-Chain Transaction Guide
 
-This guide explains how to use the real MNEE token transfer functionality for completing actual on-chain purchases in the AI Agent Marketplace.
+This guide explains how to use the real Nova token transfer functionality for completing actual on-chain purchases in the AI Agent Marketplace.
 
 ## Overview
 
-The marketplace now supports **real blockchain transactions** using the MNEE stablecoin (ERC-20 token) on Ethereum Mainnet. When you make a purchase, actual MNEE tokens transfer from your wallet to the service provider's address on-chain.
+The marketplace now supports **real blockchain transactions** using the Nova tokens (ERC-20 token) on Ethereum Mainnet. When you make a purchase, actual Nova tokens transfer from your wallet to the service provider's address on-chain.
 
 ## Prerequisites
 
@@ -17,10 +17,10 @@ The marketplace now supports **real blockchain transactions** using the MNEE sta
 - Switch MetaMask to **Ethereum Mainnet** (Chain ID: 1)
 - The app will prompt you if you're on the wrong network
 
-### 3. MNEE Tokens
-- **MNEE Contract Address**: `0x8ccedbAe4916b79da7F3F612EfB2EB93A2bFD6cF`
-- Acquire MNEE tokens from supported exchanges or liquidity providers
-- You can add MNEE to MetaMask using "Import Tokens" with the contract address above
+### 3. Nova Tokens
+- **Nova Contract Address**: `0x8ccedbAe4916b79da7F3F612EfB2EB93A2bFD6cF`
+- Acquire Nova tokens from supported exchanges or liquidity providers
+- You can add Nova to MetaMask using "Import Tokens" with the contract address above
 
 ### 4. ETH for Gas Fees
 - Keep some ETH in your wallet to pay for transaction gas fees
@@ -43,12 +43,12 @@ The marketplace now supports **real blockchain transactions** using the MNEE sta
 ### Step 3: Initiate Purchase
 1. Click **"Buy Now"** on any service
 2. Select an AI agent from the dropdown (or use your wallet address)
-3. Click **"Purchase with MNEE"**
+3. Click **"Purchase with Nova"**
 
 ### Step 4: Confirm Transaction in MetaMask
 1. MetaMask popup appears showing:
    - **To**: Service provider address
-   - **Amount**: MNEE tokens being transferred
+   - **Amount**: Nova tokens being transferred
    - **Gas Fee**: ETH cost for transaction
 2. Review the details carefully
 3. Click **"Confirm"** to proceed (or **"Reject"** to cancel)
@@ -73,14 +73,14 @@ The marketplace now supports **real blockchain transactions** using the MNEE sta
 
 ### Completed
 - Transaction confirmed and included in a block
-- MNEE tokens successfully transferred
+- Nova tokens successfully transferred
 - Shows green indicator with checkmark
 - Balances updated automatically
 
 ### Failed
 - Transaction rejected or reverted on-chain
 - Possible reasons:
-  - Insufficient MNEE balance
+  - Insufficient Nova balance
   - Insufficient ETH for gas
   - User rejected transaction in MetaMask
   - Network error
@@ -95,11 +95,11 @@ The same process applies for bundles and subscriptions:
 2. Select **Bundles** or **Subscriptions** sub-tab
 3. Click **"Purchase Bundle"** or **"Subscribe Now"**
 4. Confirm transaction in MetaMask
-5. Real MNEE tokens transfer to provider address
+5. Real Nova tokens transfer to provider address
 
 ## Understanding Gas Fees
 
-- **Gas fees** are paid in ETH (not MNEE)
+- **Gas fees** are paid in ETH (not Nova)
 - Gas is required for any Ethereum transaction
 - Fee varies based on:
   - Network congestion
@@ -112,7 +112,7 @@ The same process applies for bundles and subscriptions:
 
 ### ✅ DO:
 - Verify the **recipient address** matches the expected service provider
-- Check the **MNEE amount** is correct before confirming
+- Check the **Nova amount** is correct before confirming
 - Ensure you're on **Ethereum Mainnet** (Chain ID: 1)
 - Keep your seed phrase secure and private
 - Use a hardware wallet for large amounts
@@ -120,20 +120,20 @@ The same process applies for bundles and subscriptions:
 ### ❌ DON'T:
 - Share your seed phrase with anyone
 - Approve transactions you don't understand
-- Send MNEE to unknown addresses
+- Send Nova to unknown addresses
 - Use the same wallet for testing and mainnet
 - Keep all your funds in a hot wallet
 
 ## Troubleshooting
 
-### "Insufficient MNEE Balance"
-- Check your MNEE balance in wallet
-- Acquire more MNEE tokens before purchasing
+### "Insufficient Nova Balance"
+- Check your Nova balance in wallet
+- Acquire more Nova tokens before purchasing
 - Ensure you're checking the correct wallet address
 
 ### "Insufficient ETH for Gas"
 - Add ETH to your wallet to cover gas fees
-- Even with sufficient MNEE, you need ETH for gas
+- Even with sufficient Nova, you need ETH for gas
 
 ### "Transaction Rejected by User"
 - You clicked "Reject" in MetaMask
@@ -158,7 +158,7 @@ The same process applies for bundles and subscriptions:
 
 - Balances automatically refresh after each transaction
 - Manual refresh available via wallet refresh button
-- Shows both MNEE and ETH balances
+- Shows both Nova and ETH balances
 - Balances fetched directly from blockchain
 
 ## Transaction History
@@ -166,7 +166,7 @@ The same process applies for bundles and subscriptions:
 All transactions are recorded with:
 - **Transaction Hash**: Unique identifier on blockchain
 - **Timestamp**: When transaction was initiated
-- **Amount**: MNEE tokens transferred
+- **Amount**: Nova tokens transferred
 - **Status**: Pending/Completed/Failed
 - **Service**: What was purchased
 - **Agent**: Which agent made the purchase
@@ -183,10 +183,10 @@ All transactions are recorded with:
    - Token transfer details
    - Timestamp
 
-## MNEE Token Information
+## Nova Token Information
 
-- **Name**: MNEE
-- **Symbol**: MNEE
+- **Name**: Nova
+- **Symbol**: NOVA
 - **Type**: ERC-20 Standard Token
 - **Decimals**: 18
 - **Blockchain**: Ethereum Mainnet
@@ -195,14 +195,14 @@ All transactions are recorded with:
 
 ## Support & Resources
 
-- **MNEE Website**: [https://mnee.io](https://mnee.io)
+- **Nova Website: [https://amazon-nova.devpost.com/](https://amazon-nova.devpost.com/)
 - **Etherscan Contract**: [View on Etherscan](https://etherscan.io/address/0x8ccedbAe4916b79da7F3F612EfB2EB93A2bFD6cF)
 - **MetaMask Support**: [https://support.metamask.io](https://support.metamask.io)
 - **Ethereum Gas Tracker**: [https://etherscan.io/gastracker](https://etherscan.io/gastracker)
 
 ## Testing vs Production
 
-**⚠️ IMPORTANT**: This marketplace uses **Ethereum Mainnet** with real MNEE tokens and real value.
+**⚠️ IMPORTANT**: This marketplace uses **Ethereum Mainnet** with real Nova tokens and real value.
 
 - All transactions are irreversible
 - Real money is involved
@@ -217,4 +217,4 @@ For testing purposes:
 
 ---
 
-**Questions or Issues?** Check the troubleshooting section above or consult the MNEE documentation at [mnee.io](https://mnee.io)
+**Questions or Issues?** Check the troubleshooting section above or consult the Nova documentation at [amazon-nova.devpost.com](https://amazon-nova.devpost.com/)

@@ -440,7 +440,7 @@ export default function AchievementLeaderboard({
                               <Coins className="w-3 h-3" />
                               Spent
                             </div>
-                            <div className="font-semibold">{entry.totalSpent.toFixed(0)} MNEE</div>
+                            <div className="font-semibold">{entry.totalSpent.toFixed(0)} Nova</div>
                           </div>
 
                           <div className="text-right">
@@ -519,7 +519,7 @@ export default function AchievementLeaderboard({
               <div>
                 <div className="text-sm text-muted-foreground">Highest Spender</div>
                 <div className="font-bold">
-                  {leaderboard.sort((a, b) => b.totalSpent - a.totalSpent)[0]?.totalSpent.toFixed(0) || '0'} MNEE
+                  {leaderboard.sort((a, b) => b.totalSpent - a.totalSpent)[0]?.totalSpent.toFixed(0) || '0'} Nova
                 </div>
               </div>
             </div>
@@ -602,7 +602,7 @@ function getAchievementGuide(achievement: Achievement): string {
     'power-user': 'Complete over 50 transactions',
     'collector': 'Purchase services from multiple categories',
     'reviewer': 'Write over 10 helpful reviews',
-    'whale': 'Spend over 1,000 MNEE total',
+    'whale': 'Spend over 1,000 Nova total',
     'explorer': 'Try over 15 different services',
     'loyal-customer': 'Visit the marketplace over 20 times',
     'service-provider': 'List your own service in the marketplace',
